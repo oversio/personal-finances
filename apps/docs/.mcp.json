@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "next-devtools-for-docs-app": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "next-devtools-mcp@latest"
+      ]
+    }
+  }
+}

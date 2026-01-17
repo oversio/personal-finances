@@ -1,0 +1,38 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build outputs
+dist
+build
+out
+.next
+.turbo
+
+# Testing
+coverage
+.nyc_output
+
+# Lock files
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Environment
+.env
+.env.*
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+
+# Editor
+.vscode
+.idea
+
+# Misc
+*.tsbuildinfo
+next-env.d.ts

@@ -1,0 +1,9 @@
+{
+  "lspconfig": {
+    "eslint": {
+      "workingDirectory": {
+        "mode": "auto"
+      }
+    }
+  }
+}
