@@ -12,8 +12,9 @@ pnpm install
 pnpm dev
 
 # Development (specific app)
-pnpm dev --filter=web    # Main app on port 3000
+pnpm dev --filter=web    # Next.js app on port 3000
 pnpm dev --filter=docs   # Docs app on port 3001
+pnpm dev --filter=api    # NestJS API on port 9000
 
 # Build
 pnpm build
@@ -39,6 +40,7 @@ This is a **Turborepo monorepo** with pnpm workspaces.
 ### Apps
 - `apps/web` - Main Next.js 16 application (React 19)
 - `apps/docs` - Documentation Next.js 16 application
+- `apps/api` - NestJS 11 backend API
 
 ### Packages
 - `packages/ui` (`@repo/ui`) - Shared React component library, exports via `@repo/ui/*` pattern (e.g., `@repo/ui/button`)
