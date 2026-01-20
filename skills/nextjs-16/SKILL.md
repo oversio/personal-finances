@@ -35,12 +35,13 @@ app/
 ├── _actions/           # Actions folder (no URL impact)
 └── _commons/           # Common folder (no URL impact)
     ├── components/     # Shared components built with React Aria + Tailwind + Tailwind Variants (if needed)
-    ├── hooks/          # Shared hooks 
+    ├── hooks/          # Shared hooks
     ├── utils/          # Shared utils
     ├── stores/         # Shared zustand stores
 ```
 
 ### Feature Directory Structure
+
 ```
 app/(features)/[featureName]/page.tsx
 ├── ...                 # Different feature's pages/routes

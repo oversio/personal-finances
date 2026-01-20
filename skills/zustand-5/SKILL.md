@@ -59,14 +59,14 @@ interface SettingsStore {
 
 const useSettingsStore = create<SettingsStore>()(
   persist(
-    (set) => ({
+    set => ({
       theme: "light",
       language: "en",
-      setTheme: (theme) => set({ theme }),
-      setLanguage: (language) => set({ language }),
+      setTheme: theme => set({ theme }),
+      setLanguage: language => set({ language }),
     }),
     {
-      name: "settings-storage",  // localStorage key
+      name: "settings-storage", // localStorage key
     }
   )
 );
@@ -105,12 +105,12 @@ interface UserStore {
   fetchUser: (id: string) => Promise<void>;
 }
 
-const useUserStore = create<UserStore>((set) => ({
+const useUserStore = create<UserStore>(set => ({
   user: null,
   loading: false,
   error: null,
 
-  fetchUser: async (id) => {
+  fetchUser: async id => {
     set({ loading: true, error: null });
     try {
       const response = await fetch(`/api/users/${id}`);
@@ -135,7 +135,7 @@ interface UserSlice {
 
 const createUserSlice = (set): UserSlice => ({
   user: null,
-  setUser: (user) => set({ user }),
+  setUser: user => set({ user }),
   clearUser: () => set({ user: null }),
 });
 
@@ -148,10 +148,11 @@ interface CartSlice {
 
 const createCartSlice = (set): CartSlice => ({
   items: [],
-  addItem: (item) => set((state) => ({ items: [...state.items, item] })),
-  removeItem: (id) => set((state) => ({
-    items: state.items.filter(i => i.id !== id)
-  })),
+  addItem: item => set(state => ({ items: [...state.items, item] })),
+  removeItem: id =>
+    set(state => ({
+      items: state.items.filter(i => i.id !== id),
+    })),
 });
 
 // store.ts
@@ -176,18 +177,20 @@ interface TodoStore {
 }
 
 const useTodoStore = create<TodoStore>()(
-  immer((set) => ({
+  immer(set => ({
     todos: [],
 
-    addTodo: (text) => set((state) => {
-      // Mutate directly with Immer!
-      state.todos.push({ id: crypto.randomUUID(), text, done: false });
-    }),
+    addTodo: text =>
+      set(state => {
+        // Mutate directly with Immer!
+        state.todos.push({ id: crypto.randomUUID(), text, done: false });
+      }),
 
-    toggleTodo: (id) => set((state) => {
-      const todo = state.todos.find(t => t.id === id);
-      if (todo) todo.done = !todo.done;
-    }),
+    toggleTodo: id =>
+      set(state => {
+        const todo = state.todos.find(t => t.id === id);
+        if (todo) todo.done = !todo.done;
+      }),
   }))
 );
 ```
@@ -200,10 +203,10 @@ import { devtools } from "zustand/middleware";
 
 const useStore = create<Store>()(
   devtools(
-    (set) => ({
+    set => ({
       // store definition
     }),
-    { name: "MyStore" }  // Name in Redux DevTools
+    { name: "MyStore" } // Name in Redux DevTools
   )
 );
 ```
@@ -216,7 +219,7 @@ const { count, increment } = useCounterStore.getState();
 increment();
 
 // Subscribe to changes
-const unsubscribe = useCounterStore.subscribe(
-  (state) => console.log("Count changed:", state.count)
+const unsubscribe = useCounterStore.subscribe(state =>
+  console.log("Count changed:", state.count)
 );
 ```
