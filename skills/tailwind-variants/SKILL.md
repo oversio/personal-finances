@@ -8,7 +8,7 @@ license: Apache-2.0
 metadata:
   author: oma-solutions
   version: "1.0"
-  scope: [root, ui, components]
+  scope: [web]
   auto_invoke: "Defining component variants or complex styled components"
 allowed-tools: Read, Edit, Write, Glob, Grep, Bash
 ---
@@ -16,6 +16,7 @@ allowed-tools: Read, Edit, Write, Glob, Grep, Bash
 ## When to Use Tailwind Variants
 
 Use `tailwind-variants` when:
+
 - ✅ Building design system components with multiple variants
 - ✅ Components need props-based styling (size, color, state)
 - ✅ Complex conditional styling logic
@@ -23,16 +24,19 @@ Use `tailwind-variants` when:
 - ✅ Compound variants (combinations of variants)
 
 Use simple `cn()` when:
+
 - ❌ One-off conditional classes
 - ❌ Simple true/false conditions
 - ❌ No reusable component
 
 ## Installation
+
 ```bash
 npm install tailwind-variants
 ```
 
 ## Basic Usage with TypeScript integration
+
 ```typescript
 // botton.variants.ts
 import { tv, type VariantProps } from "tailwind-variants";
@@ -72,6 +76,7 @@ function Button({ className, ...props }: ButtonProps) {
 ```
 
 ## Slots Pattern (Multi-part Components)
+
 ```typescript
 // card.variants.ts
 export const cardVariants = tv({
@@ -118,3 +123,4 @@ function Card({ className, headerClassName, bodyClassName, footerClassName, ...p
     </div>
   );
 }
+```

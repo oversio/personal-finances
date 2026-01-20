@@ -199,7 +199,7 @@ const CHART_COLORS = {
 
 ### Responsive
 
-* Viewport-based
+- Viewport-based
 
 ```typescript
 <div className="w-full md:w-1/2 lg:w-1/3" />
@@ -207,7 +207,7 @@ const CHART_COLORS = {
 <div className="text-sm md:text-base lg:text-lg" />
 ```
 
-* Container-based
+- Container-based
 
 ```typescript
 <div className="@container">
@@ -216,7 +216,7 @@ const CHART_COLORS = {
 </div>
 ```
 
-* Usage
+- Usage
 
 ```typescript
 // Card component adapts to viewport
@@ -283,5 +283,5 @@ function Page() {
 
 ## Related Skills
 
-* [tailwind-variants](./skills/tailwind-4/SKILL.md) - Advanced component variant management
-* React Aria - Headless UI componets with all accessibility features and functionality, ready to use with Tailwind CSS 
+- [tailwind-variants](./skills/tailwind-4/SKILL.md) - Advanced component variant management
+- React Aria - Headless UI componets with all accessibility features and functionality, ready to use with Tailwind CSS
