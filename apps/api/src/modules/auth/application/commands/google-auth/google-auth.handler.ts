@@ -1,11 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { EventEmitter2 } from "@nestjs/event-emitter";
-import { User, USER_REPOSITORY } from "../../../../users";
-import type { UserRepository } from "../../../../users";
+import { User, USER_REPOSITORY } from "@/modules/users";
+import type { UserRepository } from "@/modules/users";
 import {
   CreateWorkspaceCommand,
   CreateWorkspaceHandler,
-} from "../../../../workspaces/application";
+} from "@/modules/workspaces/application";
 import { RefreshToken } from "../../../domain/entities";
 import { OAuthAccountNotLinkedError } from "../../../domain/exceptions";
 import { REFRESH_TOKEN_REPOSITORY, TOKEN_SERVICE } from "../../ports";

@@ -1,4 +1,4 @@
-import { EntityId } from "../../../shared/domain/value-objects";
+import { EntityId } from "@/modules/shared/domain/value-objects";
 
 export class RefreshToken {
   constructor(

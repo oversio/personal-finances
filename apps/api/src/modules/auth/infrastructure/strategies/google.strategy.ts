@@ -20,6 +20,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async validate(
     _accessToken: string,
     _refreshToken: string,

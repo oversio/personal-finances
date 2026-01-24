@@ -5,12 +5,12 @@ import {
   Password,
   USER_REPOSITORY,
   UserAlreadyExistsError,
-} from "../../../../users";
-import type { UserRepository } from "../../../../users";
+} from "@/modules/users";
+import type { UserRepository } from "@/modules/users";
 import {
   CreateWorkspaceCommand,
   CreateWorkspaceHandler,
-} from "../../../../workspaces/application";
+} from "@/modules/workspaces/application";
 import { RefreshToken } from "../../../domain/entities";
 import {
   PASSWORD_HASHER,

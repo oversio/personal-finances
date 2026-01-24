@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { User, USER_REPOSITORY } from "../../../../users";
-import type { UserRepository } from "../../../../users";
+import { User, USER_REPOSITORY } from "@/modules/users";
+import type { UserRepository } from "@/modules/users";
 import { RefreshToken } from "../../../domain/entities";
 import {
   InvalidCredentialsError,

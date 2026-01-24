@@ -1,4 +1,4 @@
-import { EntityId } from "../../../shared/domain/value-objects";
+import { EntityId } from "@/modules/shared/domain/value-objects";
 import { MemberRole } from "../value-objects";
 
 export class WorkspaceMember {

@@ -3,8 +3,8 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
 import { MongooseModule } from "@nestjs/mongoose";
 import { PassportModule } from "@nestjs/passport";
-import { UsersModule } from "../users";
-import { WorkspacesModule } from "../workspaces";
+import { UsersModule } from "@/modules/users";
+import { WorkspacesModule } from "@/modules/workspaces";
 import {
   GoogleAuthHandler,
   LoginHandler,
