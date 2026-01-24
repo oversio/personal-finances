@@ -1,6 +1,6 @@
 import { Controller, Get } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
-import { Public } from "../../../modules/auth/infrastructure/decorators";
+import { Public } from "@/modules/auth/infrastructure/decorators";
 
 interface HealthResponse {
   status: string;

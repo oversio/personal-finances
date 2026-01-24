@@ -669,6 +669,60 @@ export class TransactionsModule {}
 | Queries       | `Query` suffix     | `FindTransactionByIdQuery`      |
 | Handlers      | `Handler` suffix   | `CreateTransactionHandler`      |
 
+## Path Aliases
+
+This project uses **absolute imports** with the `@/*` alias pointing to `src/`.
+
+### Configuration
+
+**tsconfig.json:**
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  }
+}
+```
+
+### Usage
+
+```typescript
+// ❌ Relative imports (avoid)
+import { User } from "../../../users";
+import { EntityId } from "../../../../shared/domain/value-objects";
+
+// ✅ Absolute imports (preferred)
+import { User } from "@/modules/users";
+import { EntityId } from "@/modules/shared/domain/value-objects";
+```
+
+### Import Order Convention
+
+1. External packages (NestJS, third-party)
+2. Absolute imports (`@/...`)
+3. Relative imports (only within same module/folder)
+
+```typescript
+// External
+import { Inject, Injectable } from "@nestjs/common";
+import { EventEmitter2 } from "@nestjs/event-emitter";
+
+// Absolute - other modules
+import { User, USER_REPOSITORY } from "@/modules/users";
+import { CreateWorkspaceHandler } from "@/modules/workspaces/application";
+
+// Absolute - shared
+import { EntityId } from "@/modules/shared/domain/value-objects";
+
+// Relative - same module only
+import { RefreshToken } from "../domain/entities";
+import type { TokenService } from "./ports";
+```
+
 ## Required Dependencies
 
 ```bash

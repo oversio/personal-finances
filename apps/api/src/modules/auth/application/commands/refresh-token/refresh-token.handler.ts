@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { USER_REPOSITORY, UserNotFoundError } from "../../../../users";
-import type { UserRepository } from "../../../../users";
+import { USER_REPOSITORY, UserNotFoundError } from "@/modules/users";
+import type { UserRepository } from "@/modules/users";
 import { RefreshToken } from "../../../domain/entities";
 import { InvalidRefreshTokenError } from "../../../domain/exceptions";
 import { REFRESH_TOKEN_REPOSITORY, TOKEN_SERVICE } from "../../ports";

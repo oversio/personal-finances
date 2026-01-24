@@ -1,4 +1,4 @@
-import { DomainException } from "../../../shared/domain/exceptions";
+import { DomainException } from "@/modules/shared/domain/exceptions";
 
 export class WorkspaceNotFoundError extends DomainException {
   constructor(id: string) {
