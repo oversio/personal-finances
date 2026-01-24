@@ -29,7 +29,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
       displayName?: string;
       name?: { givenName?: string; familyName?: string };
     },
-    done: VerifyCallback,
+    done: VerifyCallback
   ): Promise<void> {
     const email = profile.emails?.[0]?.value;
     const name =

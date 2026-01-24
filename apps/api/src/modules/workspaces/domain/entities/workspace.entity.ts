@@ -9,7 +9,7 @@ export class Workspace {
     public readonly currency: Currency,
     public readonly timezone: string | undefined,
     public readonly createdAt: Date,
-    public readonly updatedAt: Date,
+    public readonly updatedAt: Date
   ) {}
 
   static create(
@@ -19,7 +19,7 @@ export class Workspace {
     currency: string = "USD",
     timezone?: string,
     createdAt?: Date,
-    updatedAt?: Date,
+    updatedAt?: Date
   ): Workspace {
     const now = new Date();
     return new Workspace(
@@ -29,7 +29,7 @@ export class Workspace {
       new Currency(currency),
       timezone,
       createdAt ?? now,
-      updatedAt ?? now,
+      updatedAt ?? now
     );
   }
 

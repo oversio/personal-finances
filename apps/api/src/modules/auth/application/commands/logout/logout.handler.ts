@@ -9,7 +9,7 @@ import { LogoutCommand } from "./logout.command";
 export class LogoutHandler {
   constructor(
     @Inject(REFRESH_TOKEN_REPOSITORY)
-    private readonly refreshTokenRepository: RefreshTokenRepository,
+    private readonly refreshTokenRepository: RefreshTokenRepository
   ) {}
 
   async execute(command: LogoutCommand): Promise<void> {

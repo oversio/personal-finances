@@ -133,7 +133,7 @@ export class CreateTransactionCommand {
     public readonly accountId: string,
     public readonly amount: number,
     public readonly description: string,
-    public readonly category: string,
+    public readonly category: string
   ) {}
 }
 
@@ -151,7 +151,7 @@ export class CreateTransactionHandler {
   constructor(
     @Inject(INJECTION_TOKENS.TRANSACTIONS_REPOSITORY)
     private readonly repository: ITransactionsRepository,
-    private readonly eventEmitter: EventEmitter2,
+    private readonly eventEmitter: EventEmitter2
   ) {}
 
   async execute(command: CreateTransactionCommand): Promise<Transaction> {
@@ -160,14 +160,18 @@ export class CreateTransactionHandler {
       command.accountId,
       command.amount,
       command.description,
-      command.category,
+      command.category
     );
 
     const saved = await this.repository.create(transaction);
 
     this.eventEmitter.emit(
       "transaction.created",
-      new TransactionCreatedEvent(saved.id!.value, saved.accountId.value, saved.amount.value),
+      new TransactionCreatedEvent(
+        saved.id!.value,
+        saved.accountId.value,
+        saved.amount.value
+      )
     );
 
     return saved;
@@ -195,7 +199,7 @@ import { FindTransactionByIdQuery } from "./find-transaction-by-id.query";
 export class FindTransactionByIdHandler {
   constructor(
     @Inject(INJECTION_TOKENS.TRANSACTIONS_REPOSITORY)
-    private readonly repository: ITransactionsRepository,
+    private readonly repository: ITransactionsRepository
   ) {}
 
   async execute(query: FindTransactionByIdQuery) {
@@ -222,7 +226,7 @@ export class TransactionCreatedEvent {
   constructor(
     public readonly transactionId: string,
     public readonly accountId: string,
-    public readonly amount: number,
+    public readonly amount: number
   ) {
     this.occurredAt = new Date();
   }
@@ -244,7 +248,9 @@ export class OnTransactionCreatedHandler {
     // Update account balance
     // Check budget alerts
     // Send notification
-    console.log(`Transaction ${event.transactionId} created for $${event.amount}`);
+    console.log(
+      `Transaction ${event.transactionId} created for $${event.amount}`
+    );
   }
 }
 ```
@@ -280,7 +286,9 @@ export const createTransactionSchema = z.object({
   category: z.string().min(1).max(50),
 });
 
-export class CreateTransactionDto extends createZodDto(createTransactionSchema) {}
+export class CreateTransactionDto extends createZodDto(
+  createTransactionSchema
+) {}
 
 export type CreateTransactionInput = z.infer<typeof createTransactionSchema>;
 ```
@@ -304,9 +312,7 @@ async function bootstrap() {
 // main.ts
 import { cleanupOpenApiDoc } from "nestjs-zod";
 
-const config = new DocumentBuilder()
-  .setTitle("Personal Finances API")
-  .build();
+const config = new DocumentBuilder().setTitle("Personal Finances API").build();
 
 const document = SwaggerModule.createDocument(app, config);
 SwaggerModule.setup("docs", app, cleanupOpenApiDoc(document));
@@ -357,7 +363,7 @@ export class Transaction {
     public readonly amount: TransactionAmount,
     public readonly description: TransactionDescription,
     public readonly category: string,
-    public readonly createdAt: Date,
+    public readonly createdAt: Date
   ) {}
 
   static create(
@@ -366,7 +372,7 @@ export class Transaction {
     amount: number,
     description: string,
     category: string,
-    createdAt?: Date,
+    createdAt?: Date
   ): Transaction {
     return new Transaction(
       id ? new EntityId(id) : undefined,
@@ -374,7 +380,7 @@ export class Transaction {
       new TransactionAmount(amount),
       new TransactionDescription(description),
       category,
-      createdAt ?? new Date(),
+      createdAt ?? new Date()
     );
   }
 
@@ -425,7 +431,7 @@ import { MongooseTransaction, TransactionDocument } from "./transaction.model";
 export class MongoTransactionsRepository implements ITransactionsRepository {
   constructor(
     @InjectModel(MongooseTransaction.name)
-    private readonly model: Model<TransactionDocument>,
+    private readonly model: Model<TransactionDocument>
   ) {}
 
   async create(transaction: Transaction): Promise<Transaction> {
@@ -445,7 +451,7 @@ export class MongoTransactionsRepository implements ITransactionsRepository {
       doc.amount,
       doc.description,
       doc.category,
-      doc.createdAt,
+      doc.createdAt
     );
   }
 }
@@ -468,7 +474,7 @@ export class TransactionNotFoundError extends Error {
 export class InsufficientBalanceError extends Error {
   constructor(accountId: string, required: number, available: number) {
     super(
-      `Insufficient balance in account ${accountId}. Required: ${required}, Available: ${available}`,
+      `Insufficient balance in account ${accountId}. Required: ${required}, Available: ${available}`
     );
     this.name = "InsufficientBalanceError";
   }
@@ -479,7 +485,12 @@ export class InsufficientBalanceError extends Error {
 
 ```typescript
 // shared/infrastructure/exceptions/domain-exception.filter.ts
-import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus } from "@nestjs/common";
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpStatus,
+} from "@nestjs/common";
 import { Response } from "express";
 import { ZodError } from "zod";
 
@@ -512,7 +523,9 @@ export class DomainExceptionFilter implements ExceptionFilter {
 
     // Domain exceptions
     if (exception instanceof Error) {
-      const status = EXCEPTION_STATUS_MAP[exception.name] ?? HttpStatus.INTERNAL_SERVER_ERROR;
+      const status =
+        EXCEPTION_STATUS_MAP[exception.name] ??
+        HttpStatus.INTERNAL_SERVER_ERROR;
 
       return response.status(status).json({
         statusCode: status,
@@ -561,7 +574,7 @@ import { FindTransactionByIdQuery } from "../../application/queries/find-transac
 export class TransactionsController {
   constructor(
     private readonly createHandler: CreateTransactionHandler,
-    private readonly findByIdHandler: FindTransactionByIdHandler,
+    private readonly findByIdHandler: FindTransactionByIdHandler
   ) {}
 
   @Post()
@@ -571,7 +584,7 @@ export class TransactionsController {
       dto.accountId,
       dto.amount,
       dto.description,
-      dto.category,
+      dto.category
     );
     const transaction = await this.createHandler.execute(command);
     return transaction.toPrimitives();
@@ -610,7 +623,10 @@ import { FindTransactionByIdHandler } from "./application/queries/find-transacti
 import { OnTransactionCreatedHandler } from "./application/event-handlers/on-transaction-created.handler";
 import { TransactionsController } from "./infrastructure/controllers/transactions.controller";
 import { MongoTransactionsRepository } from "./infrastructure/persistence/mongoose/mongo-transactions.repository";
-import { MongooseTransaction, TransactionSchema } from "./infrastructure/persistence/mongoose/transaction.model";
+import {
+  MongooseTransaction,
+  TransactionSchema,
+} from "./infrastructure/persistence/mongoose/transaction.model";
 
 @Module({
   imports: [
@@ -639,19 +655,19 @@ export class TransactionsModule {}
 
 ## Naming Conventions
 
-| Element | Convention | Example |
-|---------|------------|---------|
-| Files | `kebab-case` | `create-transaction.handler.ts` |
-| Classes | `PascalCase` | `CreateTransactionHandler` |
-| Interfaces | `I` prefix | `ITransactionsRepository` |
-| Constants | `UPPER_SNAKE_CASE` | `INJECTION_TOKENS` |
-| Methods | `camelCase` | `execute()`, `toPrimitives()` |
-| Value Objects | Domain concept | `TransactionAmount` |
-| Exceptions | `Error` suffix | `TransactionNotFoundError` |
-| Events | `Event` suffix | `TransactionCreatedEvent` |
-| Commands | `Command` suffix | `CreateTransactionCommand` |
-| Queries | `Query` suffix | `FindTransactionByIdQuery` |
-| Handlers | `Handler` suffix | `CreateTransactionHandler` |
+| Element       | Convention         | Example                         |
+| ------------- | ------------------ | ------------------------------- |
+| Files         | `kebab-case`       | `create-transaction.handler.ts` |
+| Classes       | `PascalCase`       | `CreateTransactionHandler`      |
+| Interfaces    | `I` prefix         | `ITransactionsRepository`       |
+| Constants     | `UPPER_SNAKE_CASE` | `INJECTION_TOKENS`              |
+| Methods       | `camelCase`        | `execute()`, `toPrimitives()`   |
+| Value Objects | Domain concept     | `TransactionAmount`             |
+| Exceptions    | `Error` suffix     | `TransactionNotFoundError`      |
+| Events        | `Event` suffix     | `TransactionCreatedEvent`       |
+| Commands      | `Command` suffix   | `CreateTransactionCommand`      |
+| Queries       | `Query` suffix     | `FindTransactionByIdQuery`      |
+| Handlers      | `Handler` suffix   | `CreateTransactionHandler`      |
 
 ## Required Dependencies
 

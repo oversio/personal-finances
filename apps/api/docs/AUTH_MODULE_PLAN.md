@@ -17,12 +17,12 @@ This document outlines the implementation plan for the Authentication module.
 
 ### Supported Providers
 
-| Provider | Method | Status |
-|----------|--------|--------|
-| Local | Email + Password | Phase 1 |
-| Google | OAuth 2.0 (redirect flow) | Phase 1 |
-| Apple | OAuth 2.0 | Future |
-| GitHub | OAuth 2.0 | Future |
+| Provider | Method                    | Status  |
+| -------- | ------------------------- | ------- |
+| Local    | Email + Password          | Phase 1 |
+| Google   | OAuth 2.0 (redirect flow) | Phase 1 |
+| Apple    | OAuth 2.0                 | Future  |
+| GitHub   | OAuth 2.0                 | Future  |
 
 ---
 
@@ -81,16 +81,16 @@ This document outlines the implementation plan for the Authentication module.
 
 ## API Endpoints
 
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| POST | `/auth/register` | Register with email/password | Public |
-| POST | `/auth/login` | Login with email/password | Public |
-| GET | `/auth/google` | Redirect to Google consent | Public |
-| GET | `/auth/google/callback` | Handle Google callback | Public |
-| POST | `/auth/refresh` | Refresh access token | Public |
-| POST | `/auth/logout` | Revoke current session | Protected |
-| POST | `/auth/logout-all` | Revoke all sessions | Protected |
-| GET | `/auth/me` | Get current user | Protected |
+| Method | Endpoint                | Description                  | Auth      |
+| ------ | ----------------------- | ---------------------------- | --------- |
+| POST   | `/auth/register`        | Register with email/password | Public    |
+| POST   | `/auth/login`           | Login with email/password    | Public    |
+| GET    | `/auth/google`          | Redirect to Google consent   | Public    |
+| GET    | `/auth/google/callback` | Handle Google callback       | Public    |
+| POST   | `/auth/refresh`         | Refresh access token         | Public    |
+| POST   | `/auth/logout`          | Revoke current session       | Protected |
+| POST   | `/auth/logout-all`      | Revoke all sessions          | Protected |
+| GET    | `/auth/me`              | Get current user             | Protected |
 
 ---
 
@@ -99,6 +99,7 @@ This document outlines the implementation plan for the Authentication module.
 ### POST /auth/register
 
 **Request:**
+
 ```json
 {
   "email": "user@example.com",
@@ -108,6 +109,7 @@ This document outlines the implementation plan for the Authentication module.
 ```
 
 **Response (201):**
+
 ```json
 {
   "user": {
@@ -128,6 +130,7 @@ This document outlines the implementation plan for the Authentication module.
 ### POST /auth/login
 
 **Request:**
+
 ```json
 {
   "email": "user@example.com",
@@ -136,6 +139,7 @@ This document outlines the implementation plan for the Authentication module.
 ```
 
 **Response (200):**
+
 ```json
 {
   "user": {
@@ -158,6 +162,7 @@ This document outlines the implementation plan for the Authentication module.
 **Query params:** `?code=xxx&state=xxx`
 
 **Response:** Redirect to frontend with tokens
+
 ```
 {FRONTEND_URL}/auth/callback?accessToken=xxx&refreshToken=xxx&isNewUser=true
 ```
@@ -165,6 +170,7 @@ This document outlines the implementation plan for the Authentication module.
 ### POST /auth/refresh
 
 **Request:**
+
 ```json
 {
   "refreshToken": "eyJ..."
@@ -172,6 +178,7 @@ This document outlines the implementation plan for the Authentication module.
 ```
 
 **Response (200):**
+
 ```json
 {
   "accessToken": "eyJ...",
@@ -184,6 +191,7 @@ This document outlines the implementation plan for the Authentication module.
 **Headers:** `Authorization: Bearer <access_token>`
 
 **Request:**
+
 ```json
 {
   "refreshToken": "eyJ..."
@@ -191,6 +199,7 @@ This document outlines the implementation plan for the Authentication module.
 ```
 
 **Response (200):**
+
 ```json
 {
   "message": "Logged out successfully"
@@ -202,6 +211,7 @@ This document outlines the implementation plan for the Authentication module.
 **Headers:** `Authorization: Bearer <access_token>`
 
 **Response (200):**
+
 ```json
 {
   "message": "All sessions revoked",
@@ -214,6 +224,7 @@ This document outlines the implementation plan for the Authentication module.
 **Headers:** `Authorization: Bearer <access_token>`
 
 **Response (200):**
+
 ```json
 {
   "id": "...",
@@ -262,12 +273,13 @@ This document outlines the implementation plan for the Authentication module.
 
 ## Token Strategy
 
-| Token | Expiration | Storage | Purpose |
-|-------|------------|---------|---------|
-| Access Token | 15 min | Frontend memory | API authentication |
-| Refresh Token | 7 days | DB (hashed) | Get new access token |
+| Token         | Expiration | Storage         | Purpose              |
+| ------------- | ---------- | --------------- | -------------------- |
+| Access Token  | 15 min     | Frontend memory | API authentication   |
+| Refresh Token | 7 days     | DB (hashed)     | Get new access token |
 
 **JWT Access Token Payload:**
+
 ```typescript
 {
   sub: "user_id",
@@ -290,6 +302,7 @@ This document outlines the implementation plan for the Authentication module.
 - At least 1 special character (`@$!%*?&`)
 
 **Zod Schema:**
+
 ```typescript
 const passwordSchema = z
   .string()
@@ -503,29 +516,35 @@ NODE_ENV=development
 ## Implementation Order
 
 ### Step 1: Install Dependencies
+
 ```bash
 pnpm --filter=api add @nestjs/jwt @nestjs/passport passport passport-jwt bcrypt google-auth-library @nestjs/mongoose mongoose @nestjs/config
 pnpm --filter=api add -D @types/passport-jwt @types/bcrypt
 ```
 
 ### Step 2: Setup Configuration
+
 - Create `.env` file
 - Setup ConfigModule
 
 ### Step 3: Setup MongoDB
+
 - Configure MongooseModule
 - Create connection
 
 ### Step 4: Create Shared Value Objects
+
 - Update EntityId if needed
 
 ### Step 5: Create Workspaces Module (Basic)
+
 - Workspace entity & value objects
 - WorkspaceMember entity
 - Repositories (interface + Mongoose)
 - CreateWorkspace command
 
 ### Step 6: Create Auth Module
+
 1. Domain layer:
    - User entity
    - RefreshToken entity
@@ -549,10 +568,12 @@ pnpm --filter=api add -D @types/passport-jwt @types/bcrypt
    - Controller
 
 ### Step 7: Update App Module
+
 - Import AuthModule
 - Import WorkspacesModule
 
 ### Step 8: Test Endpoints
+
 - Test register
 - Test login
 - Test Google OAuth

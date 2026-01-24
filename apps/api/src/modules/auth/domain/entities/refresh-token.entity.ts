@@ -9,7 +9,7 @@ export class RefreshToken {
     public readonly createdAt: Date,
     public readonly revokedAt: Date | undefined,
     public readonly userAgent: string | undefined,
-    public readonly ipAddress: string | undefined,
+    public readonly ipAddress: string | undefined
   ) {}
 
   static create(
@@ -20,7 +20,7 @@ export class RefreshToken {
     createdAt?: Date,
     revokedAt?: Date,
     userAgent?: string,
-    ipAddress?: string,
+    ipAddress?: string
   ): RefreshToken {
     return new RefreshToken(
       id ? new EntityId(id) : undefined,
@@ -30,7 +30,7 @@ export class RefreshToken {
       createdAt ?? new Date(),
       revokedAt,
       userAgent,
-      ipAddress,
+      ipAddress
     );
   }
 

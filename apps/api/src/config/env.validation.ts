@@ -19,7 +19,9 @@ const envSchema = z.object({
 
   // App
   PORT: z.coerce.number().default(9000),
-  NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
+  NODE_ENV: z
+    .enum(["development", "production", "test"])
+    .default("development"),
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;

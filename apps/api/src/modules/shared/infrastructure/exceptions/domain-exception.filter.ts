@@ -48,7 +48,7 @@ export class DomainExceptionFilter implements ExceptionFilter {
     if (errorResponse.statusCode >= 500) {
       this.logger.error(
         `Internal Server Error: ${exception instanceof Error ? exception.message : "Unknown error"}`,
-        exception instanceof Error ? exception.stack : undefined,
+        exception instanceof Error ? exception.stack : undefined
       );
     }
 

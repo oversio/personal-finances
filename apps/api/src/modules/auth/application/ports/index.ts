@@ -1,6 +1,4 @@
-export {
-  REFRESH_TOKEN_REPOSITORY,
-} from "./refresh-token.repository";
+export { REFRESH_TOKEN_REPOSITORY } from "./refresh-token.repository";
 export type { RefreshTokenRepository } from "./refresh-token.repository";
 export { PASSWORD_HASHER } from "./password-hasher";
 export type { PasswordHasher } from "./password-hasher";

@@ -21,17 +21,19 @@ export class CreateWorkspaceHandler {
     private readonly workspaceRepository: WorkspaceRepository,
     @Inject(WORKSPACE_MEMBER_REPOSITORY)
     private readonly memberRepository: WorkspaceMemberRepository,
-    private readonly eventEmitter: EventEmitter2,
+    private readonly eventEmitter: EventEmitter2
   ) {}
 
-  async execute(command: CreateWorkspaceCommand): Promise<CreateWorkspaceResult> {
+  async execute(
+    command: CreateWorkspaceCommand
+  ): Promise<CreateWorkspaceResult> {
     // Create the workspace
     const workspace = Workspace.create(
       undefined,
       command.name,
       command.ownerId,
       command.currency,
-      command.timezone,
+      command.timezone
     );
 
     const savedWorkspace = await this.workspaceRepository.save(workspace);
@@ -39,7 +41,7 @@ export class CreateWorkspaceHandler {
     // Create the owner as a member
     const ownerMember = WorkspaceMember.createOwner(
       savedWorkspace.id!.value,
-      command.ownerId,
+      command.ownerId
     );
 
     const savedMember = await this.memberRepository.save(ownerMember);
