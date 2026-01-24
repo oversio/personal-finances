@@ -9,7 +9,7 @@ import { WorkspaceMemberDocument, WorkspaceMemberModel } from "../schemas";
 export class MongooseWorkspaceMemberRepository implements WorkspaceMemberRepository {
   constructor(
     @InjectModel(WorkspaceMemberModel.name)
-    private readonly memberModel: Model<WorkspaceMemberDocument>,
+    private readonly memberModel: Model<WorkspaceMemberDocument>
   ) {}
 
   async save(member: WorkspaceMember): Promise<WorkspaceMember> {
@@ -38,19 +38,19 @@ export class MongooseWorkspaceMemberRepository implements WorkspaceMemberReposit
     const docs = await this.memberModel
       .find({ workspaceId: new Types.ObjectId(workspaceId) })
       .exec();
-    return docs.map((doc) => this.toDomain(doc));
+    return docs.map(doc => this.toDomain(doc));
   }
 
   async findByUserId(userId: string): Promise<WorkspaceMember[]> {
     const docs = await this.memberModel
       .find({ userId: new Types.ObjectId(userId) })
       .exec();
-    return docs.map((doc) => this.toDomain(doc));
+    return docs.map(doc => this.toDomain(doc));
   }
 
   async findByWorkspaceAndUser(
     workspaceId: string,
-    userId: string,
+    userId: string
   ): Promise<WorkspaceMember | null> {
     const doc = await this.memberModel
       .findOne({
@@ -70,7 +70,7 @@ export class MongooseWorkspaceMemberRepository implements WorkspaceMemberReposit
           joinedAt: member.joinedAt,
           isActive: member.isActive,
         },
-        { new: true },
+        { new: true }
       )
       .exec();
 
@@ -94,7 +94,7 @@ export class MongooseWorkspaceMemberRepository implements WorkspaceMemberReposit
       doc.invitedBy?.toString(),
       doc.invitedAt,
       doc.joinedAt,
-      doc.isActive,
+      doc.isActive
     );
   }
 }

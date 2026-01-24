@@ -1,6 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { EventEmitter2 } from "@nestjs/event-emitter";
-import { User, Password, USER_REPOSITORY, UserAlreadyExistsError } from "../../../../users";
+import {
+  User,
+  Password,
+  USER_REPOSITORY,
+  UserAlreadyExistsError,
+} from "../../../../users";
 import type { UserRepository } from "../../../../users";
 import {
   CreateWorkspaceCommand,
@@ -37,12 +42,12 @@ export class RegisterHandler {
     @Inject(REFRESH_TOKEN_REPOSITORY)
     private readonly refreshTokenRepository: RefreshTokenRepository,
     private readonly createWorkspaceHandler: CreateWorkspaceHandler,
-    private readonly eventEmitter: EventEmitter2,
+    private readonly eventEmitter: EventEmitter2
   ) {}
 
   async execute(
     command: RegisterCommand,
-    metadata?: { userAgent?: string; ipAddress?: string },
+    metadata?: { userAgent?: string; ipAddress?: string }
   ): Promise<RegisterResult> {
     // Validate password format
     new Password(command.password);
@@ -62,7 +67,10 @@ export class RegisterHandler {
 
     // Auto-create workspace for the user
     await this.createWorkspaceHandler.execute(
-      new CreateWorkspaceCommand(`${command.name}'s Workspace`, savedUser.id!.value),
+      new CreateWorkspaceCommand(
+        `${command.name}'s Workspace`,
+        savedUser.id!.value
+      )
     );
 
     // Generate tokens
@@ -81,7 +89,7 @@ export class RegisterHandler {
       undefined,
       undefined,
       metadata?.userAgent,
-      metadata?.ipAddress,
+      metadata?.ipAddress
     );
     await this.refreshTokenRepository.save(refreshToken);
 

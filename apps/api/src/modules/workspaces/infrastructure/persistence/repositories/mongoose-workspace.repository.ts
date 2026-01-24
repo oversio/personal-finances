@@ -9,7 +9,7 @@ import { WorkspaceDocument, WorkspaceModel } from "../schemas";
 export class MongooseWorkspaceRepository implements WorkspaceRepository {
   constructor(
     @InjectModel(WorkspaceModel.name)
-    private readonly workspaceModel: Model<WorkspaceDocument>,
+    private readonly workspaceModel: Model<WorkspaceDocument>
   ) {}
 
   async save(workspace: Workspace): Promise<Workspace> {
@@ -33,7 +33,7 @@ export class MongooseWorkspaceRepository implements WorkspaceRepository {
     const docs = await this.workspaceModel
       .find({ ownerId: new Types.ObjectId(ownerId) })
       .exec();
-    return docs.map((doc) => this.toDomain(doc));
+    return docs.map(doc => this.toDomain(doc));
   }
 
   async update(workspace: Workspace): Promise<Workspace> {
@@ -45,7 +45,7 @@ export class MongooseWorkspaceRepository implements WorkspaceRepository {
           currency: workspace.currency.value,
           timezone: workspace.timezone,
         },
-        { new: true },
+        { new: true }
       )
       .exec();
 
@@ -68,7 +68,7 @@ export class MongooseWorkspaceRepository implements WorkspaceRepository {
       doc.currency,
       doc.timezone,
       doc.createdAt,
-      doc.updatedAt,
+      doc.updatedAt
     );
   }
 }

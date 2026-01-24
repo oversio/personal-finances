@@ -171,20 +171,20 @@ This document defines the MongoDB collections for the Personal Finances applicat
 
 **Default Categories (seeded per workspace):**
 
-| Type | Category | Subcategories |
-|------|----------|---------------|
-| Income | Salary | Main Job, Side Job, Bonus |
-| Income | Freelance | Projects, Consulting |
-| Income | Investments | Dividends, Interest, Capital Gains |
-| Income | Other Income | Gifts, Refunds, Other |
-| Expense | Food | Groceries, Restaurants, Coffee |
+| Type    | Category       | Subcategories                           |
+| ------- | -------------- | --------------------------------------- |
+| Income  | Salary         | Main Job, Side Job, Bonus               |
+| Income  | Freelance      | Projects, Consulting                    |
+| Income  | Investments    | Dividends, Interest, Capital Gains      |
+| Income  | Other Income   | Gifts, Refunds, Other                   |
+| Expense | Food           | Groceries, Restaurants, Coffee          |
 | Expense | Transportation | Gas, Public Transit, Uber/Taxi, Parking |
-| Expense | Housing | Rent, Utilities, Maintenance |
-| Expense | Entertainment | Streaming, Movies, Games |
-| Expense | Shopping | Clothing, Electronics, Home |
-| Expense | Health | Doctor, Pharmacy, Gym |
-| Expense | Education | Courses, Books, Subscriptions |
-| Expense | Other Expenses | Gifts, Donations, Other |
+| Expense | Housing        | Rent, Utilities, Maintenance            |
+| Expense | Entertainment  | Streaming, Movies, Games                |
+| Expense | Shopping       | Clothing, Electronics, Home             |
+| Expense | Health         | Doctor, Pharmacy, Gym                   |
+| Expense | Education      | Courses, Books, Subscriptions           |
+| Expense | Other Expenses | Gifts, Donations, Other                 |
 
 ---
 
@@ -229,6 +229,7 @@ This document defines the MongoDB collections for the Personal Finances applicat
 ```
 
 **Transaction Types:**
+
 - `income`: Money coming in (salary, freelance, etc.)
 - `expense`: Money going out (food, bills, etc.)
 - `transfer`: Money moving between accounts (not income/expense)
@@ -275,6 +276,7 @@ This document defines the MongoDB collections for the Personal Finances applicat
 ```
 
 **Examples:**
+
 - Netflix ($15/month on day 15): `{ frequency: "monthly", dayOfMonth: 15 }`
 - Salary ($3000/month on day 1): `{ frequency: "monthly", dayOfMonth: 1, type: "income" }`
 - Weekly groceries (Saturdays): `{ frequency: "weekly", dayOfWeek: 6 }`
@@ -308,13 +310,13 @@ This document defines the MongoDB collections for the Personal Finances applicat
 
 ## Summary
 
-| Collection | Purpose |
-|------------|---------|
-| `users` | User authentication and profile |
-| `workspaces` | Multi-tenant container |
-| `workspace_members` | User ↔ Workspace membership |
-| `accounts` | Financial accounts (bank, cash, etc.) |
-| `categories` | Income/expense categories + subcategories |
-| `transactions` | All money movements |
-| `recurring_transactions` | Scheduled transaction templates |
-| `budgets` | Spending limits per category |
+| Collection               | Purpose                                   |
+| ------------------------ | ----------------------------------------- |
+| `users`                  | User authentication and profile           |
+| `workspaces`             | Multi-tenant container                    |
+| `workspace_members`      | User ↔ Workspace membership               |
+| `accounts`               | Financial accounts (bank, cash, etc.)     |
+| `categories`             | Income/expense categories + subcategories |
+| `transactions`           | All money movements                       |
+| `recurring_transactions` | Scheduled transaction templates           |
+| `budgets`                | Spending limits per category              |

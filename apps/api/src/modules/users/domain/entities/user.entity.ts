@@ -17,7 +17,7 @@ export class User {
     public readonly providerId: string | undefined,
     public readonly isEmailVerified: boolean,
     public readonly createdAt: Date,
-    public readonly updatedAt: Date,
+    public readonly updatedAt: Date
   ) {}
 
   static create(
@@ -29,7 +29,7 @@ export class User {
     providerId?: string,
     isEmailVerified: boolean = false,
     createdAt?: Date,
-    updatedAt?: Date,
+    updatedAt?: Date
   ): User {
     const now = new Date();
     return new User(
@@ -41,19 +41,27 @@ export class User {
       providerId,
       isEmailVerified,
       createdAt ?? now,
-      updatedAt ?? now,
+      updatedAt ?? now
     );
   }
 
   static createLocal(email: string, name: string, passwordHash: string): User {
-    return User.create(undefined, email, name, passwordHash, "local", undefined, false);
+    return User.create(
+      undefined,
+      email,
+      name,
+      passwordHash,
+      "local",
+      undefined,
+      false
+    );
   }
 
   static createFromOAuth(
     email: string,
     name: string,
     provider: AuthProviderType,
-    providerId: string,
+    providerId: string
   ): User {
     return User.create(
       undefined,
@@ -62,7 +70,7 @@ export class User {
       undefined,
       provider,
       providerId,
-      true, // OAuth users have verified emails
+      true // OAuth users have verified emails
     );
   }
 

@@ -40,7 +40,7 @@ export class AuthController {
     private readonly refreshTokenHandler: RefreshTokenHandler,
     private readonly googleAuthHandler: GoogleAuthHandler,
     private readonly logoutHandler: LogoutHandler,
-    private readonly configService: ConfigService,
+    private readonly configService: ConfigService
   ) {}
 
   @Public()
@@ -90,11 +90,7 @@ export class AuthController {
   @ApiOperation({ summary: "Logout (revoke refresh token)" })
   @ApiResponse({ status: 204, description: "Logged out successfully" })
   async logout(@Body() dto: LogoutDto, @CurrentUser() user: AuthenticatedUser) {
-    const command = new LogoutCommand(
-      dto.refreshToken,
-      dto.logoutAll,
-      user.id,
-    );
+    const command = new LogoutCommand(dto.refreshToken, dto.logoutAll, user.id);
     await this.logoutHandler.execute(command);
   }
 
@@ -112,7 +108,11 @@ export class AuthController {
   @ApiOperation({ summary: "Google OAuth callback" })
   async googleCallback(@Req() req: Request, @Res() res: Response) {
     const profile = req.user as GoogleProfile;
-    const command = new GoogleAuthCommand(profile.id, profile.email, profile.name);
+    const command = new GoogleAuthCommand(
+      profile.id,
+      profile.email,
+      profile.name
+    );
 
     const result = await this.googleAuthHandler.execute(command, {
       userAgent: req.headers["user-agent"],

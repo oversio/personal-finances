@@ -29,7 +29,8 @@ export class RefreshTokenModel {
   ipAddress?: string;
 }
 
-export const RefreshTokenSchema = SchemaFactory.createForClass(RefreshTokenModel);
+export const RefreshTokenSchema =
+  SchemaFactory.createForClass(RefreshTokenModel);
 
 // Indexes
 RefreshTokenSchema.index({ token: 1 }, { unique: true });

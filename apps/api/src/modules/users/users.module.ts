@@ -1,7 +1,11 @@
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 import { USER_REPOSITORY } from "./application";
-import { MongooseUserRepository, UserModel, UserSchema } from "./infrastructure";
+import {
+  MongooseUserRepository,
+  UserModel,
+  UserSchema,
+} from "./infrastructure";
 
 const repositories = [
   {

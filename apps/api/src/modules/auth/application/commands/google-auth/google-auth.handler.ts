@@ -9,7 +9,11 @@ import {
 import { RefreshToken } from "../../../domain/entities";
 import { OAuthAccountNotLinkedError } from "../../../domain/exceptions";
 import { REFRESH_TOKEN_REPOSITORY, TOKEN_SERVICE } from "../../ports";
-import type { RefreshTokenRepository, TokenPair, TokenService } from "../../ports";
+import type {
+  RefreshTokenRepository,
+  TokenPair,
+  TokenService,
+} from "../../ports";
 import { GoogleAuthCommand } from "./google-auth.command";
 
 export interface GoogleAuthResult {
@@ -28,18 +32,21 @@ export class GoogleAuthHandler {
     @Inject(REFRESH_TOKEN_REPOSITORY)
     private readonly refreshTokenRepository: RefreshTokenRepository,
     private readonly createWorkspaceHandler: CreateWorkspaceHandler,
-    private readonly eventEmitter: EventEmitter2,
+    private readonly eventEmitter: EventEmitter2
   ) {}
 
   async execute(
     command: GoogleAuthCommand,
-    metadata?: { userAgent?: string; ipAddress?: string },
+    metadata?: { userAgent?: string; ipAddress?: string }
   ): Promise<GoogleAuthResult> {
     let user: User | null = null;
     let isNewUser = false;
 
     // First, try to find by Google provider ID
-    user = await this.userRepository.findByProviderId("google", command.googleId);
+    user = await this.userRepository.findByProviderId(
+      "google",
+      command.googleId
+    );
 
     if (!user) {
       // Check if user exists with same email
@@ -57,14 +64,17 @@ export class GoogleAuthHandler {
           command.email,
           command.name,
           "google",
-          command.googleId,
+          command.googleId
         );
         user = await this.userRepository.save(user);
         isNewUser = true;
 
         // Auto-create workspace for new users
         await this.createWorkspaceHandler.execute(
-          new CreateWorkspaceCommand(`${command.name}'s Workspace`, user.id!.value),
+          new CreateWorkspaceCommand(
+            `${command.name}'s Workspace`,
+            user.id!.value
+          )
         );
 
         // Emit domain event
@@ -92,7 +102,7 @@ export class GoogleAuthHandler {
       undefined,
       undefined,
       metadata?.userAgent,
-      metadata?.ipAddress,
+      metadata?.ipAddress
     );
     await this.refreshTokenRepository.save(refreshToken);
 

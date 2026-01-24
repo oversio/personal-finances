@@ -12,5 +12,5 @@ export const CurrentUser = createParamDecorator(
     const user = request.user as AuthenticatedUser;
 
     return data ? user?.[data] : user;
-  },
+  }
 );
