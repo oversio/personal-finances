@@ -139,6 +139,11 @@ src/
 - Repository pattern with ports (interfaces) and adapters (implementations)
 - Global exception filter maps domain errors to HTTP responses
 
+**Module Documentation:**
+
+- [Authentication Module](apps/api/docs/AUTH_MODULE.md) - JWT auth, OAuth, token strategy, API contracts
+- [Database Model](apps/api/docs/DATABASE_MODEL.md) - MongoDB collections and schemas
+
 ## Code Style
 
 - 2 spaces, no tabs

@@ -1,10 +1,23 @@
-# Authentication Module - Implementation Plan
+# Authentication Module
 
-This document outlines the implementation plan for the Authentication module.
+Technical documentation for the Authentication module.
 
 ---
 
 ## Overview
+
+### Architecture
+
+The authentication system is split into separate modules following the Single Responsibility Principle:
+
+- **Users Module**: Manages user entities, persistence, and user-related operations
+- **Auth Module**: Handles authentication logic (login, register, tokens, OAuth)
+- **Workspaces Module**: Creates default workspace on user registration
+
+```
+AuthModule ──imports──► UsersModule
+AuthModule ──imports──► WorkspacesModule
+```
 
 ### Features
 
@@ -17,12 +30,12 @@ This document outlines the implementation plan for the Authentication module.
 
 ### Supported Providers
 
-| Provider | Method                    | Status  |
-| -------- | ------------------------- | ------- |
-| Local    | Email + Password          | Phase 1 |
-| Google   | OAuth 2.0 (redirect flow) | Phase 1 |
-| Apple    | OAuth 2.0                 | Future  |
-| GitHub   | OAuth 2.0                 | Future  |
+| Provider | Method                    | Status      |
+| -------- | ------------------------- | ----------- |
+| Local    | Email + Password          | Implemented |
+| Google   | OAuth 2.0 (redirect flow) | Implemented |
+| Apple    | OAuth 2.0                 | Planned     |
+| GitHub   | OAuth 2.0                 | Planned     |
 
 ---
 
@@ -161,11 +174,17 @@ This document outlines the implementation plan for the Authentication module.
 
 **Query params:** `?code=xxx&state=xxx`
 
-**Response:** Redirect to frontend with tokens
+**Response:** Sets HTTP-only cookies and redirects to frontend
 
-```
-{FRONTEND_URL}/auth/callback?accessToken=xxx&refreshToken=xxx&isNewUser=true
-```
+**Cookies set:**
+
+| Cookie           | HttpOnly | Secure     | SameSite | MaxAge  | Purpose                    |
+| ---------------- | -------- | ---------- | -------- | ------- | -------------------------- |
+| `accessToken`    | Yes      | Prod only  | Lax      | 15 min  | JWT for API authentication |
+| `refreshToken`   | Yes      | Prod only  | Lax      | 7 days  | Token rotation             |
+| `tokenExpiresAt` | No       | Prod only  | Lax      | 15 min  | Frontend token refresh     |
+
+**Redirect:** `{FRONTEND_URL}/auth/callback` (no tokens in URL)
 
 ### POST /auth/refresh
 
@@ -262,11 +281,25 @@ This document outlines the implementation plan for the Authentication module.
               │ - Get user info  │
               │ - Create/login   │
               │ - Generate tokens│
+              │ - Set cookies    │
               └────────┬─────────┘
                        │
                        ▼
               5. Redirect to frontend
-                 /auth/callback?accessToken=xxx
+                 /auth/callback (cookies set)
+```
+
+**Frontend redirect handling:**
+
+```typescript
+// Before OAuth - store target route
+sessionStorage.setItem("redirectAfterAuth", "/dashboard/settings");
+window.location.href = "/api/auth/google";
+
+// After OAuth callback (/auth/callback page)
+const redirectTo = sessionStorage.getItem("redirectAfterAuth") || "/";
+sessionStorage.removeItem("redirectAfterAuth");
+router.push(redirectTo);
 ```
 
 ---
@@ -355,8 +388,33 @@ async handleUserRegistered(event: UserRegisteredEvent) {
 
 ```
 src/modules/
+├── users/                            # Separate Users module
+│   ├── users.module.ts
+│   ├── index.ts                      # Public exports
+│   ├── application/
+│   │   └── ports/
+│   │       └── user.repository.ts    # UserRepository interface
+│   ├── domain/
+│   │   ├── entities/
+│   │   │   └── user.entity.ts
+│   │   ├── value-objects/
+│   │   │   ├── email.ts
+│   │   │   ├── user-name.ts
+│   │   │   ├── password.ts
+│   │   │   ├── hashed-password.ts
+│   │   │   └── auth-provider.ts
+│   │   └── exceptions/
+│   │       └── user.exceptions.ts    # UserNotFoundError, UserAlreadyExistsError
+│   └── infrastructure/
+│       └── persistence/
+│           ├── schemas/
+│           │   └── user.schema.ts
+│           └── repositories/
+│               └── mongoose-user.repository.ts
+│
 ├── auth/
-│   ├── auth.module.ts
+│   ├── auth.module.ts                # Imports UsersModule
+│   ├── index.ts
 │   ├── application/
 │   │   ├── commands/
 │   │   │   ├── register/
@@ -371,66 +429,43 @@ src/modules/
 │   │   │   ├── refresh-token/
 │   │   │   │   ├── refresh-token.command.ts
 │   │   │   │   └── refresh-token.handler.ts
-│   │   │   ├── logout/
-│   │   │   │   ├── logout.command.ts
-│   │   │   │   └── logout.handler.ts
-│   │   │   └── logout-all/
-│   │   │       ├── logout-all.command.ts
-│   │   │       └── logout-all.handler.ts
-│   │   ├── queries/
-│   │   │   └── get-current-user/
-│   │   │       ├── get-current-user.query.ts
-│   │   │       └── get-current-user.handler.ts
+│   │   │   └── logout/
+│   │   │       ├── logout.command.ts
+│   │   │       └── logout.handler.ts
 │   │   ├── dtos/
 │   │   │   ├── register.dto.ts
 │   │   │   ├── login.dto.ts
 │   │   │   ├── refresh-token.dto.ts
-│   │   │   ├── logout.dto.ts
 │   │   │   └── auth-response.dto.ts
-│   │   ├── ports/
-│   │   │   ├── users-repository.interface.ts
-│   │   │   └── refresh-tokens-repository.interface.ts
-│   │   ├── services/
-│   │   │   ├── token.service.ts
-│   │   │   ├── password.service.ts
-│   │   │   └── google-oauth.service.ts
-│   │   ├── event-handlers/
-│   │   │   └── on-user-registered.handler.ts
-│   │   └── constants.ts
+│   │   └── ports/
+│   │       ├── refresh-token.repository.ts
+│   │       ├── token.service.ts
+│   │       └── password-hasher.ts
 │   ├── domain/
 │   │   ├── entities/
-│   │   │   ├── user.entity.ts
 │   │   │   └── refresh-token.entity.ts
-│   │   ├── value-objects/
-│   │   │   ├── user-email.ts
-│   │   │   ├── user-password.ts
-│   │   │   └── auth-provider.ts
-│   │   ├── events/
-│   │   │   ├── user-registered.event.ts
-│   │   │   └── user-logged-in.event.ts
 │   │   └── exceptions/
-│   │       ├── invalid-credentials.error.ts
-│   │       ├── email-already-exists.error.ts
-│   │       └── invalid-token.error.ts
+│   │       └── auth.exceptions.ts    # InvalidCredentialsError, InvalidRefreshTokenError
 │   └── infrastructure/
-│       ├── controllers/
-│       │   └── auth.controller.ts
+│       ├── http/
+│       │   └── controllers/
+│       │       └── auth.controller.ts
 │       ├── guards/
-│       │   ├── jwt-auth.guard.ts
-│       │   └── optional-jwt.guard.ts
+│       │   └── jwt-auth.guard.ts
 │       ├── strategies/
-│       │   └── jwt.strategy.ts
+│       │   ├── jwt.strategy.ts
+│       │   └── google.strategy.ts
 │       ├── decorators/
 │       │   ├── current-user.decorator.ts
 │       │   └── public.decorator.ts
+│       ├── services/
+│       │   ├── jwt-token.service.ts
+│       │   └── bcrypt-password-hasher.ts
 │       └── persistence/
-│           └── mongoose/
-│               ├── mongo-users.repository.ts
-│               ├── mongo-refresh-tokens.repository.ts
-│               ├── user.model.ts
-│               ├── user.schema.ts
-│               ├── refresh-token.model.ts
-│               └── refresh-token.schema.ts
+│           ├── schemas/
+│           │   └── refresh-token.schema.ts
+│           └── repositories/
+│               └── mongoose-refresh-token.repository.ts
 │
 └── workspaces/
     ├── workspaces.module.ts
@@ -510,76 +545,6 @@ FRONTEND_URL=http://localhost:3000
 PORT=9000
 NODE_ENV=development
 ```
-
----
-
-## Implementation Order
-
-### Step 1: Install Dependencies
-
-```bash
-pnpm --filter=api add @nestjs/jwt @nestjs/passport passport passport-jwt bcrypt google-auth-library @nestjs/mongoose mongoose @nestjs/config
-pnpm --filter=api add -D @types/passport-jwt @types/bcrypt
-```
-
-### Step 2: Setup Configuration
-
-- Create `.env` file
-- Setup ConfigModule
-
-### Step 3: Setup MongoDB
-
-- Configure MongooseModule
-- Create connection
-
-### Step 4: Create Shared Value Objects
-
-- Update EntityId if needed
-
-### Step 5: Create Workspaces Module (Basic)
-
-- Workspace entity & value objects
-- WorkspaceMember entity
-- Repositories (interface + Mongoose)
-- CreateWorkspace command
-
-### Step 6: Create Auth Module
-
-1. Domain layer:
-   - User entity
-   - RefreshToken entity
-   - Value objects (email, password, authProvider)
-   - Exceptions
-   - Events
-
-2. Application layer:
-   - Ports (repository interfaces)
-   - Services (token, password, google-oauth)
-   - DTOs
-   - Commands (register, login, google-auth, refresh, logout, logout-all)
-   - Queries (get-current-user)
-   - Event handlers (on-user-registered)
-
-3. Infrastructure layer:
-   - Mongoose models & schemas
-   - Repository implementations
-   - JWT strategy
-   - Guards & decorators
-   - Controller
-
-### Step 7: Update App Module
-
-- Import AuthModule
-- Import WorkspacesModule
-
-### Step 8: Test Endpoints
-
-- Test register
-- Test login
-- Test Google OAuth
-- Test refresh
-- Test logout
-- Test me
 
 ---
 
