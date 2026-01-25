@@ -9,7 +9,7 @@ import { RefreshTokenDocument, RefreshTokenModel } from "../schemas";
 export class MongooseRefreshTokenRepository implements RefreshTokenRepository {
   constructor(
     @InjectModel(RefreshTokenModel.name)
-    private readonly tokenModel: Model<RefreshTokenDocument>
+    private readonly tokenModel: Model<RefreshTokenDocument>,
   ) {}
 
   async save(token: RefreshToken): Promise<RefreshToken> {
@@ -49,7 +49,7 @@ export class MongooseRefreshTokenRepository implements RefreshTokenRepository {
     await this.tokenModel
       .updateMany(
         { userId: new Types.ObjectId(userId), revokedAt: null },
-        { revokedAt: new Date() }
+        { revokedAt: new Date() },
       )
       .exec();
   }
@@ -70,7 +70,7 @@ export class MongooseRefreshTokenRepository implements RefreshTokenRepository {
       doc.createdAt,
       doc.revokedAt,
       doc.userAgent,
-      doc.ipAddress
+      doc.ipAddress,
     );
   }
 }

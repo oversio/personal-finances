@@ -119,7 +119,7 @@ const dateFromString = z.coerce.date(); // "2024-01-01" → Date
 // Preprocessing
 const trimmedString = z.preprocess(
   val => (typeof val === "string" ? val.trim() : val),
-  z.string()
+  z.string(),
 );
 ```
 

@@ -23,16 +23,16 @@ export class RefreshTokenHandler {
     @Inject(TOKEN_SERVICE)
     private readonly tokenService: TokenService,
     @Inject(REFRESH_TOKEN_REPOSITORY)
-    private readonly refreshTokenRepository: RefreshTokenRepository
+    private readonly refreshTokenRepository: RefreshTokenRepository,
   ) {}
 
   async execute(
     command: RefreshTokenCommand,
-    metadata?: { userAgent?: string; ipAddress?: string }
+    metadata?: { userAgent?: string; ipAddress?: string },
   ): Promise<RefreshTokenResult> {
     // Find the refresh token
     const existingToken = await this.refreshTokenRepository.findByToken(
-      command.refreshToken
+      command.refreshToken,
     );
 
     if (!existingToken || !existingToken.isValid()) {
@@ -64,7 +64,7 @@ export class RefreshTokenHandler {
       undefined,
       undefined,
       metadata?.userAgent,
-      metadata?.ipAddress
+      metadata?.ipAddress,
     );
     await this.refreshTokenRepository.save(newRefreshToken);
 

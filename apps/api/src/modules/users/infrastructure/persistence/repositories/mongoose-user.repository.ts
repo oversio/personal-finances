@@ -10,7 +10,7 @@ import { UserDocument, UserModel } from "../schemas";
 export class MongooseUserRepository implements UserRepository {
   constructor(
     @InjectModel(UserModel.name)
-    private readonly userModel: Model<UserDocument>
+    private readonly userModel: Model<UserDocument>,
   ) {}
 
   async save(user: User): Promise<User> {
@@ -21,6 +21,7 @@ export class MongooseUserRepository implements UserRepository {
       provider: user.provider.value,
       providerId: user.providerId,
       isEmailVerified: user.isEmailVerified,
+      picture: user.picture,
     });
 
     const saved = await doc.save();
@@ -41,7 +42,7 @@ export class MongooseUserRepository implements UserRepository {
 
   async findByProviderId(
     provider: string,
-    providerId: string
+    providerId: string,
   ): Promise<User | null> {
     const doc = await this.userModel.findOne({ provider, providerId }).exec();
     return doc ? this.toDomain(doc) : null;
@@ -56,8 +57,9 @@ export class MongooseUserRepository implements UserRepository {
           name: user.name.value,
           passwordHash: user.passwordHash?.value,
           isEmailVerified: user.isEmailVerified,
+          picture: user.picture,
         },
-        { new: true }
+        { new: true },
       )
       .exec();
 
@@ -81,8 +83,9 @@ export class MongooseUserRepository implements UserRepository {
       doc.provider as AuthProviderType,
       doc.providerId,
       doc.isEmailVerified,
+      doc.picture,
       doc.createdAt,
-      doc.updatedAt
+      doc.updatedAt,
     );
   }
 }

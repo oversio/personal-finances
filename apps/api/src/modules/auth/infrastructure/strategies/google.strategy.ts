@@ -7,6 +7,7 @@ export interface GoogleProfile {
   id: string;
   email: string;
   name: string;
+  picture?: string;
 }
 
 @Injectable()
@@ -29,8 +30,9 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
       emails?: Array<{ value: string }>;
       displayName?: string;
       name?: { givenName?: string; familyName?: string };
+      photos?: Array<{ value: string }>;
     },
-    done: VerifyCallback
+    done: VerifyCallback,
   ): Promise<void> {
     const email = profile.emails?.[0]?.value;
     const name =
@@ -39,6 +41,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
         .filter(Boolean)
         .join(" ") ||
       "User";
+    const picture = profile.photos?.[0]?.value;
 
     if (!email) {
       done(new Error("No email provided by Google"), undefined);
@@ -49,6 +52,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
       id: profile.id,
       email,
       name,
+      picture,
     };
 
     done(null, googleProfile);

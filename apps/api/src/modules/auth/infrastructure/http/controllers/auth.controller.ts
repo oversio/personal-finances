@@ -40,7 +40,7 @@ export class AuthController {
     private readonly refreshTokenHandler: RefreshTokenHandler,
     private readonly googleAuthHandler: GoogleAuthHandler,
     private readonly logoutHandler: LogoutHandler,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
   ) {}
 
   @Public()
@@ -111,7 +111,8 @@ export class AuthController {
     const command = new GoogleAuthCommand(
       profile.id,
       profile.email,
-      profile.name
+      profile.name,
+      profile.picture,
     );
 
     const result = await this.googleAuthHandler.execute(command, {
@@ -146,7 +147,7 @@ export class AuthController {
         secure: isProduction,
         sameSite: "lax" as const,
         maxAge: result.tokens.expiresIn * 1000,
-      }
+      },
     );
 
     // Always redirect to frontend callback (frontend handles internal redirect via sessionStorage)

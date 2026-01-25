@@ -32,12 +32,12 @@ export class GoogleAuthHandler {
     @Inject(REFRESH_TOKEN_REPOSITORY)
     private readonly refreshTokenRepository: RefreshTokenRepository,
     private readonly createWorkspaceHandler: CreateWorkspaceHandler,
-    private readonly eventEmitter: EventEmitter2
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async execute(
     command: GoogleAuthCommand,
-    metadata?: { userAgent?: string; ipAddress?: string }
+    metadata?: { userAgent?: string; ipAddress?: string },
   ): Promise<GoogleAuthResult> {
     let user: User | null = null;
     let isNewUser = false;
@@ -45,7 +45,7 @@ export class GoogleAuthHandler {
     // First, try to find by Google provider ID
     user = await this.userRepository.findByProviderId(
       "google",
-      command.googleId
+      command.googleId,
     );
 
     if (!user) {
@@ -64,7 +64,8 @@ export class GoogleAuthHandler {
           command.email,
           command.name,
           "google",
-          command.googleId
+          command.googleId,
+          command.picture,
         );
         user = await this.userRepository.save(user);
         isNewUser = true;
@@ -73,8 +74,8 @@ export class GoogleAuthHandler {
         await this.createWorkspaceHandler.execute(
           new CreateWorkspaceCommand(
             `${command.name}'s Workspace`,
-            user.id!.value
-          )
+            user.id!.value,
+          ),
         );
 
         // Emit domain event
@@ -102,7 +103,7 @@ export class GoogleAuthHandler {
       undefined,
       undefined,
       metadata?.userAgent,
-      metadata?.ipAddress
+      metadata?.ipAddress,
     );
     await this.refreshTokenRepository.save(refreshToken);
 

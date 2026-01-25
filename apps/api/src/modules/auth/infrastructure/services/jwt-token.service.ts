@@ -8,7 +8,7 @@ import { TokenPayload, TokenService } from "../../application/ports";
 export class JwtTokenService implements TokenService {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
   ) {}
 
   generateAccessToken(payload: TokenPayload): string {
@@ -30,7 +30,7 @@ export class JwtTokenService implements TokenService {
   getRefreshTokenExpiration(): Date {
     const expiration = this.configService.get<string>(
       "JWT_REFRESH_EXPIRATION",
-      "7d"
+      "7d",
     );
     const ms = this.parseExpiration(expiration);
     return new Date(Date.now() + ms);
