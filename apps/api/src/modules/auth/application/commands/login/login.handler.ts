@@ -34,12 +34,12 @@ export class LoginHandler {
     @Inject(TOKEN_SERVICE)
     private readonly tokenService: TokenService,
     @Inject(REFRESH_TOKEN_REPOSITORY)
-    private readonly refreshTokenRepository: RefreshTokenRepository
+    private readonly refreshTokenRepository: RefreshTokenRepository,
   ) {}
 
   async execute(
     command: LoginCommand,
-    metadata?: { userAgent?: string; ipAddress?: string }
+    metadata?: { userAgent?: string; ipAddress?: string },
   ): Promise<LoginResult> {
     // Find user by email
     const user = await this.userRepository.findByEmail(command.email);
@@ -55,7 +55,7 @@ export class LoginHandler {
     // Verify password
     const isPasswordValid = await this.passwordHasher.compare(
       command.password,
-      user.passwordHash.value
+      user.passwordHash.value,
     );
     if (!isPasswordValid) {
       throw new InvalidCredentialsError();
@@ -77,7 +77,7 @@ export class LoginHandler {
       undefined,
       undefined,
       metadata?.userAgent,
-      metadata?.ipAddress
+      metadata?.ipAddress,
     );
     await this.refreshTokenRepository.save(refreshToken);
 

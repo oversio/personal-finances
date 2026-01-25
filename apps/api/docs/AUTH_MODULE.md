@@ -178,11 +178,11 @@ AuthModule ──imports──► WorkspacesModule
 
 **Cookies set:**
 
-| Cookie           | HttpOnly | Secure     | SameSite | MaxAge  | Purpose                    |
-| ---------------- | -------- | ---------- | -------- | ------- | -------------------------- |
-| `accessToken`    | Yes      | Prod only  | Lax      | 15 min  | JWT for API authentication |
-| `refreshToken`   | Yes      | Prod only  | Lax      | 7 days  | Token rotation             |
-| `tokenExpiresAt` | No       | Prod only  | Lax      | 15 min  | Frontend token refresh     |
+| Cookie           | HttpOnly | Secure    | SameSite | MaxAge | Purpose                    |
+| ---------------- | -------- | --------- | -------- | ------ | -------------------------- |
+| `accessToken`    | Yes      | Prod only | Lax      | 15 min | JWT for API authentication |
+| `refreshToken`   | Yes      | Prod only | Lax      | 7 days | Token rotation             |
+| `tokenExpiresAt` | No       | Prod only | Lax      | 15 min | Frontend token refresh     |
 
 **Redirect:** `{FRONTEND_URL}/auth/callback` (no tokens in URL)
 

@@ -25,6 +25,9 @@ export class UserModel {
   @Prop({ required: true, default: false })
   isEmailVerified!: boolean;
 
+  @Prop({ type: String })
+  picture?: string;
+
   createdAt!: Date;
   updatedAt!: Date;
 }

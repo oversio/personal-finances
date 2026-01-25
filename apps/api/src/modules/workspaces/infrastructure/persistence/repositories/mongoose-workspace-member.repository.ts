@@ -9,7 +9,7 @@ import { WorkspaceMemberDocument, WorkspaceMemberModel } from "../schemas";
 export class MongooseWorkspaceMemberRepository implements WorkspaceMemberRepository {
   constructor(
     @InjectModel(WorkspaceMemberModel.name)
-    private readonly memberModel: Model<WorkspaceMemberDocument>
+    private readonly memberModel: Model<WorkspaceMemberDocument>,
   ) {}
 
   async save(member: WorkspaceMember): Promise<WorkspaceMember> {
@@ -50,7 +50,7 @@ export class MongooseWorkspaceMemberRepository implements WorkspaceMemberReposit
 
   async findByWorkspaceAndUser(
     workspaceId: string,
-    userId: string
+    userId: string,
   ): Promise<WorkspaceMember | null> {
     const doc = await this.memberModel
       .findOne({
@@ -70,7 +70,7 @@ export class MongooseWorkspaceMemberRepository implements WorkspaceMemberReposit
           joinedAt: member.joinedAt,
           isActive: member.isActive,
         },
-        { new: true }
+        { new: true },
       )
       .exec();
 
@@ -94,7 +94,7 @@ export class MongooseWorkspaceMemberRepository implements WorkspaceMemberReposit
       doc.invitedBy?.toString(),
       doc.invitedAt,
       doc.joinedAt,
-      doc.isActive
+      doc.isActive,
     );
   }
 }

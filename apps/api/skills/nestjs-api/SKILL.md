@@ -133,7 +133,7 @@ export class CreateTransactionCommand {
     public readonly accountId: string,
     public readonly amount: number,
     public readonly description: string,
-    public readonly category: string
+    public readonly category: string,
   ) {}
 }
 
@@ -151,7 +151,7 @@ export class CreateTransactionHandler {
   constructor(
     @Inject(INJECTION_TOKENS.TRANSACTIONS_REPOSITORY)
     private readonly repository: ITransactionsRepository,
-    private readonly eventEmitter: EventEmitter2
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async execute(command: CreateTransactionCommand): Promise<Transaction> {
@@ -160,7 +160,7 @@ export class CreateTransactionHandler {
       command.accountId,
       command.amount,
       command.description,
-      command.category
+      command.category,
     );
 
     const saved = await this.repository.create(transaction);
@@ -170,8 +170,8 @@ export class CreateTransactionHandler {
       new TransactionCreatedEvent(
         saved.id!.value,
         saved.accountId.value,
-        saved.amount.value
-      )
+        saved.amount.value,
+      ),
     );
 
     return saved;
@@ -199,7 +199,7 @@ import { FindTransactionByIdQuery } from "./find-transaction-by-id.query";
 export class FindTransactionByIdHandler {
   constructor(
     @Inject(INJECTION_TOKENS.TRANSACTIONS_REPOSITORY)
-    private readonly repository: ITransactionsRepository
+    private readonly repository: ITransactionsRepository,
   ) {}
 
   async execute(query: FindTransactionByIdQuery) {
@@ -226,7 +226,7 @@ export class TransactionCreatedEvent {
   constructor(
     public readonly transactionId: string,
     public readonly accountId: string,
-    public readonly amount: number
+    public readonly amount: number,
   ) {
     this.occurredAt = new Date();
   }
@@ -249,7 +249,7 @@ export class OnTransactionCreatedHandler {
     // Check budget alerts
     // Send notification
     console.log(
-      `Transaction ${event.transactionId} created for $${event.amount}`
+      `Transaction ${event.transactionId} created for $${event.amount}`,
     );
   }
 }
@@ -287,7 +287,7 @@ export const createTransactionSchema = z.object({
 });
 
 export class CreateTransactionDto extends createZodDto(
-  createTransactionSchema
+  createTransactionSchema,
 ) {}
 
 export type CreateTransactionInput = z.infer<typeof createTransactionSchema>;
@@ -363,7 +363,7 @@ export class Transaction {
     public readonly amount: TransactionAmount,
     public readonly description: TransactionDescription,
     public readonly category: string,
-    public readonly createdAt: Date
+    public readonly createdAt: Date,
   ) {}
 
   static create(
@@ -372,7 +372,7 @@ export class Transaction {
     amount: number,
     description: string,
     category: string,
-    createdAt?: Date
+    createdAt?: Date,
   ): Transaction {
     return new Transaction(
       id ? new EntityId(id) : undefined,
@@ -380,7 +380,7 @@ export class Transaction {
       new TransactionAmount(amount),
       new TransactionDescription(description),
       category,
-      createdAt ?? new Date()
+      createdAt ?? new Date(),
     );
   }
 
@@ -431,7 +431,7 @@ import { MongooseTransaction, TransactionDocument } from "./transaction.model";
 export class MongoTransactionsRepository implements ITransactionsRepository {
   constructor(
     @InjectModel(MongooseTransaction.name)
-    private readonly model: Model<TransactionDocument>
+    private readonly model: Model<TransactionDocument>,
   ) {}
 
   async create(transaction: Transaction): Promise<Transaction> {
@@ -451,7 +451,7 @@ export class MongoTransactionsRepository implements ITransactionsRepository {
       doc.amount,
       doc.description,
       doc.category,
-      doc.createdAt
+      doc.createdAt,
     );
   }
 }
@@ -474,7 +474,7 @@ export class TransactionNotFoundError extends Error {
 export class InsufficientBalanceError extends Error {
   constructor(accountId: string, required: number, available: number) {
     super(
-      `Insufficient balance in account ${accountId}. Required: ${required}, Available: ${available}`
+      `Insufficient balance in account ${accountId}. Required: ${required}, Available: ${available}`,
     );
     this.name = "InsufficientBalanceError";
   }
@@ -574,7 +574,7 @@ import { FindTransactionByIdQuery } from "../../application/queries/find-transac
 export class TransactionsController {
   constructor(
     private readonly createHandler: CreateTransactionHandler,
-    private readonly findByIdHandler: FindTransactionByIdHandler
+    private readonly findByIdHandler: FindTransactionByIdHandler,
   ) {}
 
   @Post()
@@ -584,7 +584,7 @@ export class TransactionsController {
       dto.accountId,
       dto.amount,
       dto.description,
-      dto.category
+      dto.category,
     );
     const transaction = await this.createHandler.execute(command);
     return transaction.toPrimitives();

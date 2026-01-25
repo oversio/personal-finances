@@ -10,7 +10,7 @@ export class WorkspaceMember {
     public readonly invitedBy: EntityId | undefined,
     public readonly invitedAt: Date,
     public readonly joinedAt: Date | undefined,
-    public readonly isActive: boolean
+    public readonly isActive: boolean,
   ) {}
 
   static create(
@@ -21,7 +21,7 @@ export class WorkspaceMember {
     invitedBy?: string,
     invitedAt?: Date,
     joinedAt?: Date,
-    isActive: boolean = true
+    isActive: boolean = true,
   ): WorkspaceMember {
     return new WorkspaceMember(
       id ? new EntityId(id) : undefined,
@@ -31,7 +31,7 @@ export class WorkspaceMember {
       invitedBy ? new EntityId(invitedBy) : undefined,
       invitedAt ?? new Date(),
       joinedAt,
-      isActive
+      isActive,
     );
   }
 
@@ -45,7 +45,7 @@ export class WorkspaceMember {
       undefined,
       now,
       now, // Owner joins immediately
-      true
+      true,
     );
   }
 
