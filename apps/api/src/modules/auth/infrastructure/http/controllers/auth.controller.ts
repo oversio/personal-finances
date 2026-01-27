@@ -49,12 +49,25 @@ export class AuthController {
   @ApiResponse({ status: 201, description: "User registered successfully" })
   @ApiResponse({ status: 400, description: "Validation error" })
   @ApiResponse({ status: 409, description: "User already exists" })
-  async register(@Body() dto: RegisterDto, @Req() req: Request) {
+  async register(
+    @Body() dto: RegisterDto,
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const command = new RegisterCommand(dto.email, dto.password, dto.name);
-    return this.registerHandler.execute(command, {
+    const result = await this.registerHandler.execute(command, {
       userAgent: req.headers["user-agent"],
       ipAddress: req.ip,
     });
+
+    // Set cookies for persistence (consistent with OAuth flow)
+    this.setAuthCookies(
+      res,
+      result.tokens.accessToken,
+      result.tokens.refreshToken,
+    );
+
+    return result;
   }
 
   @Public()
@@ -63,12 +76,25 @@ export class AuthController {
   @ApiOperation({ summary: "Login with email and password" })
   @ApiResponse({ status: 200, description: "Login successful" })
   @ApiResponse({ status: 401, description: "Invalid credentials" })
-  async login(@Body() dto: LoginDto, @Req() req: Request) {
+  async login(
+    @Body() dto: LoginDto,
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const command = new LoginCommand(dto.email, dto.password);
-    return this.loginHandler.execute(command, {
+    const result = await this.loginHandler.execute(command, {
       userAgent: req.headers["user-agent"],
       ipAddress: req.ip,
     });
+
+    // Set cookies for persistence (consistent with OAuth flow)
+    this.setAuthCookies(
+      res,
+      result.tokens.accessToken,
+      result.tokens.refreshToken,
+    );
+
+    return result;
   }
 
   @Public()
@@ -120,39 +146,16 @@ export class AuthController {
       ipAddress: req.ip,
     });
 
-    // Cookie configuration
-    const isProduction = this.configService.get("NODE_ENV") === "production";
-    const cookieOptions = {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: "lax" as const,
-    };
-
-    // Set HTTP-only cookies for tokens
-    res.cookie("accessToken", result.tokens.accessToken, {
-      ...cookieOptions,
-      maxAge: result.tokens.expiresIn * 1000,
-    });
-
-    res.cookie("refreshToken", result.tokens.refreshToken, {
-      ...cookieOptions,
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
-
-    // Set readable cookie for token expiration (frontend needs this to know when to refresh)
-    res.cookie(
-      "tokenExpiresAt",
-      String(Date.now() + result.tokens.expiresIn * 1000),
-      {
-        secure: isProduction,
-        sameSite: "lax" as const,
-        maxAge: result.tokens.expiresIn * 1000,
-      },
+    // Set cookies for persistence
+    this.setAuthCookies(
+      res,
+      result.tokens.accessToken,
+      result.tokens.refreshToken,
     );
 
-    // Always redirect to frontend callback (frontend handles internal redirect via sessionStorage)
+    // Redirect to frontend callback (frontend handles internal redirect via sessionStorage)
     const frontendUrl = this.configService.get<string>("FRONTEND_URL");
-    res.redirect(`${frontendUrl}/auth/callback`);
+    res.redirect(`${frontendUrl}/oauth/callback`);
   }
 
   @Get("me")
@@ -161,5 +164,33 @@ export class AuthController {
   @ApiResponse({ status: 401, description: "Unauthorized" })
   getProfile(@CurrentUser() user: AuthenticatedUser) {
     return user;
+  }
+
+  /**
+   * Set auth cookies for token persistence
+   * Cookies are readable by frontend so it can send tokens via Authorization header
+   */
+  private setAuthCookies(
+    res: Response,
+    accessToken: string,
+    refreshToken: string,
+  ): void {
+    const isProduction = this.configService.get("NODE_ENV") === "production";
+    const cookieOptions = {
+      httpOnly: false, // Frontend needs to read tokens to send via Authorization header
+      secure: isProduction,
+      sameSite: "lax" as const,
+      path: "/",
+    };
+
+    res.cookie("accessToken", accessToken, {
+      ...cookieOptions,
+      maxAge: 15 * 60 * 1000, // 15 minutes
+    });
+
+    res.cookie("refreshToken", refreshToken, {
+      ...cookieOptions,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
   }
 }
