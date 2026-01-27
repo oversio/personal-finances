@@ -139,6 +139,11 @@ src/
 - Repository pattern with ports (interfaces) and adapters (implementations)
 - Global exception filter maps domain errors to HTTP responses
 
+**IMPORTANT:** If you need to understand some app structure and/or patterns, trust the documentation first, only explore code when:
+
+- docs are missing or unclear.
+- docs are outdated (confirm with the user in this case, update the docs).
+
 **Module Documentation:**
 
 - [Authentication Module](apps/api/docs/AUTH_MODULE.md) - JWT auth, OAuth, token strategy, API contracts
@@ -151,3 +156,18 @@ src/
 - LF line endings
 - Arrow function parens avoided when possible (`x => x`)
 - Trailing commas in ES5 contexts
+
+## Claude Interaction Guidelines
+
+**Challenge assumptions, don't just comply:**
+
+- When I make a request based on a misunderstanding or incomplete knowledge, **explain what's already in place** before making changes
+- Present trade-offs objectively and recommend the best approach
+- If I suggest something suboptimal, **question me** and explain why another approach might be better
+- Only proceed with my explicit choice if I insist after understanding the alternatives
+- Goal: Help me learn and make informed decisions, not just execute commands
+
+**Example behavior:**
+
+- ❌ User: "We need an env file for API URL" → Immediately creates env file
+- ✅ User: "We need an env file for API URL" → "We're already using Next.js rewrites to proxy `/api/*` to the backend. Here are the trade-offs between rewrites vs env vars... Which approach do you prefer?"
