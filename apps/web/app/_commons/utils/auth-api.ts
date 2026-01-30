@@ -3,7 +3,7 @@ import { apiClient } from "./api-client";
 import type { AuthResponse, LoginCredentials, RegisterCredentials } from "@/_commons/types/auth";
 import type { User } from "@/_commons/types/user";
 
-const API_BASE_URL = "/api";
+const API_BASE_URL = "/api/v1";
 
 export async function loginApi(credentials: LoginCredentials): Promise<AuthResponse> {
   // Use raw axios for login (no auth header needed)
@@ -27,5 +27,5 @@ export async function getMeApi(): Promise<User> {
 }
 
 export function getGoogleAuthUrl(): string {
-  return "/api/auth/google";
+  return "/api/v1/auth/google";
 }

@@ -148,6 +148,7 @@ src/
 
 - [Authentication Module](apps/api/docs/AUTH_MODULE.md) - JWT auth, OAuth, token strategy, API contracts
 - [Database Model](apps/api/docs/DATABASE_MODEL.md) - MongoDB collections and schemas
+- [API Standards](apps/api/docs/API_STANDARDS.md) - Error formats, HTTP status codes, pagination, versioning
 
 ## Code Style
 

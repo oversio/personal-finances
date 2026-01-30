@@ -8,8 +8,8 @@ const nextConfig = {
     const apiUrl = process.env.API_URL || "http://localhost:9000";
     return [
       {
-        source: "/api/:path*",
-        destination: `${apiUrl}/:path*`,
+        source: "/api/v1/:path*",
+        destination: `${apiUrl}/api/v1/:path*`,
       },
     ];
   },
