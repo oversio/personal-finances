@@ -5,7 +5,7 @@ import { listOf } from "./list-of";
 export const ApiPaginationResponse = ApiGetManyResponse.extend({
   pagination: z.object({
     page: z.number().int().nonnegative(),
-    size: z.number().int().nonnegative(),
+    limit: z.number().int().nonnegative(),
     total: z.number().int().nonnegative(),
   }),
 });
