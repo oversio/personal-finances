@@ -33,16 +33,12 @@ export class MongooseRefreshTokenRepository implements RefreshTokenRepository {
   }
 
   async findByUserId(userId: string): Promise<RefreshToken[]> {
-    const docs = await this.tokenModel
-      .find({ userId: new Types.ObjectId(userId) })
-      .exec();
+    const docs = await this.tokenModel.find({ userId: new Types.ObjectId(userId) }).exec();
     return docs.map(doc => this.toDomain(doc));
   }
 
   async revokeToken(token: string): Promise<void> {
-    await this.tokenModel
-      .updateOne({ token }, { revokedAt: new Date() })
-      .exec();
+    await this.tokenModel.updateOne({ token }, { revokedAt: new Date() }).exec();
   }
 
   async revokeAllUserTokens(userId: string): Promise<void> {
@@ -55,9 +51,7 @@ export class MongooseRefreshTokenRepository implements RefreshTokenRepository {
   }
 
   async deleteExpired(): Promise<number> {
-    const result = await this.tokenModel
-      .deleteMany({ expiresAt: { $lt: new Date() } })
-      .exec();
+    const result = await this.tokenModel.deleteMany({ expiresAt: { $lt: new Date() } }).exec();
     return result.deletedCount;
   }
 

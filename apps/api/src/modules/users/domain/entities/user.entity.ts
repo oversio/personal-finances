@@ -1,10 +1,5 @@
 import { EntityId } from "@/modules/shared/domain/value-objects";
-import {
-  AuthProvider,
-  Email,
-  HashedPassword,
-  UserName,
-} from "../value-objects";
+import { AuthProvider, Email, HashedPassword, UserName } from "../value-objects";
 import type { AuthProviderType } from "../value-objects";
 
 export class User {
@@ -48,22 +43,8 @@ export class User {
     );
   }
 
-  static createLocal(
-    email: string,
-    name: string,
-    passwordHash: string,
-    picture?: string,
-  ): User {
-    return User.create(
-      undefined,
-      email,
-      name,
-      passwordHash,
-      "local",
-      undefined,
-      false,
-      picture,
-    );
+  static createLocal(email: string, name: string, passwordHash: string, picture?: string): User {
+    return User.create(undefined, email, name, passwordHash, "local", undefined, false, picture);
   }
 
   static createFromOAuth(

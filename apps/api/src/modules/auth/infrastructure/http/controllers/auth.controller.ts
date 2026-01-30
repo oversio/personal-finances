@@ -61,11 +61,7 @@ export class AuthController {
     });
 
     // Set cookies for persistence (consistent with OAuth flow)
-    this.setAuthCookies(
-      res,
-      result.tokens.accessToken,
-      result.tokens.refreshToken,
-    );
+    this.setAuthCookies(res, result.tokens.accessToken, result.tokens.refreshToken);
 
     return result;
   }
@@ -88,11 +84,7 @@ export class AuthController {
     });
 
     // Set cookies for persistence (consistent with OAuth flow)
-    this.setAuthCookies(
-      res,
-      result.tokens.accessToken,
-      result.tokens.refreshToken,
-    );
+    this.setAuthCookies(res, result.tokens.accessToken, result.tokens.refreshToken);
 
     return result;
   }
@@ -134,12 +126,7 @@ export class AuthController {
   @ApiOperation({ summary: "Google OAuth callback" })
   async googleCallback(@Req() req: Request, @Res() res: Response) {
     const profile = req.user as GoogleProfile;
-    const command = new GoogleAuthCommand(
-      profile.id,
-      profile.email,
-      profile.name,
-      profile.picture,
-    );
+    const command = new GoogleAuthCommand(profile.id, profile.email, profile.name, profile.picture);
 
     const result = await this.googleAuthHandler.execute(command, {
       userAgent: req.headers["user-agent"],
@@ -147,11 +134,7 @@ export class AuthController {
     });
 
     // Set cookies for persistence
-    this.setAuthCookies(
-      res,
-      result.tokens.accessToken,
-      result.tokens.refreshToken,
-    );
+    this.setAuthCookies(res, result.tokens.accessToken, result.tokens.refreshToken);
 
     // Redirect to frontend callback (frontend handles internal redirect via sessionStorage)
     const frontendUrl = this.configService.get<string>("FRONTEND_URL");
@@ -170,11 +153,7 @@ export class AuthController {
    * Set auth cookies for token persistence
    * Cookies are readable by frontend so it can send tokens via Authorization header
    */
-  private setAuthCookies(
-    res: Response,
-    accessToken: string,
-    refreshToken: string,
-  ): void {
+  private setAuthCookies(res: Response, accessToken: string, refreshToken: string): void {
     const isProduction = this.configService.get("NODE_ENV") === "production";
     const cookieOptions = {
       httpOnly: false, // Frontend needs to read tokens to send via Authorization header

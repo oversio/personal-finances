@@ -17,9 +17,7 @@ export class MongooseWorkspaceMemberRepository implements WorkspaceMemberReposit
       workspaceId: new Types.ObjectId(member.workspaceId.value),
       userId: new Types.ObjectId(member.userId.value),
       role: member.role.value,
-      invitedBy: member.invitedBy
-        ? new Types.ObjectId(member.invitedBy.value)
-        : undefined,
+      invitedBy: member.invitedBy ? new Types.ObjectId(member.invitedBy.value) : undefined,
       invitedAt: member.invitedAt,
       joinedAt: member.joinedAt,
       isActive: member.isActive,
@@ -42,9 +40,7 @@ export class MongooseWorkspaceMemberRepository implements WorkspaceMemberReposit
   }
 
   async findByUserId(userId: string): Promise<WorkspaceMember[]> {
-    const docs = await this.memberModel
-      .find({ userId: new Types.ObjectId(userId) })
-      .exec();
+    const docs = await this.memberModel.find({ userId: new Types.ObjectId(userId) }).exec();
     return docs.map(doc => this.toDomain(doc));
   }
 

@@ -1,11 +1,7 @@
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 import { USER_REPOSITORY } from "./application";
-import {
-  MongooseUserRepository,
-  UserModel,
-  UserSchema,
-} from "./infrastructure";
+import { MongooseUserRepository, UserModel, UserSchema } from "./infrastructure";
 
 const repositories = [
   {
@@ -15,9 +11,7 @@ const repositories = [
 ];
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([{ name: UserModel.name, schema: UserSchema }]),
-  ],
+  imports: [MongooseModule.forFeature([{ name: UserModel.name, schema: UserSchema }])],
   providers: [...repositories],
   exports: [...repositories],
 })

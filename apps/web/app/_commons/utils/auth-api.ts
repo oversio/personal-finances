@@ -1,33 +1,19 @@
 import axios from "axios";
 import { apiClient } from "./api-client";
-import type {
-  AuthResponse,
-  LoginCredentials,
-  RegisterCredentials,
-  User,
-} from "@/_commons/types/auth";
+import type { AuthResponse, LoginCredentials, RegisterCredentials } from "@/_commons/types/auth";
+import type { User } from "@/_commons/types/user";
 
 const API_BASE_URL = "/api";
 
-export async function loginApi(
-  credentials: LoginCredentials,
-): Promise<AuthResponse> {
+export async function loginApi(credentials: LoginCredentials): Promise<AuthResponse> {
   // Use raw axios for login (no auth header needed)
-  const response = await axios.post<AuthResponse>(
-    `${API_BASE_URL}/auth/login`,
-    credentials,
-  );
+  const response = await axios.post<AuthResponse>(`${API_BASE_URL}/auth/login`, credentials);
   return response.data;
 }
 
-export async function registerApi(
-  credentials: RegisterCredentials,
-): Promise<AuthResponse> {
+export async function registerApi(credentials: RegisterCredentials): Promise<AuthResponse> {
   // Use raw axios for register (no auth header needed)
-  const response = await axios.post<AuthResponse>(
-    `${API_BASE_URL}/auth/register`,
-    credentials,
-  );
+  const response = await axios.post<AuthResponse>(`${API_BASE_URL}/auth/register`, credentials);
   return response.data;
 }
 

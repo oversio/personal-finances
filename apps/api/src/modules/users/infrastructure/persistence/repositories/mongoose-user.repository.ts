@@ -34,16 +34,11 @@ export class MongooseUserRepository implements UserRepository {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    const doc = await this.userModel
-      .findOne({ email: email.toLowerCase() })
-      .exec();
+    const doc = await this.userModel.findOne({ email: email.toLowerCase() }).exec();
     return doc ? this.toDomain(doc) : null;
   }
 
-  async findByProviderId(
-    provider: string,
-    providerId: string,
-  ): Promise<User | null> {
+  async findByProviderId(provider: string, providerId: string): Promise<User | null> {
     const doc = await this.userModel.findOne({ provider, providerId }).exec();
     return doc ? this.toDomain(doc) : null;
   }

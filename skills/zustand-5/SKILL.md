@@ -219,7 +219,5 @@ const { count, increment } = useCounterStore.getState();
 increment();
 
 // Subscribe to changes
-const unsubscribe = useCounterStore.subscribe(state =>
-  console.log("Count changed:", state.count),
-);
+const unsubscribe = useCounterStore.subscribe(state => console.log("Count changed:", state.count));
 ```

@@ -2,18 +2,11 @@ import { Inject, Injectable } from "@nestjs/common";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { User, USER_REPOSITORY } from "@/modules/users";
 import type { UserRepository } from "@/modules/users";
-import {
-  CreateWorkspaceCommand,
-  CreateWorkspaceHandler,
-} from "@/modules/workspaces/application";
+import { CreateWorkspaceCommand, CreateWorkspaceHandler } from "@/modules/workspaces/application";
 import { RefreshToken } from "../../../domain/entities";
 import { OAuthAccountNotLinkedError } from "../../../domain/exceptions";
 import { REFRESH_TOKEN_REPOSITORY, TOKEN_SERVICE } from "../../ports";
-import type {
-  RefreshTokenRepository,
-  TokenPair,
-  TokenService,
-} from "../../ports";
+import type { RefreshTokenRepository, TokenPair, TokenService } from "../../ports";
 import { GoogleAuthCommand } from "./google-auth.command";
 
 export interface GoogleAuthResult {
@@ -43,10 +36,7 @@ export class GoogleAuthHandler {
     let isNewUser = false;
 
     // First, try to find by Google provider ID
-    user = await this.userRepository.findByProviderId(
-      "google",
-      command.googleId,
-    );
+    user = await this.userRepository.findByProviderId("google", command.googleId);
 
     if (!user) {
       // Check if user exists with same email
@@ -72,10 +62,7 @@ export class GoogleAuthHandler {
 
         // Auto-create workspace for new users
         await this.createWorkspaceHandler.execute(
-          new CreateWorkspaceCommand(
-            `${command.name}'s Workspace`,
-            user.id!.value,
-          ),
+          new CreateWorkspaceCommand(`${command.name}'s Workspace`, user.id!.value),
         );
 
         // Emit domain event

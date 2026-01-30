@@ -167,11 +167,7 @@ export class CreateTransactionHandler {
 
     this.eventEmitter.emit(
       "transaction.created",
-      new TransactionCreatedEvent(
-        saved.id!.value,
-        saved.accountId.value,
-        saved.amount.value,
-      ),
+      new TransactionCreatedEvent(saved.id!.value, saved.accountId.value, saved.amount.value),
     );
 
     return saved;
@@ -248,9 +244,7 @@ export class OnTransactionCreatedHandler {
     // Update account balance
     // Check budget alerts
     // Send notification
-    console.log(
-      `Transaction ${event.transactionId} created for $${event.amount}`,
-    );
+    console.log(`Transaction ${event.transactionId} created for $${event.amount}`);
   }
 }
 ```
@@ -286,9 +280,7 @@ export const createTransactionSchema = z.object({
   category: z.string().min(1).max(50),
 });
 
-export class CreateTransactionDto extends createZodDto(
-  createTransactionSchema,
-) {}
+export class CreateTransactionDto extends createZodDto(createTransactionSchema) {}
 
 export type CreateTransactionInput = z.infer<typeof createTransactionSchema>;
 ```
@@ -485,12 +477,7 @@ export class InsufficientBalanceError extends Error {
 
 ```typescript
 // shared/infrastructure/exceptions/domain-exception.filter.ts
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  HttpStatus,
-} from "@nestjs/common";
+import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus } from "@nestjs/common";
 import { Response } from "express";
 import { ZodError } from "zod";
 
@@ -523,9 +510,7 @@ export class DomainExceptionFilter implements ExceptionFilter {
 
     // Domain exceptions
     if (exception instanceof Error) {
-      const status =
-        EXCEPTION_STATUS_MAP[exception.name] ??
-        HttpStatus.INTERNAL_SERVER_ERROR;
+      const status = EXCEPTION_STATUS_MAP[exception.name] ?? HttpStatus.INTERNAL_SERVER_ERROR;
 
       return response.status(status).json({
         statusCode: status,
@@ -630,9 +615,7 @@ import {
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: MongooseTransaction.name, schema: TransactionSchema },
-    ]),
+    MongooseModule.forFeature([{ name: MongooseTransaction.name, schema: TransactionSchema }]),
   ],
   controllers: [TransactionsController],
   providers: [

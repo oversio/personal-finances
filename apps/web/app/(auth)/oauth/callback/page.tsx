@@ -31,8 +31,7 @@ export default function AuthCallbackPage() {
         });
 
         // Redirect to intended destination
-        const redirectTo =
-          sessionStorage.getItem("redirectAfterAuth") || "/dashboard";
+        const redirectTo = sessionStorage.getItem("redirectAfterAuth") || "/dashboard";
         sessionStorage.removeItem("redirectAfterAuth");
         router.push(redirectTo);
       } catch {

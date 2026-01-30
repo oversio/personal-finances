@@ -1,10 +1,4 @@
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  HttpStatus,
-  Logger,
-} from "@nestjs/common";
+import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus, Logger } from "@nestjs/common";
 import { Response } from "express";
 import { ZodError } from "zod";
 import { DomainException } from "../../domain/exceptions";
@@ -73,8 +67,7 @@ export class DomainExceptionFilter implements ExceptionFilter {
 
     // Domain exceptions
     if (exception instanceof DomainException) {
-      const status =
-        EXCEPTION_STATUS_MAP[exception.name] ?? HttpStatus.UNPROCESSABLE_ENTITY;
+      const status = EXCEPTION_STATUS_MAP[exception.name] ?? HttpStatus.UNPROCESSABLE_ENTITY;
 
       return {
         statusCode: status,

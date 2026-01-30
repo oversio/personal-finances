@@ -29,8 +29,7 @@ export class WorkspaceMemberModel {
   isActive!: boolean;
 }
 
-export const WorkspaceMemberSchema =
-  SchemaFactory.createForClass(WorkspaceMemberModel);
+export const WorkspaceMemberSchema = SchemaFactory.createForClass(WorkspaceMemberModel);
 
 // Indexes
 WorkspaceMemberSchema.index({ workspaceId: 1, userId: 1 }, { unique: true });

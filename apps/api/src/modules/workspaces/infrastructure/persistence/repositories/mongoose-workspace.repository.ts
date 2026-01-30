@@ -30,9 +30,7 @@ export class MongooseWorkspaceRepository implements WorkspaceRepository {
   }
 
   async findByOwnerId(ownerId: string): Promise<Workspace[]> {
-    const docs = await this.workspaceModel
-      .find({ ownerId: new Types.ObjectId(ownerId) })
-      .exec();
+    const docs = await this.workspaceModel.find({ ownerId: new Types.ObjectId(ownerId) }).exec();
     return docs.map(doc => this.toDomain(doc));
   }
 
