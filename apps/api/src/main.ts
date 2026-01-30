@@ -7,6 +7,9 @@ import { DomainExceptionFilter } from "./modules/shared/infrastructure/exception
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // API versioning
+  app.setGlobalPrefix("api/v1");
+
   // Global pipes
   app.useGlobalPipes(new ZodValidationPipe());
 

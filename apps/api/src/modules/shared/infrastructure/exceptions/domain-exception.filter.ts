@@ -1,32 +1,71 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus, Logger } from "@nestjs/common";
-import { Response } from "express";
+import { Request, Response } from "express";
+import type { ZodIssue } from "zod";
 import { ZodError } from "zod";
-import { DomainException } from "../../domain/exceptions";
+import {
+  DomainException,
+  ErrorCodes,
+  type ApiError,
+  type StandardErrorResponse,
+  type ValidationErrorResponse,
+} from "../../domain/exceptions";
 
+/**
+ * Maps exception class names to HTTP status codes.
+ */
 const EXCEPTION_STATUS_MAP: Record<string, HttpStatus> = {
-  // Not Found errors
+  // Not Found errors (404)
   EntityNotFoundError: HttpStatus.NOT_FOUND,
+  UserNotFoundError: HttpStatus.NOT_FOUND,
+  WorkspaceNotFoundError: HttpStatus.NOT_FOUND,
+  WorkspaceMemberNotFoundError: HttpStatus.NOT_FOUND,
   TransactionNotFoundError: HttpStatus.NOT_FOUND,
   AccountNotFoundError: HttpStatus.NOT_FOUND,
   CategoryNotFoundError: HttpStatus.NOT_FOUND,
   BudgetNotFoundError: HttpStatus.NOT_FOUND,
 
-  // Conflict errors
-  EntityAlreadyExistsError: HttpStatus.CONFLICT,
-
-  // Bad Request errors
-  InvalidEntityIdError: HttpStatus.BAD_REQUEST,
-
-  // Business logic errors
+  // Unprocessable Entity errors (422) - Business rules, validation
+  EntityAlreadyExistsError: HttpStatus.UNPROCESSABLE_ENTITY,
+  UserAlreadyExistsError: HttpStatus.UNPROCESSABLE_ENTITY,
+  UserAlreadyMemberError: HttpStatus.UNPROCESSABLE_ENTITY,
+  InvalidCredentialsError: HttpStatus.UNPROCESSABLE_ENTITY,
+  InvalidRefreshTokenError: HttpStatus.UNPROCESSABLE_ENTITY,
+  OAuthAccountNotLinkedError: HttpStatus.UNPROCESSABLE_ENTITY,
+  PasswordRequiredError: HttpStatus.UNPROCESSABLE_ENTITY,
   InsufficientBalanceError: HttpStatus.UNPROCESSABLE_ENTITY,
   BudgetExceededError: HttpStatus.UNPROCESSABLE_ENTITY,
+
+  // Bad Request errors (400)
+  InvalidEntityIdError: HttpStatus.BAD_REQUEST,
 };
 
-interface ErrorResponse {
-  statusCode: number;
-  error: string;
-  message: string | { field: string; message: string }[];
-  timestamp: string;
+/**
+ * Maps Zod issue codes to our validation error codes.
+ */
+function mapZodIssueToErrorCode(code: ZodIssue["code"]): string {
+  const mapping: Record<string, string> = {
+    invalid_type: ErrorCodes.validation.invalidType,
+    invalid_string: ErrorCodes.validation.invalidFormat,
+    too_small: ErrorCodes.validation.tooSmall,
+    too_big: ErrorCodes.validation.tooBig,
+  };
+  return mapping[code] ?? ErrorCodes.validation.invalidFormat;
+}
+
+/**
+ * Gets a human-readable error name from HTTP status code.
+ */
+function getErrorName(status: HttpStatus): string {
+  const names: Record<number, string> = {
+    [HttpStatus.BAD_REQUEST]: "Bad Request",
+    [HttpStatus.UNAUTHORIZED]: "Unauthorized",
+    [HttpStatus.FORBIDDEN]: "Forbidden",
+    [HttpStatus.NOT_FOUND]: "Not Found",
+    [HttpStatus.CONFLICT]: "Conflict",
+    [HttpStatus.UNPROCESSABLE_ENTITY]: "Unprocessable Entity",
+    [HttpStatus.INTERNAL_SERVER_ERROR]: "Internal Server Error",
+  };
+  return names[status] ?? "Error";
 }
 
 @Catch()
@@ -36,8 +75,10 @@ export class DomainExceptionFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
+    const request = ctx.getRequest<Request>();
+    const path = request.url;
 
-    const errorResponse = this.buildErrorResponse(exception);
+    const errorResponse = this.buildErrorResponse(exception, path);
 
     if (errorResponse.statusCode >= 500) {
       this.logger.error(
@@ -49,19 +90,26 @@ export class DomainExceptionFilter implements ExceptionFilter {
     return response.status(errorResponse.statusCode).json(errorResponse);
   }
 
-  private buildErrorResponse(exception: unknown): ErrorResponse {
+  private buildErrorResponse(
+    exception: unknown,
+    path: string,
+  ): ValidationErrorResponse | StandardErrorResponse {
     const timestamp = new Date().toISOString();
 
-    // Zod validation errors
+    // Zod validation errors -> 422 with errors array
     if (exception instanceof ZodError) {
+      const errors: ApiError[] = exception.issues.map(issue => ({
+        errorCode: mapZodIssueToErrorCode(issue.code),
+        errorDescription: issue.message,
+        fieldName: issue.path.length > 0 ? issue.path.join(".") : null,
+        handler: "user" as const,
+      }));
+
       return {
-        statusCode: HttpStatus.BAD_REQUEST,
-        error: "Validation Error",
-        message: exception.issues.map(issue => ({
-          field: issue.path.join("."),
-          message: issue.message,
-        })),
+        statusCode: 422,
         timestamp,
+        path,
+        errors,
       };
     }
 
@@ -69,11 +117,30 @@ export class DomainExceptionFilter implements ExceptionFilter {
     if (exception instanceof DomainException) {
       const status = EXCEPTION_STATUS_MAP[exception.name] ?? HttpStatus.UNPROCESSABLE_ENTITY;
 
+      // 422 errors use Format A (errors array)
+      if (status === HttpStatus.UNPROCESSABLE_ENTITY) {
+        return {
+          statusCode: 422,
+          timestamp,
+          path,
+          errors: [
+            {
+              errorCode: exception.errorCode,
+              errorDescription: exception.message,
+              fieldName: exception.fieldName,
+              handler: exception.handler,
+            },
+          ],
+        };
+      }
+
+      // Other status codes use Format B (simple message)
       return {
         statusCode: status,
-        error: exception.name,
-        message: exception.message,
         timestamp,
+        path,
+        error: getErrorName(status),
+        message: exception.message,
       };
     }
 
@@ -84,19 +151,21 @@ export class DomainExceptionFilter implements ExceptionFilter {
       if (status) {
         return {
           statusCode: status,
-          error: exception.name,
-          message: exception.message,
           timestamp,
+          path,
+          error: getErrorName(status),
+          message: exception.message,
         };
       }
     }
 
-    // Unknown errors
+    // Unknown errors -> 500
     return {
       statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      timestamp,
+      path,
       error: "Internal Server Error",
       message: "An unexpected error occurred",
-      timestamp,
     };
   }
 }
