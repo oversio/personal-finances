@@ -33,7 +33,7 @@ pnpm format
 pnpm --filter=@repo/ui generate:component
 ```
 
-## Architecture
+## Architecture Overview
 
 This is a **Turborepo monorepo** with pnpm workspaces.
 
@@ -49,27 +49,25 @@ This is a **Turborepo monorepo** with pnpm workspaces.
 - `packages/eslint-config` (`@repo/eslint-config`) - ESLint configs: `base`, `next-js`, `react-internal`
 - `packages/typescript-config` (`@repo/typescript-config`) - Shared tsconfig files
 
-### Next.js App Router Structure
+## Tech Stack & Patterns (Shared)
 
-```
-app/
-├── layout.tsx, page.tsx, loading.tsx, error.tsx, not-found.tsx
-├── (auth)/              # Route group for auth pages
-├── (features)/          # Route group for feature modules
-│   └── [featureName]/
-│       ├── _components/ # Feature-specific components
-│       ├── _hooks/      # Feature-specific hooks
-│       └── _stores/     # Feature-specific Zustand stores
-├── api/                 # Route handlers
-├── _actions/            # Server actions
-└── _commons/            # Shared code
-    ├── components/      # Shared components (React Aria + Tailwind)
-    ├── hooks/
-    ├── utils/
-    └── stores/          # Global Zustand stores
-```
+### TypeScript (skills/typescript/)
 
-### NestJS API Structure (Hexagonal + CQRS)
+- Use const objects + extracted types instead of union types
+- Flat interfaces (no inline nested objects)
+- Never use `any`, prefer `unknown` + type guards
+- Use `import type` for type-only imports
+
+### Zod 4 (skills/zod-4/)
+
+- Top-level validators: `z.email()`, `z.uuid()`, `z.url()`
+- Use `{ error: "message" }` instead of `{ message: "message" }`
+
+---
+
+## API Application (`apps/api`)
+
+### Structure
 
 ```
 src/
@@ -98,39 +96,7 @@ src/
             └── persistence/mongoose/
 ```
 
-## Tech Stack & Patterns (see skills/ for detailed guidance)
-
-### TypeScript (skills/typescript/)
-
-- Use const objects + extracted types instead of union types
-- Flat interfaces (no inline nested objects)
-- Never use `any`, prefer `unknown` + type guards
-- Use `import type` for type-only imports
-
-### React 19 (skills/react-19/)
-
-- No manual memoization (React Compiler handles it)
-- Named imports: `import { useState } from "react"` (never `import React`)
-- Server Components by default, `"use client"` only when needed
-- `ref` is a prop (no forwardRef needed)
-
-### Tailwind CSS 4 (skills/tailwind-4/)
-
-- Never use `var()` in className or hex colors
-- Use `cn()` only for conditional classes, not static
-- Use `style` prop for truly dynamic values
-
-### Zustand 5 (skills/zustand-5/)
-
-- Use selectors to prevent re-renders: `useStore((state) => state.field)`
-- Use `useShallow` for multiple fields
-
-### Zod 4 (skills/zod-4/)
-
-- Top-level validators: `z.email()`, `z.uuid()`, `z.url()`
-- Use `{ error: "message" }` instead of `{ message: "message" }`
-
-### NestJS API (apps/api/skills/nestjs-api/)
+### Patterns (apps/api/skills/nestjs-api/)
 
 - Hexagonal Architecture: domain, application, infrastructure layers
 - CQRS: explicit `commands/` and `queries/` folders
@@ -139,16 +105,69 @@ src/
 - Repository pattern with ports (interfaces) and adapters (implementations)
 - Global exception filter maps domain errors to HTTP responses
 
-**IMPORTANT:** If you need to understand some app structure and/or patterns, trust the documentation first, only explore code when:
-
-- docs are missing or unclear.
-- docs are outdated (confirm with the user in this case, update the docs).
-
-**Module Documentation:**
+### Documentation
 
 - [Authentication Module](apps/api/docs/AUTH_MODULE.md) - JWT auth, OAuth, token strategy, API contracts
 - [Database Model](apps/api/docs/DATABASE_MODEL.md) - MongoDB collections and schemas
 - [API Standards](apps/api/docs/API_STANDARDS.md) - Error formats, HTTP status codes, pagination, versioning
+
+---
+
+## Web Application (`apps/web`)
+
+### Structure
+
+```
+app/
+├── layout.tsx, page.tsx, loading.tsx, error.tsx, not-found.tsx
+├── (auth)/              # Route group for auth pages
+├── (features)/          # Route group for feature modules
+│   └── [featureName]/
+│       ├── _api/        # Feature-specific API (schemas, fetchers, hooks)
+│       ├── _components/ # Feature-specific components
+│       ├── _hooks/      # Feature-specific hooks
+│       └── _stores/     # Feature-specific Zustand stores
+├── _actions/            # Server actions
+└── _commons/            # Shared code
+    ├── api/             # Fetcher, React Query, error handling
+    ├── components/      # Shared components (React Aria + Tailwind)
+    ├── hooks/
+    ├── utils/
+    └── stores/          # Global Zustand stores
+```
+
+### Patterns
+
+#### React 19 (skills/react-19/)
+
+- No manual memoization (React Compiler handles it)
+- Named imports: `import { useState } from "react"` (never `import React`)
+- Server Components by default, `"use client"` only when needed
+- `ref` is a prop (no forwardRef needed)
+
+#### Tailwind CSS 4 (skills/tailwind-4/)
+
+- Never use `var()` in className or hex colors
+- Use `cn()` only for conditional classes, not static
+- Use `style` prop for truly dynamic values
+
+#### Zustand 5 (skills/zustand-5/)
+
+- Use selectors to prevent re-renders: `useStore((state) => state.field)`
+- Use `useShallow` for multiple fields
+
+#### Data Fetching (TanStack Query + Zod)
+
+- Feature APIs co-located: `_api/feature.schemas.ts`, `_api/feature.api.ts`, `_api/feature.hooks.ts`
+- Server components: call API functions directly (`getAccounts()`)
+- Client components: use hooks (`useGetAccounts()`)
+- Form validation errors: `useServerFormValidationErrors(form, mutation.error)`
+
+### Documentation
+
+- [Data Fetching](apps/web/docs/DATA_FETCHING.md) - Fetcher, React Query hooks, error handling pattern
+
+---
 
 ## Code Style
 
@@ -159,6 +178,11 @@ src/
 - Trailing commas in ES5 contexts
 
 ## Claude Interaction Guidelines
+
+**IMPORTANT:** If you need to understand some app structure and/or patterns, trust the documentation first, only explore code when:
+
+- docs are missing or unclear.
+- docs are outdated (confirm with the user in this case, update the docs).
 
 **Challenge assumptions, don't just comply:**
 
