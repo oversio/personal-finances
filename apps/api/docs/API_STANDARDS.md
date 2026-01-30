@@ -31,7 +31,7 @@ All API endpoints are versioned using a URL prefix.
 The global prefix is set in `main.ts`:
 
 ```typescript
-app.setGlobalPrefix('api/v1');
+app.setGlobalPrefix("api/v1");
 ```
 
 ---
@@ -69,12 +69,12 @@ Use the `errors` array for validation and business rule errors that can map to f
 
 #### Error Object Fields
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `errorCode` | `string` | Dot notation code for i18n lookup (e.g., `auth.invalid_credentials`) |
-| `errorDescription` | `string` | Human-readable message (fallback if no translation) |
-| `fieldName` | `string \| null` | Form field name, or `null` for general/security-sensitive errors |
-| `handler` | `"user" \| "system"` | `user` = display to user, `system` = log/show generic message |
+| Field              | Type                 | Description                                                          |
+| ------------------ | -------------------- | -------------------------------------------------------------------- |
+| `errorCode`        | `string`             | Dot notation code for i18n lookup (e.g., `auth.invalid_credentials`) |
+| `errorDescription` | `string`             | Human-readable message (fallback if no translation)                  |
+| `fieldName`        | `string \| null`     | Form field name, or `null` for general/security-sensitive errors     |
+| `handler`          | `"user" \| "system"` | `user` = display to user, `system` = log/show generic message        |
 
 ### Format B: Standard Errors (All Other Status Codes)
 
@@ -111,15 +111,15 @@ Simple format for non-validation errors - no field mapping needed.
 
 ### When to Use Each Format
 
-| Status | Format | Use Case |
-|--------|--------|----------|
-| 422 | Format A (errors array) | Validation errors, business rule violations, duplicate data |
-| 400 | Format B | Malformed JSON, syntax errors |
-| 401 | Format B | Missing/invalid/expired token |
-| 403 | Format B | No permission for resource |
-| 404 | Format B | Resource not found |
-| 409 | Format B | Concurrent update conflict (stale data) |
-| 500 | Format B | Unexpected server errors |
+| Status | Format                  | Use Case                                                    |
+| ------ | ----------------------- | ----------------------------------------------------------- |
+| 422    | Format A (errors array) | Validation errors, business rule violations, duplicate data |
+| 400    | Format B                | Malformed JSON, syntax errors                               |
+| 401    | Format B                | Missing/invalid/expired token                               |
+| 403    | Format B                | No permission for resource                                  |
+| 404    | Format B                | Resource not found                                          |
+| 409    | Format B                | Concurrent update conflict (stale data)                     |
+| 500    | Format B                | Unexpected server errors                                    |
 
 ### Security Considerations
 
@@ -142,18 +142,18 @@ For login errors, use `fieldName: null` to avoid revealing whether an email exis
 
 ## HTTP Status Codes
 
-| Code | Name | Usage |
-|------|------|-------|
-| 200 | OK | GET, PATCH success |
-| 201 | Created | POST success (resource created) |
-| 204 | No Content | DELETE success |
-| 400 | Bad Request | Malformed JSON, syntax errors |
-| 401 | Unauthorized | Missing/invalid JWT token |
-| 403 | Forbidden | Valid token but no permission |
-| 404 | Not Found | Resource doesn't exist |
-| 409 | Conflict | Duplicate resource, stale update |
-| 422 | Unprocessable Entity | Validation errors, business rule violations |
-| 500 | Internal Server Error | Unexpected server errors |
+| Code | Name                  | Usage                                       |
+| ---- | --------------------- | ------------------------------------------- |
+| 200  | OK                    | GET, PATCH success                          |
+| 201  | Created               | POST success (resource created)             |
+| 204  | No Content            | DELETE success                              |
+| 400  | Bad Request           | Malformed JSON, syntax errors               |
+| 401  | Unauthorized          | Missing/invalid JWT token                   |
+| 403  | Forbidden             | Valid token but no permission               |
+| 404  | Not Found             | Resource doesn't exist                      |
+| 409  | Conflict              | Duplicate resource, stale update            |
+| 422  | Unprocessable Entity  | Validation errors, business rule violations |
+| 500  | Internal Server Error | Unexpected server errors                    |
 
 ---
 
@@ -169,80 +169,80 @@ All error codes are defined in `src/modules/shared/domain/exceptions/error-codes
 
 #### Authentication (`auth`)
 
-| Code | Description |
-|------|-------------|
-| `auth.invalid_credentials` | Invalid email or password |
-| `auth.email_already_exists` | Email is already registered |
-| `auth.token_expired` | JWT token has expired |
-| `auth.invalid_refresh_token` | Refresh token is invalid or expired |
+| Code                            | Description                                |
+| ------------------------------- | ------------------------------------------ |
+| `auth.invalid_credentials`      | Invalid email or password                  |
+| `auth.email_already_exists`     | Email is already registered                |
+| `auth.token_expired`            | JWT token has expired                      |
+| `auth.invalid_refresh_token`    | Refresh token is invalid or expired        |
 | `auth.oauth_account_not_linked` | OAuth account not linked to existing email |
-| `auth.password_required` | Password required for local auth |
+| `auth.password_required`        | Password required for local auth           |
 
 #### Users (`users`)
 
-| Code | Description |
-|------|-------------|
-| `users.not_found` | User not found |
-| `users.already_exists` | User already exists |
-| `users.invalid_email` | Invalid email format |
+| Code                   | Description          |
+| ---------------------- | -------------------- |
+| `users.not_found`      | User not found       |
+| `users.already_exists` | User already exists  |
+| `users.invalid_email`  | Invalid email format |
 
 #### Workspaces (`workspaces`)
 
-| Code | Description |
-|------|-------------|
-| `workspaces.not_found` | Workspace not found |
-| `workspaces.member_not_found` | Member not found in workspace |
-| `workspaces.user_already_member` | User is already a member |
-| `workspaces.limit_reached` | Workspace limit reached |
+| Code                             | Description                   |
+| -------------------------------- | ----------------------------- |
+| `workspaces.not_found`           | Workspace not found           |
+| `workspaces.member_not_found`    | Member not found in workspace |
+| `workspaces.user_already_member` | User is already a member      |
+| `workspaces.limit_reached`       | Workspace limit reached       |
 
 #### Accounts (`accounts`)
 
-| Code | Description |
-|------|-------------|
-| `accounts.not_found` | Account not found |
+| Code                            | Description                        |
+| ------------------------------- | ---------------------------------- |
+| `accounts.not_found`            | Account not found                  |
 | `accounts.insufficient_balance` | Insufficient balance for operation |
-| `accounts.already_exists` | Account already exists |
+| `accounts.already_exists`       | Account already exists             |
 
 #### Transactions (`transactions`)
 
-| Code | Description |
-|------|-------------|
-| `transactions.not_found` | Transaction not found |
+| Code                          | Description                |
+| ----------------------------- | -------------------------- |
+| `transactions.not_found`      | Transaction not found      |
 | `transactions.invalid_amount` | Invalid transaction amount |
-| `transactions.invalid_date` | Invalid transaction date |
+| `transactions.invalid_date`   | Invalid transaction date   |
 
 #### Categories (`categories`)
 
-| Code | Description |
-|------|-------------|
-| `categories.not_found` | Category not found |
-| `categories.in_use` | Category is in use and cannot be deleted |
-| `categories.already_exists` | Category already exists |
+| Code                        | Description                              |
+| --------------------------- | ---------------------------------------- |
+| `categories.not_found`      | Category not found                       |
+| `categories.in_use`         | Category is in use and cannot be deleted |
+| `categories.already_exists` | Category already exists                  |
 
 #### Budgets (`budgets`)
 
-| Code | Description |
-|------|-------------|
-| `budgets.not_found` | Budget not found |
-| `budgets.exceeded` | Budget limit exceeded |
+| Code                     | Description           |
+| ------------------------ | --------------------- |
+| `budgets.not_found`      | Budget not found      |
+| `budgets.exceeded`       | Budget limit exceeded |
 | `budgets.already_exists` | Budget already exists |
 
 #### Validation (`validation`)
 
-| Code | Description |
-|------|-------------|
-| `validation.required` | Field is required |
-| `validation.min_length` | Value is too short |
-| `validation.max_length` | Value is too long |
-| `validation.invalid_format` | Invalid format |
-| `validation.invalid_email` | Invalid email format |
-| `validation.invalid_url` | Invalid URL format |
-| `validation.invalid_uuid` | Invalid UUID format |
-| `validation.invalid_number` | Invalid number |
-| `validation.invalid_date` | Invalid date |
-| `validation.too_small` | Value is too small |
-| `validation.too_big` | Value is too big |
-| `validation.invalid_type` | Invalid type |
+| Code                        | Description          |
+| --------------------------- | -------------------- |
+| `validation.required`       | Field is required    |
+| `validation.min_length`     | Value is too short   |
+| `validation.max_length`     | Value is too long    |
+| `validation.invalid_format` | Invalid format       |
+| `validation.invalid_email`  | Invalid email format |
+| `validation.invalid_url`    | Invalid URL format   |
+| `validation.invalid_uuid`   | Invalid UUID format  |
+| `validation.invalid_number` | Invalid number       |
+| `validation.invalid_date`   | Invalid date         |
+| `validation.too_small`      | Value is too small   |
+| `validation.too_big`        | Value is too big     |
+| `validation.invalid_type`   | Invalid type         |
 
 ---
 
@@ -258,12 +258,12 @@ GET /api/v1/transactions?page=1&limit=25&sortBy=createdAt&sortOrder=desc
 
 ### Query Parameters
 
-| Param | Type | Default | Max | Description |
-|-------|------|---------|-----|-------------|
-| `page` | number | 1 | - | Page number (1-indexed) |
-| `limit` | number | 25 | 100 | Items per page |
-| `sortBy` | string | `createdAt` | - | Field to sort by |
-| `sortOrder` | `asc \| desc` | `desc` | Sort direction |
+| Param       | Type          | Default     | Max            | Description             |
+| ----------- | ------------- | ----------- | -------------- | ----------------------- |
+| `page`      | number        | 1           | -              | Page number (1-indexed) |
+| `limit`     | number        | 25          | 100            | Items per page          |
+| `sortBy`    | string        | `createdAt` | -              | Field to sort by        |
+| `sortOrder` | `asc \| desc` | `desc`      | Sort direction |
 
 ### Response Format
 
