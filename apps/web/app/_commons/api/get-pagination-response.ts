@@ -7,6 +7,7 @@ export const ApiPaginationResponse = ApiGetManyResponse.extend({
     page: z.number().int().nonnegative(),
     limit: z.number().int().nonnegative(),
     total: z.number().int().nonnegative(),
+    totalPages: z.number().int().nonnegative(),
   }),
 });
 
