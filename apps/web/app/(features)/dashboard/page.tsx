@@ -19,9 +19,7 @@ export default function DashboardPage() {
       <Card className="w-full max-w-md p-4">
         <CardBody className="flex flex-col gap-4">
           <h1 className="text-2xl font-bold">Dashboard</h1>
-          <p className="text-default-500">
-            Welcome{user?.name ? `, ${user.name}` : ""}!
-          </p>
+          <p className="text-default-500">Welcome{user?.name ? `, ${user.name}` : ""}!</p>
           <p className="text-small text-default-400">
             This is a placeholder page. The full dashboard will be built later.
           </p>

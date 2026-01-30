@@ -14,9 +14,7 @@ export class InvalidRefreshTokenError extends DomainException {
 
 export class OAuthAccountNotLinkedError extends DomainException {
   constructor(provider: string, email: string) {
-    super(
-      `Account with email ${email} exists but is not linked to ${provider}`,
-    );
+    super(`Account with email ${email} exists but is not linked to ${provider}`);
   }
 }
 

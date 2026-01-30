@@ -69,20 +69,12 @@ const strategies = [JwtStrategy, GoogleStrategy];
         },
       }),
     }),
-    MongooseModule.forFeature([
-      { name: RefreshTokenModel.name, schema: RefreshTokenSchema },
-    ]),
+    MongooseModule.forFeature([{ name: RefreshTokenModel.name, schema: RefreshTokenSchema }]),
     UsersModule,
     WorkspacesModule,
   ],
   controllers: [AuthController],
-  providers: [
-    ...commandHandlers,
-    ...repositories,
-    ...services,
-    ...strategies,
-    JwtAuthGuard,
-  ],
+  providers: [...commandHandlers, ...repositories, ...services, ...strategies, JwtAuthGuard],
   exports: [...repositories, ...services, JwtAuthGuard, JwtStrategy],
 })
 export class AuthModule {}

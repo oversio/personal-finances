@@ -3,15 +3,15 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Input, Link, Divider } from "@heroui/react";
-import { loginSchema, type LoginFormData } from "@/(auth)/_schemas/login.schema";
-import { loginApi, getGoogleAuthUrl } from "@/_commons/utils/auth-api";
+import { registerSchema, type RegisterFormData } from "@/(auth)/_schemas/register.schema";
+import { registerApi, getGoogleAuthUrl } from "@/_commons/utils/auth-api";
 import { useAuthStore } from "@/_commons/stores/auth.store";
-import { GoogleIcon } from "./google-icon";
-import { EyeIcon, EyeSlashIcon } from "./eye-icons";
+import { GoogleIcon } from "../../login/_components/google-icon";
+import { EyeIcon, EyeSlashIcon } from "../../login/_components/eye-icons";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-export function LoginForm() {
+export function RegisterForm() {
   const router = useRouter();
   const setAuth = useAuthStore(state => state.setAuth);
 
@@ -20,39 +20,59 @@ export function LoginForm() {
     handleSubmit,
     formState: { errors, isSubmitting },
     setError,
-  } = useForm<LoginFormData>({
+  } = useForm<RegisterFormData>({
     defaultValues: {
+      name: "",
       email: "",
       password: "",
     },
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(registerSchema),
   });
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = async (data: RegisterFormData) => {
     try {
-      const response = await loginApi(data);
+      const response = await registerApi(data);
       setAuth(response.user, {
         accessToken: response.tokens.accessToken,
         refreshToken: response.tokens.refreshToken,
       });
       router.push("/dashboard");
-    } catch {
-      setError("root", {
-        type: "manual",
-        message: "Invalid email or password. Please try again.",
-      });
+    } catch (error) {
+      if (error instanceof Error && error.message.includes("409")) {
+        setError("email", {
+          type: "manual",
+          message: "An account with this email already exists.",
+        });
+      } else {
+        setError("root", {
+          type: "manual",
+          message: "Something went wrong. Please try again.",
+        });
+      }
     }
   };
 
-  const handleGoogleLogin = () => {
+  const handleGoogleSignup = () => {
     sessionStorage.setItem("redirectAfterAuth", "/dashboard");
     window.location.href = getGoogleAuthUrl();
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+      <Input
+        type="text"
+        label="Name"
+        placeholder="Enter your name"
+        {...register("name")}
+        isInvalid={!!errors.name}
+        errorMessage={errors.name?.message}
+        variant="bordered"
+        isRequired
+        autoComplete="name"
+      />
+
       <Input
         type="email"
         label="Email"
@@ -68,13 +88,14 @@ export function LoginForm() {
       <Input
         type={isPasswordVisible ? "text" : "password"}
         label="Password"
-        placeholder="Enter your password"
+        placeholder="Create a password"
         {...register("password")}
         isInvalid={!!errors.password}
         errorMessage={errors.password?.message}
+        description="At least 8 characters with uppercase, lowercase, and number"
         variant="bordered"
         isRequired
-        autoComplete="current-password"
+        autoComplete="new-password"
         endContent={
           <button
             type="button"
@@ -94,7 +115,7 @@ export function LoginForm() {
       {errors.root && <p className="text-small text-danger">{errors.root.message}</p>}
 
       <Button type="submit" color="primary" isLoading={isSubmitting} className="mt-2">
-        Sign In
+        Create Account
       </Button>
 
       <Divider className="my-4" />
@@ -103,15 +124,15 @@ export function LoginForm() {
         type="button"
         variant="bordered"
         startContent={<GoogleIcon className="text-xl" />}
-        onPress={handleGoogleLogin}
+        onPress={handleGoogleSignup}
       >
-        Continue with Google
+        Sign up with Google
       </Button>
 
       <p className="mt-4 text-center text-small text-default-500">
-        Don&apos;t have an account?{" "}
-        <Link href="/register" size="sm">
-          Sign up
+        Already have an account?{" "}
+        <Link href="/login" size="sm">
+          Sign in
         </Link>
       </p>
     </form>

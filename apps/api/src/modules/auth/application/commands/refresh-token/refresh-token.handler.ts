@@ -4,11 +4,7 @@ import type { UserRepository } from "@/modules/users";
 import { RefreshToken } from "../../../domain/entities";
 import { InvalidRefreshTokenError } from "../../../domain/exceptions";
 import { REFRESH_TOKEN_REPOSITORY, TOKEN_SERVICE } from "../../ports";
-import type {
-  RefreshTokenRepository,
-  TokenPair,
-  TokenService,
-} from "../../ports";
+import type { RefreshTokenRepository, TokenPair, TokenService } from "../../ports";
 import { RefreshTokenCommand } from "./refresh-token.command";
 
 export interface RefreshTokenResult {
@@ -31,9 +27,7 @@ export class RefreshTokenHandler {
     metadata?: { userAgent?: string; ipAddress?: string },
   ): Promise<RefreshTokenResult> {
     // Find the refresh token
-    const existingToken = await this.refreshTokenRepository.findByToken(
-      command.refreshToken,
-    );
+    const existingToken = await this.refreshTokenRepository.findByToken(command.refreshToken);
 
     if (!existingToken || !existingToken.isValid()) {
       throw new InvalidRefreshTokenError();

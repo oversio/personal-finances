@@ -2,21 +2,9 @@ import { Inject, Injectable } from "@nestjs/common";
 import { User, USER_REPOSITORY } from "@/modules/users";
 import type { UserRepository } from "@/modules/users";
 import { RefreshToken } from "../../../domain/entities";
-import {
-  InvalidCredentialsError,
-  PasswordRequiredError,
-} from "../../../domain/exceptions";
-import {
-  PASSWORD_HASHER,
-  REFRESH_TOKEN_REPOSITORY,
-  TOKEN_SERVICE,
-} from "../../ports";
-import type {
-  PasswordHasher,
-  RefreshTokenRepository,
-  TokenPair,
-  TokenService,
-} from "../../ports";
+import { InvalidCredentialsError, PasswordRequiredError } from "../../../domain/exceptions";
+import { PASSWORD_HASHER, REFRESH_TOKEN_REPOSITORY, TOKEN_SERVICE } from "../../ports";
+import type { PasswordHasher, RefreshTokenRepository, TokenPair, TokenService } from "../../ports";
 import { LoginCommand } from "./login.command";
 
 export interface LoginResult {

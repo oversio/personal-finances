@@ -1,9 +1,7 @@
 import { create } from "zustand";
-import type { AuthTokens, User } from "@/_commons/types/auth";
-import {
-  clearAuthCookies,
-  getAuthTokensFromCookies,
-} from "@/_commons/utils/cookies";
+import type { AuthTokens } from "@/_commons/types/auth";
+import type { User } from "@/_commons/types/user";
+import { clearAuthCookies, getAuthTokensFromCookies } from "@/_commons/utils/cookies";
 
 interface AuthState {
   user: User | null;
@@ -86,8 +84,7 @@ export const useAuthStore = create<AuthStore>()(set => ({
 
 // Selectors
 export const selectUser = (state: AuthStore) => state.user;
-export const selectIsAuthenticated = (state: AuthStore) =>
-  state.isAuthenticated;
+export const selectIsAuthenticated = (state: AuthStore) => state.isAuthenticated;
 export const selectIsLoading = (state: AuthStore) => state.isLoading;
 export const selectIsInitialized = (state: AuthStore) => state.isInitialized;
 export const selectAccessToken = (state: AuthStore) => state.accessToken;

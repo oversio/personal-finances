@@ -1,8 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import {
-  REFRESH_TOKEN_REPOSITORY,
-  type RefreshTokenRepository,
-} from "../../ports";
+import { REFRESH_TOKEN_REPOSITORY, type RefreshTokenRepository } from "../../ports";
 import { LogoutCommand } from "./logout.command";
 
 @Injectable()

@@ -28,10 +28,7 @@ export class JwtTokenService implements TokenService {
   }
 
   getRefreshTokenExpiration(): Date {
-    const expiration = this.configService.get<string>(
-      "JWT_REFRESH_EXPIRATION",
-      "7d",
-    );
+    const expiration = this.configService.get<string>("JWT_REFRESH_EXPIRATION", "7d");
     const ms = this.parseExpiration(expiration);
     return new Date(Date.now() + ms);
   }

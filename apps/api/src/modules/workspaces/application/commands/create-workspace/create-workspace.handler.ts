@@ -24,9 +24,7 @@ export class CreateWorkspaceHandler {
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
-  async execute(
-    command: CreateWorkspaceCommand,
-  ): Promise<CreateWorkspaceResult> {
+  async execute(command: CreateWorkspaceCommand): Promise<CreateWorkspaceResult> {
     // Create the workspace
     const workspace = Workspace.create(
       undefined,
@@ -39,10 +37,7 @@ export class CreateWorkspaceHandler {
     const savedWorkspace = await this.workspaceRepository.save(workspace);
 
     // Create the owner as a member
-    const ownerMember = WorkspaceMember.createOwner(
-      savedWorkspace.id!.value,
-      command.ownerId,
-    );
+    const ownerMember = WorkspaceMember.createOwner(savedWorkspace.id!.value, command.ownerId);
 
     const savedMember = await this.memberRepository.save(ownerMember);
 

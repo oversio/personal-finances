@@ -40,8 +40,6 @@ export class MemberRole {
   }
 
   canManageMembers(): boolean {
-    return (
-      this.value === MEMBER_ROLES.OWNER || this.value === MEMBER_ROLES.ADMIN
-    );
+    return this.value === MEMBER_ROLES.OWNER || this.value === MEMBER_ROLES.ADMIN;
   }
 }

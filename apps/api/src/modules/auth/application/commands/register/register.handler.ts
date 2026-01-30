@@ -1,28 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { EventEmitter2 } from "@nestjs/event-emitter";
-import {
-  User,
-  Password,
-  USER_REPOSITORY,
-  UserAlreadyExistsError,
-} from "@/modules/users";
+import { User, Password, USER_REPOSITORY, UserAlreadyExistsError } from "@/modules/users";
 import type { UserRepository } from "@/modules/users";
-import {
-  CreateWorkspaceCommand,
-  CreateWorkspaceHandler,
-} from "@/modules/workspaces/application";
+import { CreateWorkspaceCommand, CreateWorkspaceHandler } from "@/modules/workspaces/application";
 import { RefreshToken } from "../../../domain/entities";
-import {
-  PASSWORD_HASHER,
-  REFRESH_TOKEN_REPOSITORY,
-  TOKEN_SERVICE,
-} from "../../ports";
-import type {
-  PasswordHasher,
-  RefreshTokenRepository,
-  TokenPair,
-  TokenService,
-} from "../../ports";
+import { PASSWORD_HASHER, REFRESH_TOKEN_REPOSITORY, TOKEN_SERVICE } from "../../ports";
+import type { PasswordHasher, RefreshTokenRepository, TokenPair, TokenService } from "../../ports";
 import { RegisterCommand } from "./register.command";
 
 export interface RegisterResult {
@@ -66,20 +49,12 @@ export class RegisterHandler {
     const picture = `https://ui-avatars.com/api/?name=${encodedName}&background=random`;
 
     // Create user
-    const user = User.createLocal(
-      command.email,
-      command.name,
-      passwordHash,
-      picture,
-    );
+    const user = User.createLocal(command.email, command.name, passwordHash, picture);
     const savedUser = await this.userRepository.save(user);
 
     // Auto-create workspace for the user
     await this.createWorkspaceHandler.execute(
-      new CreateWorkspaceCommand(
-        `${command.name}'s Workspace`,
-        savedUser.id!.value,
-      ),
+      new CreateWorkspaceCommand(`${command.name}'s Workspace`, savedUser.id!.value),
     );
 
     // Generate tokens

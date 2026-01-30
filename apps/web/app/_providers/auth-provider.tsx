@@ -9,9 +9,7 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const initializeFromCookies = useAuthStore(
-    state => state.initializeFromCookies,
-  );
+  const initializeFromCookies = useAuthStore(state => state.initializeFromCookies);
   const setUser = useAuthStore(state => state.setUser);
   const logout = useAuthStore(state => state.logout);
   const isInitialized = useAuthStore(state => state.isInitialized);

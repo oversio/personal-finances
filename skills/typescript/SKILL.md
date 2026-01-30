@@ -93,12 +93,7 @@ Parameters<typeof fn>; // Function params tuple
 
 ```typescript
 function isUser(value: unknown): value is User {
-  return (
-    typeof value === "object" &&
-    value !== null &&
-    "id" in value &&
-    "name" in value
-  );
+  return typeof value === "object" && value !== null && "id" in value && "name" in value;
 }
 ```
 

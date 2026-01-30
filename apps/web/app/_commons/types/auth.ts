@@ -1,3 +1,5 @@
+import type { User } from "./user";
+
 export const AUTH_PROVIDER = {
   local: "local",
   google: "google",
@@ -6,16 +8,6 @@ export const AUTH_PROVIDER = {
 } as const;
 
 export type AuthProvider = (typeof AUTH_PROVIDER)[keyof typeof AUTH_PROVIDER];
-
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-  picture?: string;
-  authProvider: AuthProvider;
-  isEmailVerified: boolean;
-  createdAt: string;
-}
 
 export interface AuthTokens {
   accessToken: string;

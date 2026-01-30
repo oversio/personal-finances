@@ -1,8 +1,4 @@
-export {
-  WorkspaceModel,
-  WorkspaceSchema,
-  type WorkspaceDocument,
-} from "./workspace.schema";
+export { WorkspaceModel, WorkspaceSchema, type WorkspaceDocument } from "./workspace.schema";
 export {
   WorkspaceMemberModel,
   WorkspaceMemberSchema,

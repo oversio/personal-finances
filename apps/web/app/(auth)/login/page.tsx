@@ -8,9 +8,7 @@ export default function LoginPage() {
     <Card className="p-4 shadow-lg">
       <CardHeader className="flex flex-col gap-1 pb-0">
         <h1 className="text-2xl font-bold">Welcome back</h1>
-        <p className="text-small text-default-500">
-          Sign in to continue to Personal Finances
-        </p>
+        <p className="text-small text-default-500">Sign in to continue to Personal Finances</p>
       </CardHeader>
       <CardBody>
         <LoginForm />
