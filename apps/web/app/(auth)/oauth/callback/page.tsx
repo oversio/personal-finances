@@ -3,9 +3,10 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Spinner } from "@heroui/react";
+
 import { useAuthStore } from "@/_commons/stores/auth.store";
-import { getMeApi } from "@/_commons/utils/auth-api";
 import { getAuthTokensFromCookies } from "@/_commons/utils/cookies";
+import { getAuthUser } from "@/(auth)/_api/auth-user/get-auth-user";
 
 export default function AuthCallbackPage() {
   const router = useRouter();
@@ -22,7 +23,7 @@ export default function AuthCallbackPage() {
         }
 
         // Fetch user data
-        const user = await getMeApi();
+        const user = await getAuthUser();
 
         // Store in Zustand
         setAuth(user, {

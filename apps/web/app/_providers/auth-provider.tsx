@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, type ReactNode } from "react";
+
 import { useAuthStore } from "@/_commons/stores/auth.store";
-import { getMeApi } from "@/_commons/utils/auth-api";
+import { getAuthUser } from "@/(auth)/_api/auth-user/get-auth-user";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -22,7 +23,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (hasTokens) {
         try {
           // Fetch user data with the token
-          const user = await getMeApi();
+          const user = await getAuthUser();
           setUser(user);
         } catch {
           // Token invalid or expired, clear auth

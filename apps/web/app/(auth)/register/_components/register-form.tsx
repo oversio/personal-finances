@@ -3,24 +3,23 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Input, Link, Divider } from "@heroui/react";
-import { registerSchema, type RegisterFormData } from "@/(auth)/_schemas/register.schema";
-import { registerApi, getGoogleAuthUrl } from "@/_commons/utils/auth-api";
-import { useAuthStore } from "@/_commons/stores/auth.store";
-import { GoogleIcon } from "../../login/_components/google-icon";
-import { EyeIcon, EyeSlashIcon } from "../../login/_components/eye-icons";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import { useServerFormValidationErrors } from "@/_commons/api";
+import { useAuthStore } from "@/_commons/stores/auth.store";
+import { registerSchema, type RegisterFormData } from "@/(auth)/_schemas/register.schema";
+
+import { GoogleIcon } from "../../login/_components/google-icon";
+import { EyeIcon, EyeSlashIcon } from "../../login/_components/eye-icons";
+import { useRegister } from "@/(auth)/register/_api/use-register";
+import { getGoogleAuthUrl } from "@/(auth)/_api/auth.api";
 
 export function RegisterForm() {
   const router = useRouter();
   const setAuth = useAuthStore(state => state.setAuth);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    setError,
-  } = useForm<RegisterFormData>({
+  const form = useForm<RegisterFormData>({
     defaultValues: {
       name: "",
       email: "",
@@ -29,29 +28,29 @@ export function RegisterForm() {
     resolver: zodResolver(registerSchema),
   });
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = form;
+
+  const { mutate: registerMutation, isPending, error } = useRegister();
+
+  // Auto-apply server validation errors to form fields
+  const generalError = useServerFormValidationErrors(form, error);
+
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  const onSubmit = async (data: RegisterFormData) => {
-    try {
-      const response = await registerApi(data);
-      setAuth(response.user, {
-        accessToken: response.tokens.accessToken,
-        refreshToken: response.tokens.refreshToken,
-      });
-      router.push("/dashboard");
-    } catch (error) {
-      if (error instanceof Error && error.message.includes("409")) {
-        setError("email", {
-          type: "manual",
-          message: "An account with this email already exists.",
+  const onSubmit = (data: RegisterFormData) => {
+    registerMutation(data, {
+      onSuccess: response => {
+        setAuth(response.user, {
+          accessToken: response.tokens.accessToken,
+          refreshToken: response.tokens.refreshToken,
         });
-      } else {
-        setError("root", {
-          type: "manual",
-          message: "Something went wrong. Please try again.",
-        });
-      }
-    }
+        router.push("/dashboard");
+      },
+    });
   };
 
   const handleGoogleSignup = () => {
@@ -112,9 +111,9 @@ export function RegisterForm() {
         }
       />
 
-      {errors.root && <p className="text-small text-danger">{errors.root.message}</p>}
+      {generalError && <p className="text-small text-danger">{generalError}</p>}
 
-      <Button type="submit" color="primary" isLoading={isSubmitting} className="mt-2">
+      <Button type="submit" color="primary" isLoading={isPending} className="mt-2">
         Create Account
       </Button>
 
