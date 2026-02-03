@@ -1,20 +1,27 @@
-import type { User } from "./user";
+import { z } from "zod";
 
-export const AUTH_PROVIDER = {
-  local: "local",
-  google: "google",
-  apple: "apple",
-  github: "github",
-} as const;
+import { User } from "./user";
 
-export type AuthProvider = (typeof AUTH_PROVIDER)[keyof typeof AUTH_PROVIDER];
+// Re-export from auth-provider.ts for backward compatibility
+export { AUTH_PROVIDER, type AuthProvider } from "./auth-provider";
 
-export interface AuthTokens {
-  accessToken: string;
-  refreshToken: string;
-  expiresIn?: number;
-}
+// Zod Schemas
+export const AuthTokensSchema = z.object({
+  accessToken: z.string(),
+  refreshToken: z.string(),
+  expiresIn: z.number().optional(),
+});
 
+export const AuthResponseSchema = z.object({
+  user: User,
+  tokens: AuthTokensSchema,
+});
+
+// Types (inferred from Zod)
+export type AuthTokens = z.infer<typeof AuthTokensSchema>;
+export type AuthResponse = z.infer<typeof AuthResponseSchema>;
+
+// Input types for API calls
 export interface LoginCredentials {
   email: string;
   password: string;
@@ -24,9 +31,4 @@ export interface RegisterCredentials {
   email: string;
   password: string;
   name: string;
-}
-
-export interface AuthResponse {
-  user: User;
-  tokens: AuthTokens;
 }

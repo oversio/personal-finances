@@ -1,5 +1,6 @@
 import z from "zod";
-import { AUTH_PROVIDER } from "./auth";
+
+import { AUTH_PROVIDER } from "./auth-provider";
 import { DateTime } from "./app";
 
 export const ApiGetUser = z.object({

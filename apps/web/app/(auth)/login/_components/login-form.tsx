@@ -3,24 +3,22 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Input, Link, Divider } from "@heroui/react";
-import { loginSchema, type LoginFormData } from "@/(auth)/_schemas/login.schema";
-import { loginApi, getGoogleAuthUrl } from "@/_commons/utils/auth-api";
-import { useAuthStore } from "@/_commons/stores/auth.store";
-import { GoogleIcon } from "./google-icon";
-import { EyeIcon, EyeSlashIcon } from "./eye-icons";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import { useServerFormValidationErrors } from "@/_commons/api";
+import { useAuthStore } from "@/_commons/stores/auth.store";
+import { loginSchema, type LoginFormData } from "@/(auth)/_schemas/login.schema";
+import { GoogleIcon } from "./google-icon";
+import { EyeIcon, EyeSlashIcon } from "./eye-icons";
+import { useLogin } from "../_api/use-login";
+import { getGoogleAuthUrl } from "@/(auth)/_api/auth.api";
 
 export function LoginForm() {
   const router = useRouter();
   const setAuth = useAuthStore(state => state.setAuth);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    setError,
-  } = useForm<LoginFormData>({
+  const form = useForm<LoginFormData>({
     defaultValues: {
       email: "",
       password: "",
@@ -28,22 +26,29 @@ export function LoginForm() {
     resolver: zodResolver(loginSchema),
   });
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = form;
+
+  const { mutate: loginMutation, isPending, error } = useLogin();
+
+  // Auto-apply server validation errors to form fields
+  const generalError = useServerFormValidationErrors(form, error);
+
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  const onSubmit = async (data: LoginFormData) => {
-    try {
-      const response = await loginApi(data);
-      setAuth(response.user, {
-        accessToken: response.tokens.accessToken,
-        refreshToken: response.tokens.refreshToken,
-      });
-      router.push("/dashboard");
-    } catch {
-      setError("root", {
-        type: "manual",
-        message: "Invalid email or password. Please try again.",
-      });
-    }
+  const onSubmit = (data: LoginFormData) => {
+    loginMutation(data, {
+      onSuccess: response => {
+        setAuth(response.user, {
+          accessToken: response.tokens.accessToken,
+          refreshToken: response.tokens.refreshToken,
+        });
+        router.push("/dashboard");
+      },
+    });
   };
 
   const handleGoogleLogin = () => {
@@ -91,9 +96,9 @@ export function LoginForm() {
         }
       />
 
-      {errors.root && <p className="text-small text-danger">{errors.root.message}</p>}
+      {generalError && <p className="text-small text-danger">{generalError}</p>}
 
-      <Button type="submit" color="primary" isLoading={isSubmitting} className="mt-2">
+      <Button type="submit" color="primary" isLoading={isPending} className="mt-2">
         Sign In
       </Button>
 
