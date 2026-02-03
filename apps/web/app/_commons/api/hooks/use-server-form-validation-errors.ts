@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import type { FieldValues, Path, UseFormReturn } from "react-hook-form";
 
 import { isValidationErrors } from "../errors";
-import type { MutationError } from "../errors";
 
 /**
  * Hook to automatically apply server validation errors to a react-hook-form form.
@@ -34,7 +33,7 @@ import type { MutationError } from "../errors";
  */
 export function useServerFormValidationErrors<TFieldValues extends FieldValues>(
   form: UseFormReturn<TFieldValues>,
-  error: MutationError | null | undefined,
+  error: Error | null | undefined,
 ): string | undefined {
   useEffect(() => {
     if (isValidationErrors(error) && error.hasFieldErrors()) {
