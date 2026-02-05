@@ -26,10 +26,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
       throw new UnauthorizedException("User not found");
     }
 
-    return {
-      id: user.id!.value,
-      email: user.email.value,
-      name: user.name.value,
-    };
+    // Return full user object for @CurrentUser() decorator
+    return user.toPrimitives();
   }
 }

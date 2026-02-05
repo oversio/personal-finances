@@ -71,7 +71,7 @@ export class User {
       id: this.id?.value,
       email: this.email.value,
       name: this.name.value,
-      provider: this.provider.value,
+      authProvider: this.provider.value,
       providerId: this.providerId,
       isEmailVerified: this.isEmailVerified,
       picture: this.picture,
