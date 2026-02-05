@@ -12,6 +12,9 @@ import {
   selectUser,
   selectAccessToken,
 } from "@/_commons/stores/auth.store";
+import { useSidebarStore, selectIsCollapsed } from "@/_commons/stores/sidebar.store";
+import { AppNavbar } from "./_components/app-navbar";
+import { AppSidebar } from "./_components/app-sidebar";
 
 interface FeaturesLayoutProps {
   children: React.ReactNode;
@@ -27,6 +30,8 @@ export default function FeaturesLayout({ children }: FeaturesLayoutProps) {
   const initializeFromCookies = useAuthStore(state => state.initializeFromCookies);
   const setAuth = useAuthStore(state => state.setAuth);
   const logout = useAuthStore(state => state.logout);
+
+  const isCollapsed = useSidebarStore(selectIsCollapsed);
 
   useEffect(() => {
     async function initializeAuth() {
@@ -81,5 +86,19 @@ export default function FeaturesLayout({ children }: FeaturesLayoutProps) {
     return null;
   }
 
-  return <>{children}</>;
+  return (
+    <div className="min-h-screen bg-background">
+      <AppNavbar />
+      <AppSidebar />
+      <main
+        className={`
+          pt-14 transition-all duration-200
+          md:pl-64
+          ${isCollapsed ? "md:pl-16" : "md:pl-64"}
+        `}
+      >
+        <div className="p-6">{children}</div>
+      </main>
+    </div>
+  );
 }
