@@ -4,6 +4,11 @@ export interface AuthenticatedUser {
   id: string;
   email: string;
   name: string;
+  authProvider: string;
+  isEmailVerified: boolean;
+  picture?: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const CurrentUser = createParamDecorator(
