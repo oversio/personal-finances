@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button, Input, Link, Divider } from "@heroui/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,7 +17,10 @@ import { RegisterFormData, registerSchema } from "../_schemas/register.schema";
 
 export function RegisterForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const setAuth = useAuthStore(state => state.setAuth);
+
+  const redirectTo = searchParams.get("redirect") || "/dashboard";
 
   const form = useForm<RegisterFormData>({
     defaultValues: {
@@ -48,13 +51,13 @@ export function RegisterForm() {
           accessToken: response.tokens.accessToken,
           refreshToken: response.tokens.refreshToken,
         });
-        router.push("/dashboard");
+        router.push(redirectTo);
       },
     });
   };
 
   const handleGoogleSignup = () => {
-    sessionStorage.setItem("redirectAfterAuth", "/dashboard");
+    sessionStorage.setItem("redirectAfterAuth", redirectTo);
     window.location.href = getGoogleAuthUrl();
   };
 
