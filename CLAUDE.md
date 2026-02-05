@@ -120,20 +120,34 @@ src/
 ```
 app/
 ├── layout.tsx, page.tsx, loading.tsx, error.tsx, not-found.tsx
-├── (auth)/              # Route group for auth pages
-├── (features)/          # Route group for feature modules
+├── (auth)/                   # Route group for auth pages
+│   ├── _api/                 # Shared API code for auth module
+│   │   ├── _support/         # Query keys, constants
+│   │   └── auth-user/        # Shared endpoint
+│   ├── login/
+│   │   ├── _api/             # Feature-specific (login.ts, use-login.ts)
+│   │   ├── _components/
+│   │   └── _schemas/         # Form validation schemas
+│   └── register/...
+├── (features)/               # Route group for feature modules
 │   └── [featureName]/
-│       ├── _api/        # Feature-specific API (schemas, fetchers, hooks)
-│       ├── _components/ # Feature-specific components
-│       ├── _hooks/      # Feature-specific hooks
-│       └── _stores/     # Feature-specific Zustand stores
-├── _actions/            # Server actions
-└── _commons/            # Shared code
-    ├── api/             # Fetcher, React Query, error handling
-    ├── components/      # Shared components (React Aria + Tailwind)
-    ├── hooks/
-    ├── utils/
-    └── stores/          # Global Zustand stores
+│       ├── _api/             # Feature-specific API
+│       │   ├── _support/     # Query keys
+│       │   ├── get-*.ts      # Fetcher functions
+│       │   └── use-*.ts      # TanStack Query hooks
+│       ├── _components/
+│       ├── _schemas/
+│       └── _stores/          # Feature-specific Zustand stores
+├── _actions/                 # Server actions
+└── _commons/                 # Shared code
+    ├── api/                  # Fetcher, React Query, error handling
+    │   ├── fetcher.ts
+    │   ├── errors/
+    │   └── hooks/
+    ├── components/
+    ├── stores/               # Global Zustand stores
+    ├── types/
+    └── utils/
 ```
 
 ### Patterns
@@ -158,14 +172,23 @@ app/
 
 #### Data Fetching (TanStack Query + Zod)
 
-- Feature APIs co-located: `_api/feature.schemas.ts`, `_api/feature.api.ts`, `_api/feature.hooks.ts`
+- Feature APIs co-located in `_api/` folders with separate files per endpoint
+- File naming: `get-accounts.ts` (fetcher), `use-get-accounts.ts` (hook)
+- Query keys: const objects in `_api/_support/` (not enums)
 - Server components: call API functions directly (`getAccounts()`)
 - Client components: use hooks (`useGetAccounts()`)
 - Form validation errors: `useServerFormValidationErrors(form, mutation.error)`
 
 ### Documentation
 
-- [Data Fetching](apps/web/docs/DATA_FETCHING.md) - Fetcher, React Query hooks, error handling pattern
+See [apps/web/CLAUDE.md](apps/web/CLAUDE.md) for AI-specific instructions when working in the web app.
+
+| Document | Description |
+|----------|-------------|
+| [Data Fetching](apps/web/docs/DATA_FETCHING.md) | Fetcher, React Query hooks, schema parsing |
+| [Error Handling](apps/web/docs/ERROR_HANDLING.md) | ValidationErrors, ApiError, form error handling |
+| [Auth Flow](apps/web/docs/AUTH_FLOW.md) | Login, registration, OAuth, token management |
+| [State Management](apps/web/docs/STATE_MANAGEMENT.md) | Zustand stores, selectors, best practices |
 
 ---
 

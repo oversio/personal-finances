@@ -64,19 +64,38 @@ The fetcher throws different error types:
 
 ## Feature-Specific API Code
 
-Each feature should have its own API files co-located:
+Each feature has its own `_api/` folder with separate files per endpoint:
 
 ```
 (features)/accounts/
 ├── _api/
-│   ├── accounts.schemas.ts     # Zod schemas
-│   ├── accounts.api.ts         # Fetcher functions
-│   └── accounts.hooks.ts       # Query/Mutation hooks
+│   ├── _support/
+│   │   └── account-query-keys.ts  # Query key constants
+│   ├── account.schema.ts          # Zod schemas
+│   ├── get-accounts.ts            # Fetcher function
+│   ├── use-get-accounts.ts        # Query hook
+│   ├── create-account.ts          # Fetcher function
+│   └── use-create-account.ts      # Mutation hook
+├── _schemas/
+│   └── account-form.schema.ts     # Form validation schemas
 ├── _components/
 └── page.tsx
 ```
 
-### Example: accounts.schemas.ts
+### Query Keys (const object pattern)
+
+```typescript
+// _api/_support/account-query-keys.ts
+export const ACCOUNT_QUERY_KEYS = {
+  list: "accounts-list",
+  detail: "accounts-detail",
+  create: "accounts-create",
+  update: "accounts-update",
+  delete: "accounts-delete",
+} as const;
+```
+
+### Example: account.schema.ts
 
 ```typescript
 import { z } from "zod";
@@ -91,67 +110,71 @@ export const AccountSchema = z.object({
 export type Account = z.infer<typeof AccountSchema>;
 ```
 
-### Example: accounts.api.ts
+### Example: get-accounts.ts
 
 ```typescript
-import {
-  fetcher,
-  apiPaginationResponseTransformer,
-  apiOneItemResponseTransformer,
-} from "@/_commons/api";
-import { AccountSchema } from "./accounts.schemas";
+import { fetcher, apiPaginationResponseTransformer } from "@/_commons/api";
+import { AccountSchema } from "./account.schema";
 
 export async function getAccounts(params?: { page?: number; limit?: number }) {
   return fetcher("/accounts", {
+    method: "GET",
     params,
     schema: apiPaginationResponseTransformer(AccountSchema),
   });
 }
+```
 
-export async function createAccount(data: { name: string }) {
+### Example: use-get-accounts.ts
+
+```typescript
+import { useQuery } from "@tanstack/react-query";
+import { ACCOUNT_QUERY_KEYS } from "./_support/account-query-keys";
+import { getAccounts } from "./get-accounts";
+
+export function useGetAccounts(params?: { page?: number; limit?: number }) {
+  return useQuery({
+    queryKey: [ACCOUNT_QUERY_KEYS.list, params],
+    queryFn: () => getAccounts(params),
+  });
+}
+```
+
+### Example: create-account.ts
+
+```typescript
+import { fetcher, apiOneItemResponseTransformer } from "@/_commons/api";
+import { AccountSchema } from "./account.schema";
+
+export interface CreateAccountInput {
+  name: string;
+  type: "checking" | "savings" | "credit";
+}
+
+export async function createAccount(data: CreateAccountInput) {
   return fetcher("/accounts", {
     method: "POST",
     body: data,
     schema: apiOneItemResponseTransformer(AccountSchema),
   });
 }
-
-export async function deleteAccount(id: string) {
-  return fetcher(`/accounts/${id}`, { method: "DELETE" });
-}
 ```
 
-### Example: accounts.hooks.ts
+### Example: use-create-account.ts
 
 ```typescript
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getAccounts, createAccount, deleteAccount } from "./accounts.api";
-
-export function useGetAccounts(params?: { page?: number; limit?: number }) {
-  return useQuery({
-    queryKey: ["accounts", params],
-    queryFn: () => getAccounts(params),
-  });
-}
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ACCOUNT_QUERY_KEYS } from "./_support/account-query-keys";
+import { createAccount } from "./create-account";
 
 export function useCreateAccount() {
   const queryClient = useQueryClient();
 
   return useMutation({
+    mutationKey: [ACCOUNT_QUERY_KEYS.create],
     mutationFn: createAccount,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["accounts"] });
-    },
-  });
-}
-
-export function useDeleteAccount() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: deleteAccount,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      queryClient.invalidateQueries({ queryKey: [ACCOUNT_QUERY_KEYS.list] });
     },
   });
 }

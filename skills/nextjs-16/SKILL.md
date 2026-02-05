@@ -1,14 +1,14 @@
 ---
-name: nextjs-15
+name: nextjs-16
 description: >
-  Next.js 15 App Router patterns.
-  Trigger: When working in Next.js App Router (app/), Server Components vs Client Components, Server Actions, Route Handlers, caching/revalidation, and streaming/Suspense.
+  Next.js 16 App Router patterns with TanStack Query data fetching.
+  Trigger: When working in Next.js App Router (app/), Server Components vs Client Components, Server Actions, Route Handlers, data fetching, and streaming/Suspense.
 license: Apache-2.0
 metadata:
   author: prowler-cloud
-  version: "1.0"
+  version: "2.0"
   scope: [root, ui]
-  auto_invoke: "App Router / Server Actions"
+  auto_invoke: "App Router / Server Actions / Data Fetching"
 allowed-tools: Read, Edit, Write, Glob, Grep, Bash, WebFetch, WebSearch, Task
 ---
 
@@ -24,32 +24,78 @@ app/
 ├── error.tsx           # Error boundary
 ├── not-found.tsx       # 404 page
 ├── (auth)/             # Route group (no URL impact)
-│   ├── layout.tsx      # Auth layout (required)
-│   ├── login/page.tsx  # /login
-│   └── signup/page.tsx # /signup
-├── (features)/             # Route group (no URL impact)
-│   ├── layout.tsx      # Features layout (required)
+│   ├── layout.tsx      # Auth layout
+│   ├── _api/           # Shared API code for auth module
+│   │   ├── _support/   # Query keys, shared constants
+│   │   ├── auth.types.ts
+│   │   ├── auth.constants.ts
+│   │   └── auth-user/  # Shared endpoint (get-auth-user.ts, use-get-auth-user.ts)
+│   ├── login/
+│   │   ├── page.tsx
+│   │   ├── _api/       # Feature-specific API (login.ts, use-login.ts)
+│   │   ├── _components/
+│   │   └── _schemas/   # Form validation schemas
+│   └── register/
+│       ├── page.tsx
+│       ├── _api/
+│       ├── _components/
+│       └── _schemas/
+├── (features)/         # Route group (no URL impact)
+│   ├── layout.tsx      # Features layout
 │   └── [featureName]/  # Feature folder
-├── api/
-│   └── route.ts        # API handler
-├── _actions/           # Actions folder (no URL impact)
-└── _commons/           # Common folder (no URL impact)
-    ├── components/     # Shared components built with React Aria + Tailwind + Tailwind Variants (if needed)
+├── api/                # Next.js Route Handlers (if needed)
+│   └── route.ts
+├── _actions/           # Server Actions folder
+└── _commons/           # Shared code across the app
+    ├── api/            # Data fetching infrastructure
+    │   ├── fetcher.ts  # Core fetcher function
+    │   ├── errors/     # ApiError, ValidationErrors, parseApiError
+    │   └── hooks/      # useServerFormValidationErrors
+    ├── components/     # Shared UI components
     ├── hooks/          # Shared hooks
     ├── utils/          # Shared utils
-    ├── stores/         # Shared zustand stores
+    ├── stores/         # Global Zustand stores
+    └── types/          # Shared type definitions
 ```
 
-### Feature Directory Structure
+### Feature Directory Structure (Co-location Pattern)
+
+Each feature folder contains its own `_api/`, `_components/`, `_schemas/`, etc.
 
 ```
-app/(features)/[featureName]/page.tsx
-├── ...                 # Different feature's pages/routes
-├── _components/        # Specific components for this feature
-├── _hooks/             # Specific hooks for this feature (if needed)
-├── _utils/             # Specific utils for this feature (if needed)
-└── _stores/            # Specific zustand stores for this feature (if needed)
+app/(features)/[featureName]/
+├── page.tsx            # Feature page
+├── _api/               # API layer for this feature
+│   ├── [entity].ts     # Fetcher function (e.g., get-accounts.ts)
+│   └── use-[entity].ts # TanStack Query hook (e.g., use-get-accounts.ts)
+├── _components/        # Feature-specific components
+├── _schemas/           # Form validation schemas (Zod)
+├── _hooks/             # Feature-specific hooks (if needed)
+└── _stores/            # Feature-specific Zustand stores (if needed)
+```
 
+### Route Group `_api/` Structure
+
+For route groups with shared API code (like `(auth)`):
+
+```
+(auth)/
+├── _api/                           # Shared across auth module
+│   ├── _support/
+│   │   └── auth-query-keys.ts      # Query key constants
+│   ├── auth.types.ts               # Shared types/schemas
+│   ├── auth.constants.ts           # Constants like OAuth URLs
+│   └── auth-user/                  # Shared endpoint
+│       ├── get-auth-user.ts        # Fetcher function
+│       └── use-get-auth-user.ts    # Query hook
+├── login/
+│   └── _api/                       # Feature-specific
+│       ├── login.ts                # POST /auth/login
+│       └── use-login.ts            # useMutation hook
+└── register/
+    └── _api/
+        ├── register.ts
+        └── use-register.ts
 ```
 
 ## Server Components (Default)
@@ -62,10 +108,108 @@ export default async function Page() {
 }
 ```
 
+## Client-Side Data Fetching (TanStack Query)
+
+### Query Keys (const object pattern)
+
+```typescript
+// _api/_support/feature-query-keys.ts
+export const FEATURE_QUERY_KEYS = {
+  list: "feature-list",
+  detail: "feature-detail",
+  create: "feature-create",
+} as const;
+```
+
+### Fetcher Function
+
+```typescript
+// _api/get-accounts.ts
+import { fetcher } from "@/_commons/api";
+import { AccountSchema } from "./account.schema";
+
+export async function getAccounts() {
+  return fetcher("/accounts", {
+    method: "GET",
+    schema: z.array(AccountSchema),
+  });
+}
+```
+
+### Query Hook
+
+```typescript
+// _api/use-get-accounts.ts
+import { useQuery } from "@tanstack/react-query";
+import { ACCOUNT_QUERY_KEYS } from "./_support/account-query-keys";
+import { getAccounts } from "./get-accounts";
+
+export function useGetAccounts() {
+  return useQuery({
+    queryKey: [ACCOUNT_QUERY_KEYS.list],
+    queryFn: getAccounts,
+  });
+}
+```
+
+### Mutation Hook
+
+```typescript
+// _api/use-create-account.ts
+import { useMutation } from "@tanstack/react-query";
+import { ACCOUNT_QUERY_KEYS } from "./_support/account-query-keys";
+import { createAccount } from "./create-account";
+
+export function useCreateAccount() {
+  return useMutation({
+    mutationKey: [ACCOUNT_QUERY_KEYS.create],
+    mutationFn: createAccount,
+  });
+}
+```
+
+### Form with Server Validation Errors
+
+```typescript
+// _components/create-account-form.tsx
+"use client";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useServerFormValidationErrors } from "@/_commons/api";
+import { useCreateAccount } from "../_api/use-create-account";
+import { AccountFormData, accountSchema } from "../_schemas/account.schema";
+
+export function CreateAccountForm() {
+  const form = useForm<AccountFormData>({
+    resolver: zodResolver(accountSchema),
+  });
+
+  const { mutate, isPending, error } = useCreateAccount();
+
+  // Auto-apply server validation errors to form fields
+  const generalError = useServerFormValidationErrors(form, error);
+
+  const onSubmit = (data: AccountFormData) => {
+    mutate(data, {
+      onSuccess: () => router.push("/accounts"),
+    });
+  };
+
+  return (
+    <form onSubmit={form.handleSubmit(onSubmit)}>
+      {generalError && <Alert variant="error">{generalError}</Alert>}
+      <Input {...form.register("name")} error={form.formState.errors.name?.message} />
+      <Button type="submit" isLoading={isPending}>Create</Button>
+    </form>
+  );
+}
+```
+
 ## Server Actions
 
 ```typescript
-// app/actions.ts
+// app/_actions/create-user.ts
 "use server";
 
 import { revalidatePath } from "next/cache";
@@ -80,17 +224,17 @@ export async function createUser(formData: FormData) {
   redirect("/users");
 }
 
-// Usage
+// Usage in component
 <form action={createUser}>
   <input name="name" required />
   <button type="submit">Create</button>
 </form>
 ```
 
-## Data Fetching
+## Server-Side Data Fetching
 
 ```typescript
-// Parallel
+// Parallel fetching in Server Components
 async function Page() {
   const [users, posts] = await Promise.all([
     getUsers(),
