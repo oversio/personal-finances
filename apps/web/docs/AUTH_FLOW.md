@@ -228,24 +228,56 @@ The `apiClient` (axios) has an interceptor that:
 
 ## Protected Routes
 
-Use Next.js middleware for server-side protection:
+Route protection uses a two-layer approach:
+
+### Layer 1: Next.js Middleware (Server-side)
+
+The middleware runs before any page renders and provides fast redirects based on cookie presence:
 
 ```typescript
 // middleware.ts
-export function middleware(request: NextRequest) {
-  const token = request.cookies.get("accessToken");
+const PUBLIC_ROUTES = ["/", "/login", "/register", "/oauth/callback"];
 
-  if (!token && request.nextUrl.pathname.startsWith("/dashboard")) {
-    return NextResponse.redirect(new URL("/login", request.url));
+export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const hasToken = request.cookies.has("accessToken");
+
+  // Redirect authenticated users away from auth pages
+  if (hasToken && isAuthRoute(pathname)) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
+  // Redirect unauthenticated users to login for protected routes
+  if (!hasToken && !isPublicRoute(pathname)) {
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("redirect", pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
   return NextResponse.next();
 }
-
-export const config = {
-  matcher: ["/dashboard/:path*", "/accounts/:path*"],
-};
 ```
+
+### Layer 2: Protected Layout (Client-side)
+
+The `(features)/layout.tsx` handles auth state initialization and user fetching:
+
+```typescript
+// (features)/layout.tsx
+export default function FeaturesLayout({ children }) {
+  // 1. Initialize tokens from cookies
+  // 2. Fetch user if tokens exist but no user in store
+  // 3. Handle loading state
+  // 4. Redirect if not authenticated
+}
+```
+
+### Redirect After Login
+
+When middleware redirects to `/login`, it passes a `redirect` query param:
+- `/login?redirect=/dashboard/settings`
+
+Both `LoginForm` and `RegisterForm` read this param and redirect back after successful authentication.
 
 ## Query Keys
 
