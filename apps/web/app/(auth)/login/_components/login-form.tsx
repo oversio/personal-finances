@@ -8,11 +8,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useServerFormValidationErrors } from "@/_commons/api";
 import { useAuthStore } from "@/_commons/stores/auth.store";
-import { loginSchema, type LoginFormData } from "@/(auth)/_schemas/login.schema";
 import { GoogleIcon } from "./google-icon";
 import { EyeIcon, EyeSlashIcon } from "./eye-icons";
 import { useLogin } from "../_api/use-login";
-import { getGoogleAuthUrl } from "@/(auth)/_api/auth.api";
+import { getGoogleAuthUrl } from "@/(auth)/_api/auth.constants";
+import { LoginFormData, loginSchema } from "../_schemas/login.schema";
 
 export function LoginForm() {
   const router = useRouter();
