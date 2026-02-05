@@ -8,12 +8,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useServerFormValidationErrors } from "@/_commons/api";
 import { useAuthStore } from "@/_commons/stores/auth.store";
-import { registerSchema, type RegisterFormData } from "@/(auth)/_schemas/register.schema";
 
 import { GoogleIcon } from "../../login/_components/google-icon";
 import { EyeIcon, EyeSlashIcon } from "../../login/_components/eye-icons";
 import { useRegister } from "@/(auth)/register/_api/use-register";
-import { getGoogleAuthUrl } from "@/(auth)/_api/auth.api";
+import { getGoogleAuthUrl } from "@/(auth)/_api/auth.constants";
+import { RegisterFormData, registerSchema } from "../_schemas/register.schema";
 
 export function RegisterForm() {
   const router = useRouter();
