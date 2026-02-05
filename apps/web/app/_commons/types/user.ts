@@ -1,6 +1,6 @@
 import z from "zod";
 
-import { AUTH_PROVIDER } from "./auth-provider";
+import { AUTH_PROVIDER_VALUES } from "./auth-provider";
 import { DateTime } from "./app";
 
 export const ApiGetUser = z.object({
@@ -8,7 +8,7 @@ export const ApiGetUser = z.object({
   email: z.string(),
   name: z.string(),
   picture: z.string().optional(),
-  authProvider: z.enum(AUTH_PROVIDER),
+  authProvider: z.enum(AUTH_PROVIDER_VALUES),
   isEmailVerified: z.boolean(),
   createdAt: DateTime,
 });
