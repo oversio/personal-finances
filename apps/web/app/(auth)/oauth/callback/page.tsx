@@ -35,7 +35,8 @@ export default function AuthCallbackPage() {
         const redirectTo = sessionStorage.getItem("redirectAfterAuth") || "/dashboard";
         sessionStorage.removeItem("redirectAfterAuth");
         router.push(redirectTo);
-      } catch {
+      } catch (error) {
+        console.error(error);
         router.push("/login?error=oauth_failed");
       }
     }
