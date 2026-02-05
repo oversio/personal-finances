@@ -6,10 +6,10 @@ This document describes how errors from the API are handled in the web applicati
 
 The application handles two types of API errors:
 
-| Error Class | HTTP Status | Use Case |
-|-------------|-------------|----------|
-| `ValidationErrors` | 422 | Form validation errors, business rule violations |
-| `ApiError` | 401, 403, 404, 500, etc. | Auth errors, not found, server errors |
+| Error Class        | HTTP Status              | Use Case                                         |
+| ------------------ | ------------------------ | ------------------------------------------------ |
+| `ValidationErrors` | 422                      | Form validation errors, business rule violations |
+| `ApiError`         | 401, 403, 404, 500, etc. | Auth errors, not found, server errors            |
 
 ## Error Flow
 
@@ -107,15 +107,15 @@ Location: `app/_commons/api/errors/api-error.ts`
 ```typescript
 const error = new ApiError(404, "Not Found", "User not found");
 
-error.statusCode;    // 404
-error.errorType;     // "Not Found"
-error.message;       // "User not found"
+error.statusCode; // 404
+error.errorType; // "Not Found"
+error.message; // "User not found"
 
 // Helper getters
 error.isUnauthorized; // statusCode === 401
-error.isForbidden;    // statusCode === 403
-error.isNotFound;     // statusCode === 404
-error.isServerError;  // statusCode >= 500
+error.isForbidden; // statusCode === 403
+error.isNotFound; // statusCode === 404
+error.isServerError; // statusCode >= 500
 ```
 
 ### Type Guard
@@ -211,7 +211,7 @@ For errors that should show toast notifications or be logged globally, you can a
 const queryClient = new QueryClient({
   defaultOptions: {
     mutations: {
-      onError: (error) => {
+      onError: error => {
         if (isApiError(error) && error.isServerError) {
           toast.error("Server error. Please try again later.");
         }
@@ -225,9 +225,9 @@ const queryClient = new QueryClient({
 
 See [API_STANDARDS.md](../../api/docs/API_STANDARDS.md) for the complete list of error codes.
 
-| Code Pattern | Example | Description |
-|--------------|---------|-------------|
-| `auth.*` | `auth.invalid_credentials` | Authentication errors |
-| `validation.*` | `validation.required` | Generic validation errors |
-| `users.*` | `users.not_found` | User-related errors |
-| `accounts.*` | `accounts.insufficient_balance` | Account-related errors |
+| Code Pattern   | Example                         | Description               |
+| -------------- | ------------------------------- | ------------------------- |
+| `auth.*`       | `auth.invalid_credentials`      | Authentication errors     |
+| `validation.*` | `validation.required`           | Generic validation errors |
+| `users.*`      | `users.not_found`               | User-related errors       |
+| `accounts.*`   | `accounts.insufficient_balance` | Account-related errors    |

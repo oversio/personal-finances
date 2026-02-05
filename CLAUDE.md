@@ -183,12 +183,12 @@ app/
 
 See [apps/web/CLAUDE.md](apps/web/CLAUDE.md) for AI-specific instructions when working in the web app.
 
-| Document | Description |
-|----------|-------------|
-| [Data Fetching](apps/web/docs/DATA_FETCHING.md) | Fetcher, React Query hooks, schema parsing |
-| [Error Handling](apps/web/docs/ERROR_HANDLING.md) | ValidationErrors, ApiError, form error handling |
-| [Auth Flow](apps/web/docs/AUTH_FLOW.md) | Login, registration, OAuth, token management |
-| [State Management](apps/web/docs/STATE_MANAGEMENT.md) | Zustand stores, selectors, best practices |
+| Document                                              | Description                                     |
+| ----------------------------------------------------- | ----------------------------------------------- |
+| [Data Fetching](apps/web/docs/DATA_FETCHING.md)       | Fetcher, React Query hooks, schema parsing      |
+| [Error Handling](apps/web/docs/ERROR_HANDLING.md)     | ValidationErrors, ApiError, form error handling |
+| [Auth Flow](apps/web/docs/AUTH_FLOW.md)               | Login, registration, OAuth, token management    |
+| [State Management](apps/web/docs/STATE_MANAGEMENT.md) | Zustand stores, selectors, best practices       |
 
 ---
 
