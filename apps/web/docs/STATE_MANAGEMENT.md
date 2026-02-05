@@ -6,21 +6,21 @@ This document describes the state management approach in the web application.
 
 The app uses a combination of:
 
-| Tool | Purpose |
-|------|---------|
-| **TanStack Query** | Server state (API data, caching, synchronization) |
-| **Zustand** | Client state (UI state, auth state, user preferences) |
-| **React Hook Form** | Form state (validation, submission) |
+| Tool                | Purpose                                               |
+| ------------------- | ----------------------------------------------------- |
+| **TanStack Query**  | Server state (API data, caching, synchronization)     |
+| **Zustand**         | Client state (UI state, auth state, user preferences) |
+| **React Hook Form** | Form state (validation, submission)                   |
 
 ## When to Use What
 
-| State Type | Example | Tool |
-|------------|---------|------|
-| Server data | Accounts list, user profile | TanStack Query |
-| Auth state | Current user, tokens | Zustand |
-| UI state | Sidebar open, selected tab | Zustand or React state |
-| Form state | Input values, errors | React Hook Form |
-| URL state | Filters, pagination | URL params (useSearchParams) |
+| State Type  | Example                     | Tool                         |
+| ----------- | --------------------------- | ---------------------------- |
+| Server data | Accounts list, user profile | TanStack Query               |
+| Auth state  | Current user, tokens        | Zustand                      |
+| UI state    | Sidebar open, selected tab  | Zustand or React state       |
+| Form state  | Input values, errors        | React Hook Form              |
+| URL state   | Filters, pagination         | URL params (useSearchParams) |
 
 ## Zustand Stores
 
@@ -71,9 +71,10 @@ export const useExampleStore = create<ExampleStore>()(set => ({
 
   increment: () => set(state => ({ count: state.count + 1 })),
 
-  addItem: (item) => set(state => ({
-    items: [...state.items, item],
-  })),
+  addItem: item =>
+    set(state => ({
+      items: [...state.items, item],
+    })),
 
   reset: () => set(initialState),
 }));
@@ -107,7 +108,7 @@ import { useShallow } from "zustand/react/shallow";
 
 // Good - only re-renders when count OR items change (shallow compare)
 const { count, items } = useExampleStore(
-  useShallow(state => ({ count: state.count, items: state.items }))
+  useShallow(state => ({ count: state.count, items: state.items })),
 );
 ```
 
@@ -178,7 +179,7 @@ For data from the API, use TanStack Query hooks instead of Zustand:
 // Don't do this - duplicating server state in Zustand
 const useAccountsStore = create(set => ({
   accounts: [],
-  setAccounts: (accounts) => set({ accounts }),
+  setAccounts: accounts => set({ accounts }),
   fetchAccounts: async () => {
     const data = await getAccounts();
     set({ accounts: data });
@@ -219,9 +220,9 @@ export const useDashboardStore = create<DashboardStore>()(set => ({
   dateRange: { start: new Date(), end: new Date() },
   chartType: "bar",
 
-  setSelectedAccount: (id) => set({ selectedAccountId: id }),
-  setDateRange: (range) => set({ dateRange: range }),
-  setChartType: (type) => set({ chartType: type }),
+  setSelectedAccount: id => set({ selectedAccountId: id }),
+  setDateRange: range => set({ dateRange: range }),
+  setChartType: type => set({ chartType: type }),
 }));
 ```
 
@@ -235,14 +236,14 @@ import { persist } from "zustand/middleware";
 
 export const usePreferencesStore = create<PreferencesStore>()(
   persist(
-    (set) => ({
+    set => ({
       theme: "light",
-      setTheme: (theme) => set({ theme }),
+      setTheme: theme => set({ theme }),
     }),
     {
       name: "preferences", // localStorage key
-    }
-  )
+    },
+  ),
 );
 ```
 

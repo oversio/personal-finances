@@ -294,7 +294,7 @@ AuthModule ──imports──► WorkspacesModule
 ```typescript
 // Before OAuth - store target route
 sessionStorage.setItem("redirectAfterAuth", "/dashboard/settings");
-window.location.href = "/api/auth/google";
+window.location.href = "/api/v1/auth/google";
 
 // After OAuth callback (/auth/callback page)
 const redirectTo = sessionStorage.getItem("redirectAfterAuth") || "/";
@@ -536,7 +536,7 @@ JWT_REFRESH_EXPIRATION=7d
 # Google OAuth
 GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
-GOOGLE_CALLBACK_URL=http://localhost:9000/auth/google/callback
+GOOGLE_CALLBACK_URL=http://localhost:9000/api/v1/auth/google/callback
 
 # Frontend
 FRONTEND_URL=http://localhost:3000

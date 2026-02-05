@@ -4,11 +4,11 @@ This document provides AI-specific instructions for working with the web applica
 
 ## Quick Reference
 
-| Topic | Documentation |
-|-------|---------------|
-| Data Fetching | [docs/DATA_FETCHING.md](docs/DATA_FETCHING.md) |
-| Error Handling | [docs/ERROR_HANDLING.md](docs/ERROR_HANDLING.md) |
-| Auth Flow | [docs/AUTH_FLOW.md](docs/AUTH_FLOW.md) |
+| Topic            | Documentation                                        |
+| ---------------- | ---------------------------------------------------- |
+| Data Fetching    | [docs/DATA_FETCHING.md](docs/DATA_FETCHING.md)       |
+| Error Handling   | [docs/ERROR_HANDLING.md](docs/ERROR_HANDLING.md)     |
+| Auth Flow        | [docs/AUTH_FLOW.md](docs/AUTH_FLOW.md)               |
 | State Management | [docs/STATE_MANAGEMENT.md](docs/STATE_MANAGEMENT.md) |
 
 ## Folder Structure Conventions
@@ -112,10 +112,10 @@ const { user, isLoading } = useAuthStore();
 
 ## Import Aliases
 
-| Alias | Path |
-|-------|------|
-| `@/_commons/*` | `app/_commons/*` |
-| `@/(auth)/*` | `app/(auth)/*` |
+| Alias            | Path               |
+| ---------------- | ------------------ |
+| `@/_commons/*`   | `app/_commons/*`   |
+| `@/(auth)/*`     | `app/(auth)/*`     |
 | `@/(features)/*` | `app/(features)/*` |
 
 ## When Creating New Features

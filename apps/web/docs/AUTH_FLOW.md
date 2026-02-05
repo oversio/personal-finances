@@ -182,24 +182,24 @@ Location: `app/_commons/stores/auth.store.ts`
 
 ### State
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `user` | `User \| null` | Current user object |
-| `accessToken` | `string \| null` | JWT access token |
-| `refreshToken` | `string \| null` | JWT refresh token |
-| `isAuthenticated` | `boolean` | Whether user is authenticated |
-| `isLoading` | `boolean` | Loading state |
-| `isInitialized` | `boolean` | Whether auth state has been initialized |
+| Field             | Type             | Description                             |
+| ----------------- | ---------------- | --------------------------------------- |
+| `user`            | `User \| null`   | Current user object                     |
+| `accessToken`     | `string \| null` | JWT access token                        |
+| `refreshToken`    | `string \| null` | JWT refresh token                       |
+| `isAuthenticated` | `boolean`        | Whether user is authenticated           |
+| `isLoading`       | `boolean`        | Loading state                           |
+| `isInitialized`   | `boolean`        | Whether auth state has been initialized |
 
 ### Actions
 
-| Action | Description |
-|--------|-------------|
-| `setAuth(user, tokens)` | Set user and tokens after login |
-| `setUser(user)` | Update user only |
-| `setTokens(tokens)` | Update tokens only |
+| Action                    | Description                                |
+| ------------------------- | ------------------------------------------ |
+| `setAuth(user, tokens)`   | Set user and tokens after login            |
+| `setUser(user)`           | Update user only                           |
+| `setTokens(tokens)`       | Update tokens only                         |
 | `initializeFromCookies()` | Initialize tokens from cookies on app load |
-| `logout()` | Clear auth state and cookies |
+| `logout()`                | Clear auth state and cookies               |
 
 ### Selectors
 
