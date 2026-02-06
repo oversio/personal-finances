@@ -4,6 +4,7 @@ import { Button, Tooltip } from "@heroui/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSidebarStore, selectIsCollapsed } from "@/_commons/stores/sidebar.store";
+import { cn } from "@/_commons/utils/cn";
 
 interface SidebarItemProps {
   href: string;
@@ -24,7 +25,7 @@ export function SidebarItem({ href, label, icon }: SidebarItemProps) {
       href={href}
       variant={isActive ? "flat" : "light"}
       color={isActive ? "primary" : "default"}
-      className={`w-full justify-start gap-3 ${isCollapsed ? "min-w-10 px-0" : ""}`}
+      className={cn("w-full gap-3", isCollapsed ? "justify-center min-w-10 px-0" : "justify-start")}
       onPress={closeMobile}
     >
       <span className="shrink-0">{icon}</span>

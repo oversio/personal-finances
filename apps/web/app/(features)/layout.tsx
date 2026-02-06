@@ -13,6 +13,7 @@ import {
   selectAccessToken,
 } from "@/_commons/stores/auth.store";
 import { useSidebarStore, selectIsCollapsed } from "@/_commons/stores/sidebar.store";
+import { cn } from "@/_commons/utils/cn";
 import { AppNavbar } from "./_components/app-navbar";
 import { AppSidebar } from "./_components/app-sidebar";
 
@@ -71,8 +72,15 @@ export default function FeaturesLayout({ children }: FeaturesLayoutProps) {
     fetchUser();
   }, [isInitialized, accessToken, user, setAuth, logout, router]);
 
-  // Show loading while initializing or fetching user
-  if (!isInitialized || (accessToken && !user)) {
+  // Safety check: redirect if not authenticated after initialization
+  useEffect(() => {
+    if (isInitialized && !isAuthenticated) {
+      router.replace("/login");
+    }
+  }, [isInitialized, isAuthenticated, router]);
+
+  // Show loading while initializing, fetching user, or not authenticated
+  if (!isInitialized || (accessToken && !user) || !isAuthenticated) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <Spinner size="lg" />
@@ -80,22 +88,12 @@ export default function FeaturesLayout({ children }: FeaturesLayoutProps) {
     );
   }
 
-  // Safety check: redirect if not authenticated after initialization
-  if (!isAuthenticated) {
-    router.replace("/login");
-    return null;
-  }
-
   return (
     <div className="min-h-screen bg-background">
       <AppNavbar />
       <AppSidebar />
       <main
-        className={`
-          pt-14 transition-all duration-200
-          md:pl-64
-          ${isCollapsed ? "md:pl-16" : "md:pl-64"}
-        `}
+        className={cn("pt-14 transition-all duration-200", isCollapsed ? "md:pl-16" : "md:pl-64")}
       >
         <div className="p-6">{children}</div>
       </main>
