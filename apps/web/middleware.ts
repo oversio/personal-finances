@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 
 const AUTH_COOKIE = "accessToken";
 
-const PUBLIC_ROUTES = ["/", "/login", "/register", "/oauth/callback"];
+const PUBLIC_ROUTES = ["/login", "/register", "/oauth/callback"];
 
 function isPublicRoute(pathname: string): boolean {
   return PUBLIC_ROUTES.some(route => pathname === route || pathname.startsWith(`${route}/`));
@@ -16,6 +16,12 @@ function isAuthRoute(pathname: string): boolean {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const hasToken = request.cookies.has(AUTH_COOKIE);
+
+  // Root route: redirect based on auth state
+  if (pathname === "/") {
+    const destination = hasToken ? "/dashboard" : "/login";
+    return NextResponse.redirect(new URL(destination, request.url));
+  }
 
   // Redirect authenticated users away from auth pages
   if (hasToken && isAuthRoute(pathname)) {

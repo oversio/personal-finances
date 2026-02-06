@@ -6,6 +6,7 @@ import {
   selectIsCollapsed,
   selectIsMobileOpen,
 } from "@/_commons/stores/sidebar.store";
+import { cn } from "@/_commons/utils/cn";
 import { SidebarItem } from "./sidebar-item";
 
 const NAV_ITEMS = [
@@ -53,14 +54,13 @@ export function AppSidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`
-          fixed left-0 top-14 z-50 h-[calc(100vh-3.5rem)] border-r border-divider bg-background
-          transition-all duration-200 ease-in-out
-          ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}
-          md:translate-x-0
-          ${isCollapsed ? "md:w-16" : "md:w-64"}
-          w-64
-        `}
+        className={cn(
+          "fixed left-0 top-14 z-50 h-[calc(100vh-3.5rem)] w-64 border-r border-divider bg-background",
+          "transition-all duration-200 ease-in-out",
+          "md:translate-x-0",
+          isMobileOpen ? "translate-x-0" : "-translate-x-full",
+          isCollapsed ? "md:w-16" : "md:w-64",
+        )}
       >
         <nav className="flex h-full flex-col p-3">
           <div className="flex flex-col gap-1">
