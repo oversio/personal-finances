@@ -14,6 +14,9 @@ import {
  * Maps exception class names to HTTP status codes.
  */
 const EXCEPTION_STATUS_MAP: Record<string, HttpStatus> = {
+  // Forbidden errors (403)
+  WorkspaceAccessDeniedError: HttpStatus.FORBIDDEN,
+
   // Not Found errors (404)
   EntityNotFoundError: HttpStatus.NOT_FOUND,
   UserNotFoundError: HttpStatus.NOT_FOUND,

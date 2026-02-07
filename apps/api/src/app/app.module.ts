@@ -4,6 +4,7 @@ import { APP_GUARD } from "@nestjs/core";
 import { EventEmitterModule } from "@nestjs/event-emitter";
 import { MongooseModule } from "@nestjs/mongoose";
 import { validateEnv } from "@/config";
+import { AccountsModule } from "@/modules/accounts";
 import { AuthModule, JwtAuthGuard } from "@/modules/auth";
 import { SharedModule } from "@/modules/shared/shared.module";
 import { WorkspacesModule } from "@/modules/workspaces";
@@ -38,6 +39,7 @@ import { HealthModule } from "./health/health.module";
     // Feature modules
     WorkspacesModule,
     AuthModule,
+    AccountsModule,
   ],
   providers: [
     // Global JWT guard - all routes require authentication by default

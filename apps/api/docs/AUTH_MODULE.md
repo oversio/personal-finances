@@ -457,7 +457,7 @@ src/modules/
 │       │   └── google.strategy.ts
 │       ├── decorators/
 │       │   ├── current-user.decorator.ts
-│       │   └── public.decorator.ts
+│       │   └── public.decorator.ts   # Re-exports from @/modules/shared
 │       ├── services/
 │       │   ├── jwt-token.service.ts
 │       │   └── bcrypt-password-hasher.ts
@@ -466,6 +466,25 @@ src/modules/
 │           │   └── refresh-token.schema.ts
 │           └── repositories/
 │               └── mongoose-refresh-token.repository.ts
+│
+├── shared/                           # Shared infrastructure
+│   ├── shared.module.ts
+│   ├── index.ts
+│   ├── application/
+│   │   └── dtos/
+│   │       └── pagination.dto.ts
+│   ├── domain/
+│   │   ├── value-objects/
+│   │   │   └── entity-id.ts
+│   │   └── exceptions/
+│   │       ├── domain.exception.ts
+│   │       ├── error-codes.ts
+│   │       └── api-error.ts
+│   └── infrastructure/
+│       ├── decorators/
+│       │   └── public.decorator.ts   # IS_PUBLIC_KEY, Public decorator
+│       └── exceptions/
+│           └── domain-exception.filter.ts
 │
 └── workspaces/
     ├── workspaces.module.ts
@@ -487,8 +506,14 @@ src/modules/
     │   │   ├── currency.ts
     │   │   └── member-role.ts
     │   └── exceptions/
-    │       └── workspace-not-found.error.ts
+    │       ├── workspace.exceptions.ts  # WorkspaceNotFoundError, WorkspaceAccessDeniedError
+    │       └── index.ts
     └── infrastructure/
+        ├── guards/
+        │   └── workspace-access.guard.ts  # Validates workspace membership
+        ├── decorators/
+        │   ├── current-workspace.decorator.ts
+        │   └── current-workspace-member.decorator.ts
         └── persistence/
             └── mongoose/
                 ├── mongo-workspaces.repository.ts
@@ -545,6 +570,67 @@ FRONTEND_URL=http://localhost:3000
 PORT=9000
 NODE_ENV=development
 ```
+
+---
+
+## Workspace Access Authorization
+
+Routes that operate within a workspace context use the `WorkspaceAccessGuard` to validate that:
+
+1. The workspace exists
+2. The authenticated user is a member of the workspace
+3. The membership is active
+
+### Usage
+
+```typescript
+import { Controller, UseGuards } from "@nestjs/common";
+import {
+  WorkspaceAccessGuard,
+  CurrentWorkspace,
+  CurrentWorkspaceMember,
+} from "@/modules/workspaces";
+
+@Controller("ws/:workspaceId/accounts")
+@UseGuards(WorkspaceAccessGuard)
+export class AccountsController {
+  @Get()
+  findAll(
+    @CurrentWorkspace() workspace: WorkspaceContext["workspace"],
+    @CurrentWorkspaceMember() member: WorkspaceContext["membership"],
+  ) {
+    // workspace and member are validated and available
+  }
+}
+```
+
+### Workspace Context
+
+The guard attaches context to the request:
+
+```typescript
+interface WorkspaceContext {
+  workspace: {
+    id: string;
+    name: string;
+    ownerId: string;
+    currency: string;
+    timezone?: string;
+  };
+  membership: {
+    id: string;
+    role: string; // "owner" | "admin" | "member"
+    isActive: boolean;
+  };
+}
+```
+
+### Errors
+
+| Error                        | HTTP Status | Description                                    |
+| ---------------------------- | ----------- | ---------------------------------------------- |
+| `WorkspaceNotFoundError`     | 404         | Workspace doesn't exist                        |
+| `WorkspaceAccessDeniedError` | 403         | User is not a member or membership is inactive |
 
 ---
 

@@ -16,7 +16,7 @@ This document defines the MongoDB collections for the Personal Finances applicat
         ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                        WORKSPACES                               │
-│  _id, name, ownerId, currency, createdAt                        │
+│  _id, name, ownerId, currency, isDefault, createdAt             │
 └─────────────────────────────────────────────────────────────────┘
         │
         ├──► WORKSPACE_MEMBERS (userId, workspaceId, role)
@@ -75,6 +75,7 @@ This document defines the MongoDB collections for the Personal Finances applicat
   ownerId: ObjectId,                // ref: Users
   currency: string,                 // ISO 4217: "USD", "EUR", "MXN"
   timezone?: string,                // "America/Mexico_City"
+  isDefault: boolean,               // true = user's default workspace
 
   createdAt: Date,
   updatedAt: Date,
@@ -83,6 +84,12 @@ This document defines the MongoDB collections for the Personal Finances applicat
 // Indexes
 // - ownerId
 ```
+
+**Default Workspace:**
+
+- Each user gets a default workspace created on registration
+- The `isDefault` flag identifies which workspace to redirect to after login
+- Only one workspace per user should be marked as default
 
 ---
 
@@ -117,25 +124,27 @@ This document defines the MongoDB collections for the Personal Finances applicat
   _id: ObjectId,
   workspaceId: ObjectId,
   name: string,                     // "BBVA Checking", "Wallet"
-  type: "bank" | "cash" | "credit_card" | "savings" | "investment",
+  type: "checking" | "savings" | "credit_card" | "cash" | "investment",
 
   // Balance
   initialBalance: number,
-  currentBalance: number,           // Denormalized
+  currentBalance: number,           // Denormalized, updated via transactions
 
   // Display
-  currency: string,
-  color?: string,
+  currency: string,                 // ISO 4217: "USD", "EUR", "MXN"
+  color: string,                    // Hex color: "#6366F1"
   icon?: string,
 
-  isActive: boolean,
+  // Soft delete
+  isArchived: boolean,              // false = active, true = archived
+
   createdAt: Date,
   updatedAt: Date,
 }
 
 // Indexes
-// - workspaceId
-// - workspaceId + isActive
+// - workspaceId (for listing accounts by workspace)
+// - workspaceId + name (unique, prevents duplicate names per workspace)
 ```
 
 ---
