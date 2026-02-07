@@ -165,35 +165,38 @@ This document defines the MongoDB collections for the Personal Finances applicat
 
   // Display
   icon?: string,
-  color?: string,
+  color: string,                    // Hex color: "#6366F1"
 
-  isSystem: boolean,                // Default categories, can't delete
-  isActive: boolean,
+  // Soft delete
+  isArchived: boolean,              // false = active, true = archived
+
   createdAt: Date,
   updatedAt: Date,
 }
 
 // Indexes
+// - workspaceId
+// - workspaceId + isArchived
+// - workspaceId + name + type (unique)
 // - workspaceId + type
-// - workspaceId + isActive
 ```
 
-**Default Categories (seeded per workspace):**
+**Default Categories (seeded on workspace creation via `workspace.created` event):**
 
-| Type    | Category       | Subcategories                           |
-| ------- | -------------- | --------------------------------------- |
-| Income  | Salary         | Main Job, Side Job, Bonus               |
-| Income  | Freelance      | Projects, Consulting                    |
-| Income  | Investments    | Dividends, Interest, Capital Gains      |
-| Income  | Other Income   | Gifts, Refunds, Other                   |
-| Expense | Food           | Groceries, Restaurants, Coffee          |
-| Expense | Transportation | Gas, Public Transit, Uber/Taxi, Parking |
-| Expense | Housing        | Rent, Utilities, Maintenance            |
-| Expense | Entertainment  | Streaming, Movies, Games                |
-| Expense | Shopping       | Clothing, Electronics, Home             |
-| Expense | Health         | Doctor, Pharmacy, Gym                   |
-| Expense | Education      | Courses, Books, Subscriptions           |
-| Expense | Other Expenses | Gifts, Donations, Other                 |
+| Type    | Category       | Subcategories                              |
+| ------- | -------------- | ------------------------------------------ |
+| Income  | Salary         | Regular Pay, Bonus, Overtime               |
+| Income  | Freelance      | Consulting, Projects, Commissions          |
+| Income  | Investments    | Dividends, Interest, Capital Gains         |
+| Income  | Other Income   | Refunds, Gifts Received, Rental, Misc      |
+| Expense | Food & Dining  | Groceries, Restaurants, Coffee, Delivery   |
+| Expense | Transportation | Gas, Public Transit, Parking, Maintenance  |
+| Expense | Housing        | Rent, Mortgage, Utilities, Internet        |
+| Expense | Healthcare     | Doctor, Medication, Insurance, Gym         |
+| Expense | Entertainment  | Streaming, Movies, Games, Hobbies          |
+| Expense | Shopping       | Clothing, Electronics, Home, Personal Care |
+| Expense | Education      | Courses, Books, Supplies, Tuition          |
+| Expense | Personal       | Gifts, Donations, Subscriptions, Other     |
 
 ---
 

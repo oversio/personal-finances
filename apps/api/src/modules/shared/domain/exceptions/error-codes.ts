@@ -54,6 +54,7 @@ export const ErrorCodes = {
     notFound: "categories.not_found",
     inUse: "categories.in_use",
     alreadyExists: "categories.already_exists",
+    subcategoryNotFound: "categories.subcategory_not_found",
   },
 
   // Budget errors
