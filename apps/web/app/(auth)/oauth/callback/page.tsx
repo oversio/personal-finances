@@ -32,7 +32,7 @@ export default function AuthCallbackPage() {
         });
 
         // Redirect to intended destination
-        const redirectTo = sessionStorage.getItem("redirectAfterAuth") || "/dashboard";
+        const redirectTo = sessionStorage.getItem("redirectAfterAuth") || "/workspace-redirect";
         sessionStorage.removeItem("redirectAfterAuth");
         router.push(redirectTo);
       } catch (error) {

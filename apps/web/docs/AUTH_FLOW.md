@@ -275,6 +275,7 @@ export default function FeaturesLayout({ children }) {
 ### Redirect After Login
 
 When middleware redirects to `/login`, it passes a `redirect` query param:
+
 - `/login?redirect=/dashboard/settings`
 
 Both `LoginForm` and `RegisterForm` read this param and redirect back after successful authentication.

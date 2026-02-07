@@ -73,11 +73,13 @@ export default function FeaturesLayout({ children }: FeaturesLayoutProps) {
   }, [isInitialized, accessToken, user, setAuth, logout, router]);
 
   // Safety check: redirect if not authenticated after initialization
+  // Only redirect if we don't have tokens (user actually logged out)
+  // If we have tokens but no user, we're still fetching the user
   useEffect(() => {
-    if (isInitialized && !isAuthenticated) {
+    if (isInitialized && !isAuthenticated && !accessToken) {
       router.replace("/login");
     }
-  }, [isInitialized, isAuthenticated, router]);
+  }, [isInitialized, isAuthenticated, accessToken, router]);
 
   // Show loading while initializing, fetching user, or not authenticated
   if (!isInitialized || (accessToken && !user) || !isAuthenticated) {
@@ -92,9 +94,7 @@ export default function FeaturesLayout({ children }: FeaturesLayoutProps) {
     <div className="min-h-screen bg-background">
       <AppNavbar />
       <AppSidebar />
-      <main
-        className={cn("pt-14 transition-all duration-200", isCollapsed ? "md:pl-16" : "md:pl-64")}
-      >
+      <main className={cn("transition-all duration-200", isCollapsed ? "md:pl-16" : "md:pl-64")}>
         <div className="p-6">{children}</div>
       </main>
     </div>
