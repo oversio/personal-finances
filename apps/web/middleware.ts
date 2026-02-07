@@ -19,13 +19,13 @@ export function middleware(request: NextRequest) {
 
   // Root route: redirect based on auth state
   if (pathname === "/") {
-    const destination = hasToken ? "/dashboard" : "/login";
+    const destination = hasToken ? "/workspace-redirect" : "/login";
     return NextResponse.redirect(new URL(destination, request.url));
   }
 
   // Redirect authenticated users away from auth pages
   if (hasToken && isAuthRoute(pathname)) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL("/workspace-redirect", request.url));
   }
 
   // Redirect unauthenticated users to login for protected routes

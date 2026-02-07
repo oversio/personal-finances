@@ -20,7 +20,7 @@ export function RegisterForm() {
   const searchParams = useSearchParams();
   const setAuth = useAuthStore(state => state.setAuth);
 
-  const redirectTo = searchParams.get("redirect") || "/dashboard";
+  const redirectTo = searchParams.get("redirect") || "/workspace-redirect";
 
   const form = useForm<RegisterFormData>({
     defaultValues: {

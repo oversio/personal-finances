@@ -3,6 +3,7 @@
 import { Button, Navbar, NavbarBrand, NavbarContent } from "@heroui/react";
 import { useSidebarStore, selectIsMobileOpen } from "@/_commons/stores/sidebar.store";
 import { UserMenu } from "./user-menu";
+import { WorkspaceSwitcher } from "./workspace-switcher";
 
 function HamburgerIcon({ isOpen }: { isOpen: boolean }) {
   return (
@@ -62,6 +63,7 @@ export function AppNavbar() {
         <NavbarBrand className="hidden sm:flex">
           <p className="font-semibold text-inherit">Personal Finances</p>
         </NavbarBrand>
+        <WorkspaceSwitcher />
       </NavbarContent>
 
       <NavbarContent justify="end">
