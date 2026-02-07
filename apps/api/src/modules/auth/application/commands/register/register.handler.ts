@@ -52,9 +52,15 @@ export class RegisterHandler {
     const user = User.createLocal(command.email, command.name, passwordHash, picture);
     const savedUser = await this.userRepository.save(user);
 
-    // Auto-create workspace for the user
+    // Auto-create default workspace for the user
     await this.createWorkspaceHandler.execute(
-      new CreateWorkspaceCommand(`${command.name}'s Workspace`, savedUser.id!.value),
+      new CreateWorkspaceCommand(
+        `${command.name}'s Workspace`,
+        savedUser.id!.value,
+        "USD",
+        undefined,
+        true, // isDefault
+      ),
     );
 
     // Generate tokens
