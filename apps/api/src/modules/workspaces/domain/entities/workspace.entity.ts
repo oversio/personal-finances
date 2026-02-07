@@ -8,6 +8,7 @@ export class Workspace {
     public readonly ownerId: EntityId,
     public readonly currency: Currency,
     public readonly timezone: string | undefined,
+    public readonly isDefault: boolean,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
   ) {}
@@ -18,6 +19,7 @@ export class Workspace {
     ownerId: string,
     currency: string = "USD",
     timezone?: string,
+    isDefault: boolean = false,
     createdAt?: Date,
     updatedAt?: Date,
   ): Workspace {
@@ -28,6 +30,7 @@ export class Workspace {
       new EntityId(ownerId),
       new Currency(currency),
       timezone,
+      isDefault,
       createdAt ?? now,
       updatedAt ?? now,
     );
@@ -40,6 +43,7 @@ export class Workspace {
       ownerId: this.ownerId.value,
       currency: this.currency.value,
       timezone: this.timezone,
+      isDefault: this.isDefault,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };
