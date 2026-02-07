@@ -18,6 +18,7 @@ export class MongooseWorkspaceRepository implements WorkspaceRepository {
       ownerId: new Types.ObjectId(workspace.ownerId.value),
       currency: workspace.currency.value,
       timezone: workspace.timezone,
+      isDefault: workspace.isDefault,
     });
 
     const saved = await doc.save();
@@ -42,6 +43,7 @@ export class MongooseWorkspaceRepository implements WorkspaceRepository {
           name: workspace.name.value,
           currency: workspace.currency.value,
           timezone: workspace.timezone,
+          isDefault: workspace.isDefault,
         },
         { new: true },
       )
@@ -65,6 +67,7 @@ export class MongooseWorkspaceRepository implements WorkspaceRepository {
       doc.ownerId.toString(),
       doc.currency,
       doc.timezone,
+      doc.isDefault,
       doc.createdAt,
       doc.updatedAt,
     );

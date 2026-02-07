@@ -29,3 +29,13 @@ export class UserAlreadyMemberError extends DomainException {
     });
   }
 }
+
+export class WorkspaceAccessDeniedError extends DomainException {
+  constructor(workspaceId: string) {
+    super(`Access denied to workspace ${workspaceId}`, {
+      errorCode: ErrorCodes.workspaces.accessDenied,
+      fieldName: null,
+      handler: "user",
+    });
+  }
+}

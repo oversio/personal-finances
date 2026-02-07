@@ -32,6 +32,7 @@ export class CreateWorkspaceHandler {
       command.ownerId,
       command.currency,
       command.timezone,
+      command.isDefault,
     );
 
     const savedWorkspace = await this.workspaceRepository.save(workspace);

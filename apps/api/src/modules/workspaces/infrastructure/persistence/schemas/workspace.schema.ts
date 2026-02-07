@@ -19,6 +19,9 @@ export class WorkspaceModel {
   @Prop({ type: String })
   timezone?: string;
 
+  @Prop({ required: true, default: false })
+  isDefault!: boolean;
+
   createdAt!: Date;
   updatedAt!: Date;
 }
