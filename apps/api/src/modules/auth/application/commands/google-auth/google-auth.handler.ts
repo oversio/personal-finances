@@ -60,9 +60,15 @@ export class GoogleAuthHandler {
         user = await this.userRepository.save(user);
         isNewUser = true;
 
-        // Auto-create workspace for new users
+        // Auto-create default workspace for new users
         await this.createWorkspaceHandler.execute(
-          new CreateWorkspaceCommand(`${command.name}'s Workspace`, user.id!.value),
+          new CreateWorkspaceCommand(
+            `${command.name}'s Workspace`,
+            user.id!.value,
+            "USD",
+            undefined,
+            true, // isDefault
+          ),
         );
 
         // Emit domain event
