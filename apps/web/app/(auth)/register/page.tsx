@@ -1,6 +1,7 @@
 "use client";
 
-import { Card, CardHeader, CardBody } from "@heroui/react";
+import { Suspense } from "react";
+import { Card, CardHeader, CardBody, Spinner } from "@heroui/react";
 import { RegisterForm } from "./_components/register-form";
 
 export default function RegisterPage() {
@@ -11,7 +12,15 @@ export default function RegisterPage() {
         <p className="text-small text-default-500">Sign up to start managing your finances</p>
       </CardHeader>
       <CardBody>
-        <RegisterForm />
+        <Suspense
+          fallback={
+            <div className="flex justify-center py-8">
+              <Spinner size="lg" />
+            </div>
+          }
+        >
+          <RegisterForm />
+        </Suspense>
       </CardBody>
     </Card>
   );
