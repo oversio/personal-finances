@@ -31,6 +31,7 @@ export const ErrorCodes = {
     notFound: "workspaces.not_found",
     memberNotFound: "workspaces.member_not_found",
     userAlreadyMember: "workspaces.user_already_member",
+    accessDenied: "workspaces.access_denied",
     limitReached: "workspaces.limit_reached",
   },
 
