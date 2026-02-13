@@ -70,7 +70,7 @@ export function RegisterForm() {
         {...register("name")}
         isInvalid={!!errors.name}
         errorMessage={errors.name?.message}
-        variant="bordered"
+        variant="flat"
         isRequired
         autoComplete="name"
       />
@@ -82,7 +82,7 @@ export function RegisterForm() {
         {...register("email")}
         isInvalid={!!errors.email}
         errorMessage={errors.email?.message}
-        variant="bordered"
+        variant="flat"
         isRequired
         autoComplete="email"
       />
@@ -95,7 +95,7 @@ export function RegisterForm() {
         isInvalid={!!errors.password}
         errorMessage={errors.password?.message}
         description="At least 8 characters with uppercase, lowercase, and number"
-        variant="bordered"
+        variant="flat"
         isRequired
         autoComplete="new-password"
         endContent={
@@ -124,7 +124,7 @@ export function RegisterForm() {
 
       <Button
         type="button"
-        variant="bordered"
+        variant="flat"
         startContent={<GoogleIcon className="text-xl" />}
         onPress={handleGoogleSignup}
       >

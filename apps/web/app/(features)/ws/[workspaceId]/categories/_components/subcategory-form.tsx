@@ -70,7 +70,7 @@ export function SubcategoryForm({
               {...register("name")}
               isInvalid={!!errors.name}
               errorMessage={errors.name?.message}
-              variant="bordered"
+              variant="flat"
               isRequired
             />
 
@@ -80,7 +80,7 @@ export function SubcategoryForm({
               {...register("icon")}
               isInvalid={!!errors.icon}
               errorMessage={errors.icon?.message}
-              variant="bordered"
+              variant="flat"
             />
 
             {generalError && <p className="text-small text-danger">{generalError}</p>}

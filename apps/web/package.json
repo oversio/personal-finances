@@ -13,6 +13,7 @@
   "dependencies": {
     "@heroui/react": "^2.8.7",
     "@hookform/resolvers": "^5.2.2",
+    "@internationalized/date": "^3.10.1",
     "@repo/ui": "workspace:*",
     "@tanstack/react-query": "^5.90.20",
     "axios": "^1.13.3",
