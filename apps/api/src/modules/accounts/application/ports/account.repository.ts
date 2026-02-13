@@ -9,4 +9,9 @@ export interface AccountRepository {
   findByNameAndWorkspace(name: string, workspaceId: string): Promise<Account | null>;
   update(account: Account): Promise<Account>;
   delete(id: string): Promise<void>;
+  /**
+   * Atomically updates the account balance by the given delta amount.
+   * Positive delta = increase balance, negative delta = decrease balance.
+   */
+  updateBalance(accountId: string, delta: number): Promise<void>;
 }

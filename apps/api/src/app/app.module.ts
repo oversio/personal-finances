@@ -6,8 +6,10 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { validateEnv } from "@/config";
 import { AccountsModule } from "@/modules/accounts";
 import { AuthModule, JwtAuthGuard } from "@/modules/auth";
+import { BudgetsModule } from "@/modules/budgets";
 import { CategoriesModule } from "@/modules/categories";
 import { SharedModule } from "@/modules/shared/shared.module";
+import { TransactionsModule } from "@/modules/transactions";
 import { WorkspacesModule } from "@/modules/workspaces";
 import { HealthModule } from "./health/health.module";
 
@@ -42,6 +44,8 @@ import { HealthModule } from "./health/health.module";
     AuthModule,
     AccountsModule,
     CategoriesModule,
+    TransactionsModule,
+    BudgetsModule,
   ],
   providers: [
     // Global JWT guard - all routes require authentication by default

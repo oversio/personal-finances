@@ -213,11 +213,12 @@ All error codes are defined in `src/modules/shared/domain/exceptions/error-codes
 
 #### Categories (`categories`)
 
-| Code                        | Description                              |
-| --------------------------- | ---------------------------------------- |
-| `categories.not_found`      | Category not found                       |
-| `categories.in_use`         | Category is in use and cannot be deleted |
-| `categories.already_exists` | Category already exists                  |
+| Code                               | Description                              |
+| ---------------------------------- | ---------------------------------------- |
+| `categories.not_found`             | Category not found                       |
+| `categories.in_use`                | Category is in use and cannot be deleted |
+| `categories.already_exists`        | Category already exists                  |
+| `categories.subcategory_not_found` | Subcategory not found in category        |
 
 #### Budgets (`budgets`)
 
@@ -312,37 +313,46 @@ Soft delete is used for financial entities to maintain audit trails and allow re
 ### Applies To
 
 - `accounts`
+- `categories`
 - `transactions`
 - `budgets`
 
 ### Implementation
 
-Add `deletedAt` field to entity schemas:
+Add `isArchived` boolean field to entity schemas:
 
 ```typescript
-const AccountSchema = z.object({
+@Schema({ collection: "accounts", timestamps: true })
+export class AccountModel {
   // ... other fields
-  deletedAt: z.date().nullable().default(null),
-});
+  @Prop({ required: true, default: false })
+  isArchived!: boolean;
+}
 ```
 
 ### Query Behavior
 
-- Default queries filter `deletedAt: null` to exclude deleted items
-- DELETE endpoint sets `deletedAt = new Date()` and returns 204
+- Default queries filter `isArchived: false` to exclude archived items
+- DELETE endpoint sets `isArchived = true` and returns 204 No Content
+- Use `?includeArchived=true` query param to include archived items
 - Data remains in database for audit/recovery purposes
 
 ### Example Repository Query
 
 ```typescript
-async findAll(): Promise<Account[]> {
-  return this.model.find({ deletedAt: null });
+async findByWorkspaceId(workspaceId: string, includeArchived = false): Promise<Account[]> {
+  const filter: Record<string, unknown> = {
+    workspaceId: new Types.ObjectId(workspaceId),
+  };
+
+  if (!includeArchived) {
+    filter.isArchived = false;
+  }
+
+  return this.model.find(filter).exec();
 }
 
-async softDelete(id: string): Promise<void> {
-  await this.model.updateOne(
-    { _id: id },
-    { $set: { deletedAt: new Date() } }
-  );
+async archive(id: string): Promise<void> {
+  await this.model.findByIdAndUpdate(id, { isArchived: true });
 }
 ```
