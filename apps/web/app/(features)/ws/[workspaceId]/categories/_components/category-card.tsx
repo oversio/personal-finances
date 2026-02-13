@@ -166,7 +166,7 @@ export function CategoryCard({ category, workspaceId, onArchive, isArchiving }: 
                   <Chip
                     key={subcategory.id}
                     size="sm"
-                    variant="bordered"
+                    variant="flat"
                     onClose={() => handleRemoveSubcategory(subcategory.id)}
                     isDisabled={isRemoving}
                     classNames={{

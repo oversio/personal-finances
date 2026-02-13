@@ -76,6 +76,48 @@ function getWorkspaceNavItems(workspaceId: string) {
       ),
       href: `/ws/${workspaceId}/categories`,
     },
+    {
+      key: "transactions",
+      label: "Transactions",
+      icon: (
+        <svg
+          className="size-5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={1.5}
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      ),
+      href: `/ws/${workspaceId}/transactions`,
+    },
+    {
+      key: "budgets",
+      label: "Budgets",
+      icon: (
+        <svg
+          className="size-5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={1.5}
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      ),
+      href: `/ws/${workspaceId}/budgets`,
+    },
   ];
 }
 

@@ -59,7 +59,7 @@ export function AccountForm({
         {...register("name")}
         isInvalid={!!errors.name}
         errorMessage={errors.name?.message}
-        variant="bordered"
+        variant="flat"
         isRequired
       />
 
@@ -73,7 +73,7 @@ export function AccountForm({
         }}
         isInvalid={!!errors.type}
         errorMessage={errors.type?.message}
-        variant="bordered"
+        variant="flat"
         isRequired
       >
         {Object.entries(ACCOUNT_TYPE_LABELS).map(([value, label]) => (
@@ -91,7 +91,7 @@ export function AccountForm({
         }}
         isInvalid={!!errors.currency}
         errorMessage={errors.currency?.message}
-        variant="bordered"
+        variant="flat"
         isRequired
         isDisabled={!!account}
       >
@@ -109,7 +109,7 @@ export function AccountForm({
           {...register("initialBalance", { valueAsNumber: true })}
           isInvalid={!!errors.initialBalance}
           errorMessage={errors.initialBalance?.message}
-          variant="bordered"
+          variant="flat"
           isRequired
         />
       )}

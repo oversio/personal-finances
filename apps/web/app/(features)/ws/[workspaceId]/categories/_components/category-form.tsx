@@ -57,7 +57,7 @@ export function CategoryForm({
         {...register("name")}
         isInvalid={!!errors.name}
         errorMessage={errors.name?.message}
-        variant="bordered"
+        variant="flat"
         isRequired
       />
 
@@ -71,7 +71,7 @@ export function CategoryForm({
         }}
         isInvalid={!!errors.type}
         errorMessage={errors.type?.message}
-        variant="bordered"
+        variant="flat"
         isRequired
       >
         {Object.entries(CATEGORY_TYPE_LABELS).map(([value, label]) => (
@@ -85,7 +85,7 @@ export function CategoryForm({
         {...register("icon")}
         isInvalid={!!errors.icon}
         errorMessage={errors.icon?.message}
-        variant="bordered"
+        variant="flat"
       />
 
       <div className="flex flex-col gap-2">

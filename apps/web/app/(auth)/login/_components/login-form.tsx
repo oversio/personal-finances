@@ -68,7 +68,7 @@ export function LoginForm() {
         {...register("email")}
         isInvalid={!!errors.email}
         errorMessage={errors.email?.message}
-        variant="bordered"
+        variant="flat"
         isRequired
         autoComplete="email"
       />
@@ -80,7 +80,7 @@ export function LoginForm() {
         {...register("password")}
         isInvalid={!!errors.password}
         errorMessage={errors.password?.message}
-        variant="bordered"
+        variant="flat"
         isRequired
         autoComplete="current-password"
         endContent={
@@ -109,7 +109,7 @@ export function LoginForm() {
 
       <Button
         type="button"
-        variant="bordered"
+        variant="flat"
         startContent={<GoogleIcon className="text-xl" />}
         onPress={handleGoogleLogin}
       >
