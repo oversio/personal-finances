@@ -47,6 +47,9 @@ export const ErrorCodes = {
     notFound: "transactions.not_found",
     invalidAmount: "transactions.invalid_amount",
     invalidDate: "transactions.invalid_date",
+    transferRequiresToAccount: "transactions.transfer_requires_to_account",
+    categoryRequired: "transactions.category_required",
+    sameAccountTransfer: "transactions.same_account_transfer",
   },
 
   // Category errors

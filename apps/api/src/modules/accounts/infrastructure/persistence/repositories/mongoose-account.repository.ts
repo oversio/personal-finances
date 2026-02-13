@@ -88,6 +88,12 @@ export class MongooseAccountRepository implements AccountRepository {
     await this.accountModel.findByIdAndDelete(id).exec();
   }
 
+  async updateBalance(accountId: string, delta: number): Promise<void> {
+    await this.accountModel
+      .findByIdAndUpdate(accountId, { $inc: { currentBalance: delta } })
+      .exec();
+  }
+
   private toDomain(doc: AccountDocument): Account {
     return Account.create({
       id: doc._id.toString(),

@@ -302,21 +302,44 @@ This document defines the MongoDB collections for the Personal Finances applicat
   _id: ObjectId,
   workspaceId: ObjectId,
   categoryId: ObjectId,
+  subcategoryId?: string,           // Optional - if set, budget is for subcategory only
 
+  name: string,                     // Display name for the budget
   amount: number,                   // Budget limit
   period: "weekly" | "monthly" | "yearly",
-  startDate: Date,
+  startDate: Date,                  // When budget tracking begins
   alertThreshold?: number,          // Notify at X% (e.g., 80)
 
-  isActive: boolean,
+  isArchived: boolean,              // false = active, true = archived (soft delete)
   createdAt: Date,
   updatedAt: Date,
 }
 
 // Indexes
-// - workspaceId + categoryId (unique when isActive)
-// - workspaceId + isActive
+// - workspaceId
+// - workspaceId + isArchived
+// - workspaceId + categoryId
+// - workspaceId + categoryId + subcategoryId + isArchived (unique, partial: isArchived=false)
 ```
+
+**Budget Scope:**
+
+- **Category budget** (subcategoryId not set): Tracks all transactions in the category
+- **Subcategory budget** (subcategoryId set): Tracks only transactions with that specific subcategory
+
+**Computed Fields (returned by API, not stored):**
+
+| Field         | Description                                        |
+| ------------- | -------------------------------------------------- |
+| `spent`       | Sum of expenses in current period                  |
+| `remaining`   | `amount - spent` (min 0)                           |
+| `percentage`  | `(spent / amount) * 100`                           |
+| `isExceeded`  | `spent > amount`                                   |
+| `isWarning`   | `percentage >= alertThreshold` (and not exceeded)  |
+| `periodStart` | Current period start date                          |
+| `periodEnd`   | Current period end date                            |
+| `category`    | `{ id, name, type }` - populated from categories   |
+| `subcategory` | `{ id, name }` - populated if subcategoryId is set |
 
 ---
 
