@@ -8,6 +8,7 @@ import { AccountsModule } from "@/modules/accounts";
 import { AuthModule, JwtAuthGuard } from "@/modules/auth";
 import { BudgetsModule } from "@/modules/budgets";
 import { CategoriesModule } from "@/modules/categories";
+import { RecurringTransactionsModule } from "@/modules/recurring-transactions";
 import { SharedModule } from "@/modules/shared/shared.module";
 import { TransactionsModule } from "@/modules/transactions";
 import { WorkspacesModule } from "@/modules/workspaces";
@@ -46,6 +47,7 @@ import { HealthModule } from "./health/health.module";
     CategoriesModule,
     TransactionsModule,
     BudgetsModule,
+    RecurringTransactionsModule,
   ],
   providers: [
     // Global JWT guard - all routes require authentication by default
