@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useGetAccounts } from "../../accounts/_api/use-get-accounts";
 import { useGetCategories } from "../../categories/_api/use-get-categories";
-import { useCreateRecurringTransaction } from "../_api/use-create-recurring-transaction";
+import { useCreateRecurringTransaction } from "../_api/create-recurring-transaction/use-create-recurring-transaction";
 import { RecurringTransactionForm } from "../_components/recurring-transaction-form";
 import type { CreateRecurringTransactionFormData } from "../_schemas/recurring-transaction.schema";
 

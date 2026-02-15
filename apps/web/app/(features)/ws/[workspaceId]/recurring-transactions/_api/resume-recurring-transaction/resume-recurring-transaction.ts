@@ -1,5 +1,5 @@
 import { fetcher } from "@/_commons/api";
-import { RecurringTransactionSchema } from "./recurring-transaction.types";
+import { RecurringTransactionSchema } from "../recurring-transaction.types";
 
 export interface ResumeRecurringTransactionParams {
   workspaceId: string;

@@ -4,11 +4,11 @@ import { Button, Spinner } from "@heroui/react";
 import { useState } from "react";
 import { useGetAccounts } from "../../accounts/_api/use-get-accounts";
 import { useGetCategories } from "../../categories/_api/use-get-categories";
-import { useDeleteRecurringTransaction } from "../_api/use-delete-recurring-transaction";
-import { useGetRecurringTransactions } from "../_api/use-get-recurring-transactions";
-import { usePauseRecurringTransaction } from "../_api/use-pause-recurring-transaction";
-import { useProcessRecurringTransactions } from "../_api/use-process-recurring-transactions";
-import { useResumeRecurringTransaction } from "../_api/use-resume-recurring-transaction";
+import { useDeleteRecurringTransaction } from "../_api/delete-recurring-transaction/use-delete-recurring-transaction";
+import { useGetRecurringTransactionList } from "../_api/get-recurring-transaction-list/use-get-recurring-transaction-list";
+import { usePauseRecurringTransaction } from "../_api/pause-recurring-transaction/use-pause-recurring-transaction";
+import { useProcessRecurringTransactions } from "../_api/process-recurring-transactions/use-process-recurring-transactions";
+import { useResumeRecurringTransaction } from "../_api/resume-recurring-transaction/use-resume-recurring-transaction";
 import { RecurringTransactionCard } from "./recurring-transaction-card";
 
 interface RecurringTransactionListProps {
@@ -24,7 +24,7 @@ export function RecurringTransactionList({ workspaceId }: RecurringTransactionLi
     data: recurringTransactions,
     isLoading: isLoadingRecurring,
     error: recurringError,
-  } = useGetRecurringTransactions({ workspaceId });
+  } = useGetRecurringTransactionList({ workspaceId });
 
   const { data: accounts, isLoading: isLoadingAccounts } = useGetAccounts({ workspaceId });
   const { data: categories, isLoading: isLoadingCategories } = useGetCategories({ workspaceId });

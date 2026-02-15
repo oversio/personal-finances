@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { RECURRING_TRANSACTION_QUERY_KEYS } from "./_support/recurring-transaction-query-keys";
+import { RECURRING_TRANSACTION_QUERY_KEYS } from "../_support/recurring-transaction-query-keys";
 import {
   getRecurringTransaction,
   type GetRecurringTransactionParams,

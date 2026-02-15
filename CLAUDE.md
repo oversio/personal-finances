@@ -131,10 +131,15 @@ app/
 │   └── register/...
 ├── (features)/               # Route group for feature modules
 │   └── [featureName]/
-│       ├── _api/             # Feature-specific API
+│       ├── _api/             # Feature-specific API (grouped by action)
 │       │   ├── _support/     # Query keys
-│       │   ├── get-*.ts      # Fetcher functions
-│       │   └── use-*.ts      # TanStack Query hooks
+│       │   ├── [feature].types.ts  # Shared Zod schemas
+│       │   ├── get-[entity]/       # Grouped folder per action
+│       │   │   ├── get-[entity].ts
+│       │   │   └── use-get-[entity].ts
+│       │   └── create-[entity]/
+│       │       ├── create-[entity].ts
+│       │       └── use-create-[entity].ts
 │       ├── _components/
 │       ├── _schemas/
 │       └── _stores/          # Feature-specific Zustand stores
@@ -172,8 +177,9 @@ app/
 
 #### Data Fetching (TanStack Query + Zod)
 
-- Feature APIs co-located in `_api/` folders with separate files per endpoint
-- File naming: `get-accounts.ts` (fetcher), `use-get-accounts.ts` (hook)
+- Feature APIs co-located in `_api/` folders with **endpoints grouped by action in subfolders**
+- Folder structure: `_api/get-accounts/get-accounts.ts` + `use-get-accounts.ts`
+- Shared types: `_api/account.types.ts` for Zod schemas used across endpoints
 - Query keys: const objects in `_api/_support/` (not enums)
 - Server components: call API functions directly (`getAccounts()`)
 - Client components: use hooks (`useGetAccounts()`)

@@ -2,17 +2,17 @@ import { fetcher, listOf } from "@/_commons/api";
 import {
   RecurringTransactionSchema,
   type RecurringTransactionFilters,
-} from "./recurring-transaction.types";
+} from "../recurring-transaction.types";
 
-export interface GetRecurringTransactionsParams {
+export interface GetRecurringTransactionListParams {
   workspaceId: string;
   filters?: RecurringTransactionFilters;
 }
 
-export async function getRecurringTransactions({
+export async function getRecurringTransactionList({
   workspaceId,
   filters,
-}: GetRecurringTransactionsParams) {
+}: GetRecurringTransactionListParams) {
   const params: Record<string, string> = {};
 
   if (filters?.type) {

@@ -1,15 +1,15 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { RECURRING_TRANSACTION_QUERY_KEYS } from "./_support/recurring-transaction-query-keys";
-import { deleteRecurringTransaction } from "./delete-recurring-transaction";
+import { RECURRING_TRANSACTION_QUERY_KEYS } from "../_support/recurring-transaction-query-keys";
+import { createRecurringTransaction } from "./create-recurring-transaction";
 
-export function useDeleteRecurringTransaction() {
+export function useCreateRecurringTransaction() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: [RECURRING_TRANSACTION_QUERY_KEYS.delete],
-    mutationFn: deleteRecurringTransaction,
+    mutationKey: [RECURRING_TRANSACTION_QUERY_KEYS.create],
+    mutationFn: createRecurringTransaction,
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: [RECURRING_TRANSACTION_QUERY_KEYS.list, variables.workspaceId],
