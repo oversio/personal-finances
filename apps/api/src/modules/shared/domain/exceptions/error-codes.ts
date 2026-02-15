@@ -67,6 +67,18 @@ export const ErrorCodes = {
     alreadyExists: "budgets.already_exists",
   },
 
+  // Recurring transaction errors
+  recurringTransactions: {
+    notFound: "recurring_transactions.not_found",
+    invalidFrequency: "recurring_transactions.invalid_frequency",
+    invalidInterval: "recurring_transactions.invalid_interval",
+    invalidSchedule: "recurring_transactions.invalid_schedule",
+    invalidDateRange: "recurring_transactions.invalid_date_range",
+    alreadyPaused: "recurring_transactions.already_paused",
+    alreadyActive: "recurring_transactions.already_active",
+    transferNotAllowed: "recurring_transactions.transfer_not_allowed",
+  },
+
   // Generic entity errors
   entity: {
     notFound: "entity.not_found",
@@ -99,5 +111,6 @@ export type ErrorCode =
   | (typeof ErrorCodes.transactions)[keyof typeof ErrorCodes.transactions]
   | (typeof ErrorCodes.categories)[keyof typeof ErrorCodes.categories]
   | (typeof ErrorCodes.budgets)[keyof typeof ErrorCodes.budgets]
+  | (typeof ErrorCodes.recurringTransactions)[keyof typeof ErrorCodes.recurringTransactions]
   | (typeof ErrorCodes.entity)[keyof typeof ErrorCodes.entity]
   | (typeof ErrorCodes.validation)[keyof typeof ErrorCodes.validation];
