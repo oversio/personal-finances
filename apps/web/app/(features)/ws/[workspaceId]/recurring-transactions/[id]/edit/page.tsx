@@ -5,8 +5,8 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useGetAccounts } from "../../../accounts/_api/use-get-accounts";
 import { useGetCategories } from "../../../categories/_api/use-get-categories";
-import { useGetRecurringTransaction } from "../../_api/use-get-recurring-transaction";
-import { useUpdateRecurringTransaction } from "../../_api/use-update-recurring-transaction";
+import { useGetRecurringTransaction } from "../../_api/get-recurring-transaction/use-get-recurring-transaction";
+import { useUpdateRecurringTransaction } from "../../_api/update-recurring-transaction/use-update-recurring-transaction";
 import { RecurringTransactionForm } from "../../_components/recurring-transaction-form";
 import type { CreateRecurringTransactionFormData } from "../../_schemas/recurring-transaction.schema";
 

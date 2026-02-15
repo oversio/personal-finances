@@ -15,18 +15,28 @@ This document provides AI-specific instructions for working with the web applica
 
 ### Feature Co-location Pattern
 
-Each feature owns its API code, components, schemas, and hooks:
+Each feature owns its API code, components, schemas, and hooks. API endpoints are **grouped by action** in subfolders:
 
 ```
-app/(auth)/login/
+app/(features)/accounts/
 ├── page.tsx              # Route page
 ├── _api/                 # Data fetching for this feature
-│   ├── login.ts          # Fetcher function
-│   └── use-login.ts      # TanStack Query hook
+│   ├── _support/         # Query keys, constants
+│   │   └── account-query-keys.ts
+│   ├── account.types.ts  # Shared Zod schemas
+│   ├── get-accounts/     # Grouped by action
+│   │   ├── get-accounts.ts
+│   │   └── use-get-accounts.ts
+│   ├── create-account/
+│   │   ├── create-account.ts
+│   │   └── use-create-account.ts
+│   └── delete-account/
+│       ├── delete-account.ts
+│       └── use-delete-account.ts
 ├── _components/          # Feature-specific components
-│   └── login-form.tsx
+│   └── account-form.tsx
 └── _schemas/             # Form validation schemas
-    └── login.schema.ts
+    └── account-form.schema.ts
 ```
 
 ### Shared API Code in Route Groups
@@ -121,7 +131,12 @@ const { user, isLoading } = useAuthStore();
 ## When Creating New Features
 
 1. Create folder under appropriate route group
-2. Add `_api/` folder with fetcher function + hook
+2. Add `_api/` folder with grouped subfolders for each endpoint:
+   - `_api/_support/` for query keys
+   - `_api/[feature].types.ts` for shared Zod schemas
+   - `_api/get-[entity]/` with `get-[entity].ts` and `use-get-[entity].ts`
+   - `_api/create-[entity]/` with `create-[entity].ts` and `use-create-[entity].ts`
+   - etc.
 3. Add `_schemas/` folder for form validation
 4. Add `_components/` folder for UI components
 5. Use `useServerFormValidationErrors` for forms with mutations

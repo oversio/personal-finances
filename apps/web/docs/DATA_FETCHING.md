@@ -64,23 +64,40 @@ The fetcher throws different error types:
 
 ## Feature-Specific API Code
 
-Each feature has its own `_api/` folder with separate files per endpoint:
+Each feature has its own `_api/` folder with endpoints **grouped by action** in subfolders:
 
 ```
 (features)/accounts/
 ├── _api/
 │   ├── _support/
-│   │   └── account-query-keys.ts  # Query key constants
-│   ├── account.schema.ts          # Zod schemas
-│   ├── get-accounts.ts            # Fetcher function
-│   ├── use-get-accounts.ts        # Query hook
-│   ├── create-account.ts          # Fetcher function
-│   └── use-create-account.ts      # Mutation hook
+│   │   └── account-query-keys.ts    # Query key constants
+│   ├── account.types.ts             # Zod schemas (shared types)
+│   ├── get-accounts/                # Grouped by action
+│   │   ├── get-accounts.ts          # Fetcher function
+│   │   └── use-get-accounts.ts      # Query hook
+│   ├── get-account/
+│   │   ├── get-account.ts
+│   │   └── use-get-account.ts
+│   ├── create-account/
+│   │   ├── create-account.ts
+│   │   └── use-create-account.ts
+│   ├── update-account/
+│   │   ├── update-account.ts
+│   │   └── use-update-account.ts
+│   └── delete-account/
+│       ├── delete-account.ts
+│       └── use-delete-account.ts
 ├── _schemas/
-│   └── account-form.schema.ts     # Form validation schemas
+│   └── account-form.schema.ts       # Form validation schemas
 ├── _components/
 └── page.tsx
 ```
+
+**Why grouped folders?**
+- Better organization as the feature grows
+- Easier to find related files (fetcher + hook together)
+- Cleaner imports
+- Consistent with API module structure (commands/queries in folders)
 
 ### Query Keys (const object pattern)
 
@@ -110,11 +127,11 @@ export const AccountSchema = z.object({
 export type Account = z.infer<typeof AccountSchema>;
 ```
 
-### Example: get-accounts.ts
+### Example: get-accounts/get-accounts.ts
 
 ```typescript
 import { fetcher, apiPaginationResponseTransformer } from "@/_commons/api";
-import { AccountSchema } from "./account.schema";
+import { AccountSchema } from "../account.types";
 
 export async function getAccounts(params?: { page?: number; limit?: number }) {
   return fetcher("/accounts", {
@@ -125,11 +142,11 @@ export async function getAccounts(params?: { page?: number; limit?: number }) {
 }
 ```
 
-### Example: use-get-accounts.ts
+### Example: get-accounts/use-get-accounts.ts
 
 ```typescript
 import { useQuery } from "@tanstack/react-query";
-import { ACCOUNT_QUERY_KEYS } from "./_support/account-query-keys";
+import { ACCOUNT_QUERY_KEYS } from "../_support/account-query-keys";
 import { getAccounts } from "./get-accounts";
 
 export function useGetAccounts(params?: { page?: number; limit?: number }) {
@@ -140,11 +157,11 @@ export function useGetAccounts(params?: { page?: number; limit?: number }) {
 }
 ```
 
-### Example: create-account.ts
+### Example: create-account/create-account.ts
 
 ```typescript
 import { fetcher, apiOneItemResponseTransformer } from "@/_commons/api";
-import { AccountSchema } from "./account.schema";
+import { AccountSchema } from "../account.types";
 
 export interface CreateAccountInput {
   name: string;
@@ -160,11 +177,11 @@ export async function createAccount(data: CreateAccountInput) {
 }
 ```
 
-### Example: use-create-account.ts
+### Example: create-account/use-create-account.ts
 
 ```typescript
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ACCOUNT_QUERY_KEYS } from "./_support/account-query-keys";
+import { ACCOUNT_QUERY_KEYS } from "../_support/account-query-keys";
 import { createAccount } from "./create-account";
 
 export function useCreateAccount() {
@@ -187,7 +204,7 @@ export function useCreateAccount() {
 ```tsx
 "use client";
 
-import { useGetAccounts } from "./_api/accounts.hooks";
+import { useGetAccounts } from "./_api/get-accounts/use-get-accounts";
 
 function AccountsList() {
   const { data, isLoading, error } = useGetAccounts({ page: 1, limit: 10 });
@@ -209,7 +226,7 @@ function AccountsList() {
 
 ```tsx
 // Server component - no "use client" directive
-import { getAccounts } from "./_api/accounts.api";
+import { getAccounts } from "./_api/get-accounts/get-accounts";
 
 async function AccountsPage() {
   const { data: accounts } = await getAccounts({ page: 1, limit: 10 });

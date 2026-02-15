@@ -2,7 +2,7 @@ import { fetcher } from "@/_commons/api";
 import {
   RecurringTransactionSchema,
   type UpdateRecurringTransactionInput,
-} from "./recurring-transaction.types";
+} from "../recurring-transaction.types";
 
 export interface UpdateRecurringTransactionParams {
   workspaceId: string;

@@ -1,9 +1,9 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ACCOUNT_QUERY_KEYS } from "../../accounts/_api/_support/account-query-keys";
-import { TRANSACTION_QUERY_KEYS } from "../../transactions/_api/_support/transaction-query-keys";
-import { RECURRING_TRANSACTION_QUERY_KEYS } from "./_support/recurring-transaction-query-keys";
+import { ACCOUNT_QUERY_KEYS } from "../../../accounts/_api/_support/account-query-keys";
+import { TRANSACTION_QUERY_KEYS } from "../../../transactions/_api/_support/transaction-query-keys";
+import { RECURRING_TRANSACTION_QUERY_KEYS } from "../_support/recurring-transaction-query-keys";
 import { processRecurringTransactions } from "./process-recurring-transactions";
 
 export function useProcessRecurringTransactions() {
