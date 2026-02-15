@@ -1,5 +1,11 @@
 import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
+import {
+  dayOfMonthSchema,
+  dayOfWeekSchema,
+  intervalSchema,
+  monthOfYearSchema,
+} from "../../../domain/value-objects/recurrence-schedule.schemas";
 
 const RECURRING_TRANSACTION_TYPES = ["income", "expense"] as const;
 const FREQUENCIES = ["daily", "weekly", "monthly", "yearly"] as const;
@@ -35,29 +41,10 @@ const createRecurringTransactionSchema = z
     frequency: z.enum(FREQUENCIES, {
       error: "Frequency must be daily, weekly, monthly, or yearly",
     }),
-    interval: z
-      .number()
-      .int({ error: "Interval must be a whole number" })
-      .min(1, { error: "Interval must be at least 1" })
-      .max(365, { error: "Interval must be at most 365" }),
-    dayOfWeek: z
-      .number()
-      .int()
-      .min(0, { error: "Day of week must be between 0 (Sunday) and 6 (Saturday)" })
-      .max(6, { error: "Day of week must be between 0 (Sunday) and 6 (Saturday)" })
-      .optional(),
-    dayOfMonth: z
-      .number()
-      .int()
-      .min(1, { error: "Day of month must be between 1 and 31" })
-      .max(31, { error: "Day of month must be between 1 and 31" })
-      .optional(),
-    monthOfYear: z
-      .number()
-      .int()
-      .min(1, { error: "Month must be between 1 (January) and 12 (December)" })
-      .max(12, { error: "Month must be between 1 (January) and 12 (December)" })
-      .optional(),
+    interval: intervalSchema,
+    dayOfWeek: dayOfWeekSchema.optional(),
+    dayOfMonth: dayOfMonthSchema.optional(),
+    monthOfYear: monthOfYearSchema.optional(),
     startDate: z.string({ error: "Invalid date format" }).transform(val => new Date(val)),
     endDate: z
       .string({ error: "Invalid date format" })
