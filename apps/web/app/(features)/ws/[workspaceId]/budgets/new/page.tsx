@@ -3,7 +3,7 @@
 import { Button, Card, CardBody, CardHeader } from "@heroui/react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useCreateBudget } from "../_api/use-create-budget";
+import { useCreateBudget } from "../_api/create-budget/use-create-budget";
 import { BudgetForm } from "../_components/budget-form";
 import type { CreateBudgetFormData } from "../_schemas/budget.schema";
 

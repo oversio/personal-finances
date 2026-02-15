@@ -3,9 +3,9 @@
 import { Button, Card, CardBody, CardHeader, Spinner } from "@heroui/react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useGetAccounts } from "../../accounts/_api/use-get-accounts";
-import { useGetCategories } from "../../categories/_api/use-get-categories";
-import { useCreateTransaction } from "../_api/use-create-transaction";
+import { useGetAccountList } from "../../accounts/_api/get-account-list/use-get-account-list";
+import { useGetCategoryList } from "../../categories/_api/get-category-list/use-get-category-list";
+import { useCreateTransaction } from "../_api/create-transaction/use-create-transaction";
 import { TransactionForm } from "../_components/transaction-form";
 import type { CreateTransactionFormData } from "../_schemas/transaction.schema";
 
@@ -14,8 +14,8 @@ export default function NewTransactionPage() {
   const router = useRouter();
   const workspaceId = params.workspaceId;
 
-  const { data: accounts, isLoading: isLoadingAccounts } = useGetAccounts({ workspaceId });
-  const { data: categories, isLoading: isLoadingCategories } = useGetCategories({ workspaceId });
+  const { data: accounts, isLoading: isLoadingAccounts } = useGetAccountList({ workspaceId });
+  const { data: categories, isLoading: isLoadingCategories } = useGetCategoryList({ workspaceId });
   const createMutation = useCreateTransaction();
 
   const handleSubmit = async (data: CreateTransactionFormData) => {

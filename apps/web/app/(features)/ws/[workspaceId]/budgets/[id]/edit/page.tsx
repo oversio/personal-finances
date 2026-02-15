@@ -3,8 +3,8 @@
 import { Button, Card, CardBody, CardHeader, Spinner } from "@heroui/react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useGetBudget } from "../../_api/use-get-budget";
-import { useUpdateBudget } from "../../_api/use-update-budget";
+import { useGetBudget } from "../../_api/get-budget/use-get-budget";
+import { useUpdateBudget } from "../../_api/update-budget/use-update-budget";
 import { BudgetForm } from "../../_components/budget-form";
 import type { CreateBudgetFormData } from "../../_schemas/budget.schema";
 

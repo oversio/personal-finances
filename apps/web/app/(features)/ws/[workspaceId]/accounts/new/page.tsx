@@ -3,7 +3,7 @@
 import { Button, Card, CardBody, CardHeader } from "@heroui/react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useCreateAccount } from "../_api/use-create-account";
+import { useCreateAccount } from "../_api/create-account/use-create-account";
 import { AccountForm } from "../_components/account-form";
 import type { CreateAccountFormData } from "../_schemas/account.schema";
 

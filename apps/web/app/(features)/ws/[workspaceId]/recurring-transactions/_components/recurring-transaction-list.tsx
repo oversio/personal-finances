@@ -2,8 +2,8 @@
 
 import { Button, Spinner } from "@heroui/react";
 import { useState } from "react";
-import { useGetAccounts } from "../../accounts/_api/use-get-accounts";
-import { useGetCategories } from "../../categories/_api/use-get-categories";
+import { useGetAccountList } from "../../accounts/_api/get-account-list/use-get-account-list";
+import { useGetCategoryList } from "../../categories/_api/get-category-list/use-get-category-list";
 import { useDeleteRecurringTransaction } from "../_api/delete-recurring-transaction/use-delete-recurring-transaction";
 import { useGetRecurringTransactionList } from "../_api/get-recurring-transaction-list/use-get-recurring-transaction-list";
 import { usePauseRecurringTransaction } from "../_api/pause-recurring-transaction/use-pause-recurring-transaction";
@@ -26,8 +26,8 @@ export function RecurringTransactionList({ workspaceId }: RecurringTransactionLi
     error: recurringError,
   } = useGetRecurringTransactionList({ workspaceId });
 
-  const { data: accounts, isLoading: isLoadingAccounts } = useGetAccounts({ workspaceId });
-  const { data: categories, isLoading: isLoadingCategories } = useGetCategories({ workspaceId });
+  const { data: accounts, isLoading: isLoadingAccounts } = useGetAccountList({ workspaceId });
+  const { data: categories, isLoading: isLoadingCategories } = useGetCategoryList({ workspaceId });
 
   const deleteMutation = useDeleteRecurringTransaction();
   const pauseMutation = usePauseRecurringTransaction();

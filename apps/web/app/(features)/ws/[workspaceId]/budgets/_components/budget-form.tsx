@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { parseDate, today, getLocalTimeZone, type CalendarDate } from "@internationalized/date";
 import { useForm } from "react-hook-form";
 import { useServerFormValidationErrors } from "@/_commons/api";
-import { useGetCategories } from "../../categories/_api/use-get-categories";
+import { useGetCategoryList } from "../../categories/_api/get-category-list/use-get-category-list";
 import type { Budget } from "../_api/budget.types";
 import {
   BUDGET_PERIOD_LABELS,
@@ -31,7 +31,7 @@ export function BudgetForm({
   submitLabel = "Create Budget",
 }: BudgetFormProps) {
   // Fetch expense categories for the dropdown (budgets are typically for expenses)
-  const { data: categories, isLoading: categoriesLoading } = useGetCategories({
+  const { data: categories, isLoading: categoriesLoading } = useGetCategoryList({
     workspaceId,
     type: "expense",
   });

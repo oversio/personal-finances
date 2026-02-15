@@ -134,7 +134,10 @@ app/
 │       ├── _api/             # Feature-specific API (grouped by action)
 │       │   ├── _support/     # Query keys
 │       │   ├── [feature].types.ts  # Shared Zod schemas
-│       │   ├── get-[entity]/       # Grouped folder per action
+│       │   ├── get-[entity]-list/  # List endpoint (note -list suffix)
+│       │   │   ├── get-[entity]-list.ts
+│       │   │   └── use-get-[entity]-list.ts
+│       │   ├── get-[entity]/       # Single entity endpoint
 │       │   │   ├── get-[entity].ts
 │       │   │   └── use-get-[entity].ts
 │       │   └── create-[entity]/
@@ -178,11 +181,12 @@ app/
 #### Data Fetching (TanStack Query + Zod)
 
 - Feature APIs co-located in `_api/` folders with **endpoints grouped by action in subfolders**
-- Folder structure: `_api/get-accounts/get-accounts.ts` + `use-get-accounts.ts`
+- **List endpoints use `-list` suffix**: `_api/get-account-list/` (not `get-accounts/`)
+- Folder structure: `_api/get-account-list/get-account-list.ts` + `use-get-account-list.ts`
 - Shared types: `_api/account.types.ts` for Zod schemas used across endpoints
 - Query keys: const objects in `_api/_support/` (not enums)
-- Server components: call API functions directly (`getAccounts()`)
-- Client components: use hooks (`useGetAccounts()`)
+- Server components: call API functions directly (`getAccountList()`)
+- Client components: use hooks (`useGetAccountList()`)
 - Form validation errors: `useServerFormValidationErrors(form, mutation.error)`
 
 ### Documentation

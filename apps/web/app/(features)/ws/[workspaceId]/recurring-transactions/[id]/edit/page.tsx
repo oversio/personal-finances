@@ -3,8 +3,8 @@
 import { Button, Card, CardBody, CardHeader, Spinner } from "@heroui/react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useGetAccounts } from "../../../accounts/_api/use-get-accounts";
-import { useGetCategories } from "../../../categories/_api/use-get-categories";
+import { useGetAccountList } from "../../../accounts/_api/get-account-list/use-get-account-list";
+import { useGetCategoryList } from "../../../categories/_api/get-category-list/use-get-category-list";
 import { useGetRecurringTransaction } from "../../_api/get-recurring-transaction/use-get-recurring-transaction";
 import { useUpdateRecurringTransaction } from "../../_api/update-recurring-transaction/use-update-recurring-transaction";
 import { RecurringTransactionForm } from "../../_components/recurring-transaction-form";
@@ -20,8 +20,8 @@ export default function EditRecurringTransactionPage() {
     workspaceId,
     recurringTransactionId,
   });
-  const { data: accounts, isLoading: isLoadingAccounts } = useGetAccounts({ workspaceId });
-  const { data: categories, isLoading: isLoadingCategories } = useGetCategories({ workspaceId });
+  const { data: accounts, isLoading: isLoadingAccounts } = useGetAccountList({ workspaceId });
+  const { data: categories, isLoading: isLoadingCategories } = useGetCategoryList({ workspaceId });
   const updateMutation = useUpdateRecurringTransaction();
 
   const handleSubmit = async (data: CreateRecurringTransactionFormData) => {

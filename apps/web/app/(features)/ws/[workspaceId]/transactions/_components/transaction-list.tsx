@@ -2,11 +2,11 @@
 
 import { Spinner } from "@heroui/react";
 import { useState } from "react";
-import { useGetAccounts } from "../../accounts/_api/use-get-accounts";
-import { useGetCategories } from "../../categories/_api/use-get-categories";
+import { useGetAccountList } from "../../accounts/_api/get-account-list/use-get-account-list";
+import { useGetCategoryList } from "../../categories/_api/get-category-list/use-get-category-list";
 import type { Transaction, TransactionFilters } from "../_api/transaction.types";
-import { useDeleteTransaction } from "../_api/use-delete-transaction";
-import { useGetTransactions } from "../_api/use-get-transactions";
+import { useDeleteTransaction } from "../_api/delete-transaction/use-delete-transaction";
+import { useGetTransactionList } from "../_api/get-transaction-list/use-get-transaction-list";
 import { TransactionCard } from "./transaction-card";
 import { TransactionFiltersComponent } from "./transaction-filters";
 
@@ -59,10 +59,10 @@ export function TransactionList({ workspaceId }: TransactionListProps) {
     data: transactions,
     isLoading: isLoadingTransactions,
     error: transactionsError,
-  } = useGetTransactions({ workspaceId, filters });
+  } = useGetTransactionList({ workspaceId, filters });
 
-  const { data: accounts, isLoading: isLoadingAccounts } = useGetAccounts({ workspaceId });
-  const { data: categories, isLoading: isLoadingCategories } = useGetCategories({ workspaceId });
+  const { data: accounts, isLoading: isLoadingAccounts } = useGetAccountList({ workspaceId });
+  const { data: categories, isLoading: isLoadingCategories } = useGetCategoryList({ workspaceId });
 
   const deleteMutation = useDeleteTransaction();
 

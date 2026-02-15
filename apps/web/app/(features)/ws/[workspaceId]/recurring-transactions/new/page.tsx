@@ -3,8 +3,8 @@
 import { Button, Card, CardBody, CardHeader, Spinner } from "@heroui/react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useGetAccounts } from "../../accounts/_api/use-get-accounts";
-import { useGetCategories } from "../../categories/_api/use-get-categories";
+import { useGetAccountList } from "../../accounts/_api/get-account-list/use-get-account-list";
+import { useGetCategoryList } from "../../categories/_api/get-category-list/use-get-category-list";
 import { useCreateRecurringTransaction } from "../_api/create-recurring-transaction/use-create-recurring-transaction";
 import { RecurringTransactionForm } from "../_components/recurring-transaction-form";
 import type { CreateRecurringTransactionFormData } from "../_schemas/recurring-transaction.schema";
@@ -14,8 +14,8 @@ export default function NewRecurringTransactionPage() {
   const router = useRouter();
   const workspaceId = params.workspaceId;
 
-  const { data: accounts, isLoading: isLoadingAccounts } = useGetAccounts({ workspaceId });
-  const { data: categories, isLoading: isLoadingCategories } = useGetCategories({ workspaceId });
+  const { data: accounts, isLoading: isLoadingAccounts } = useGetAccountList({ workspaceId });
+  const { data: categories, isLoading: isLoadingCategories } = useGetCategoryList({ workspaceId });
   const createMutation = useCreateRecurringTransaction();
 
   const handleSubmit = async (data: CreateRecurringTransactionFormData) => {
