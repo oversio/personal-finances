@@ -31,7 +31,7 @@ import {
   UpdateWorkspaceDto,
   UpdateWorkspaceHandler,
 } from "../../../application";
-import { CurrentWorkspace, RequireRole } from "../../decorators";
+import { CurrentWorkspace, CurrentWorkspaceMember, RequireRole } from "../../decorators";
 import { WorkspaceAccessGuard, WorkspaceRoleGuard, type WorkspaceContext } from "../../guards";
 
 @ApiTags("workspace-settings")
@@ -68,10 +68,12 @@ export class WorkspaceSettingsController {
   @ApiResponse({ status: 403, description: "Insufficient permissions" })
   async updateSettings(
     @CurrentWorkspace() workspace: WorkspaceContext["workspace"],
+    @CurrentWorkspaceMember("role") currentUserRole: string,
     @Body() dto: UpdateWorkspaceDto,
   ) {
     const command = new UpdateWorkspaceCommand(workspace.id, dto.name, dto.currency, dto.timezone);
-    return this.updateWorkspaceHandler.execute(command);
+    const result = await this.updateWorkspaceHandler.execute(command);
+    return { ...result, currentUserRole };
   }
 
   @Get("members")
