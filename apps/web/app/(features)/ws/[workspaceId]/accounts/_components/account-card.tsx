@@ -29,7 +29,12 @@ function formatCurrency(amount: number, currency: string): string {
 
 export function AccountCard({ account, workspaceId, onArchive, isArchiving }: AccountCardProps) {
   return (
-    <Card className="overflow-hidden">
+    <Card
+      as={Link}
+      href={`/ws/${workspaceId}/transactions?accountId=${account.id}`}
+      isPressable
+      className="overflow-hidden"
+    >
       <div className="h-1 w-full" style={{ backgroundColor: account.color }} />
       <CardBody className="p-4">
         <div className="flex items-start justify-between">
@@ -40,43 +45,45 @@ export function AccountCard({ account, workspaceId, onArchive, isArchiving }: Ac
             </p>
           </div>
 
-          <Dropdown>
-            <DropdownTrigger>
-              <Button isIconOnly size="sm" variant="light" aria-label="Account actions">
-                <svg
-                  className="size-5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={1.5}
-                  viewBox="0 0 24 24"
+          <div onClick={e => e.stopPropagation()}>
+            <Dropdown>
+              <DropdownTrigger>
+                <Button isIconOnly size="sm" variant="light" aria-label="Account actions">
+                  <svg
+                    className="size-5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Account actions">
+                <DropdownItem
+                  key="edit"
+                  as={Link}
+                  href={`/ws/${workspaceId}/accounts/${account.id}/edit`}
                 >
-                  <path
-                    d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu aria-label="Account actions">
-              <DropdownItem
-                key="edit"
-                as={Link}
-                href={`/ws/${workspaceId}/accounts/${account.id}/edit`}
-              >
-                Edit
-              </DropdownItem>
-              <DropdownItem
-                key="archive"
-                className="text-danger"
-                color="danger"
-                onPress={() => onArchive(account.id)}
-                isDisabled={isArchiving}
-              >
-                Archive
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
+                  Edit
+                </DropdownItem>
+                <DropdownItem
+                  key="archive"
+                  className="text-danger"
+                  color="danger"
+                  onPress={() => onArchive(account.id)}
+                  isDisabled={isArchiving}
+                >
+                  Archive
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </div>
         </div>
 
         <div className="mt-4">

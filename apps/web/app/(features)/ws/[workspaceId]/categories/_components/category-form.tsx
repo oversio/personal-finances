@@ -79,15 +79,6 @@ export function CategoryForm({
         ))}
       </Select>
 
-      <Input
-        label="Icon (optional)"
-        placeholder="e.g., utensils, home, car"
-        {...register("icon")}
-        isInvalid={!!errors.icon}
-        errorMessage={errors.icon?.message}
-        variant="flat"
-      />
-
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium text-foreground">Color</label>
         <div className="flex flex-wrap gap-2">

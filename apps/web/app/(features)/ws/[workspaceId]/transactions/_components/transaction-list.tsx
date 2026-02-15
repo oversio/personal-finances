@@ -12,6 +12,7 @@ import { TransactionFiltersComponent } from "./transaction-filters";
 
 interface TransactionListProps {
   workspaceId: string;
+  initialAccountId?: string;
 }
 
 function groupTransactionsByDate(transactions: Transaction[]): Map<string, Transaction[]> {
@@ -51,8 +52,10 @@ function formatGroupDate(dateString: string): string {
   }).format(date);
 }
 
-export function TransactionList({ workspaceId }: TransactionListProps) {
-  const [filters, setFilters] = useState<TransactionFilters>({});
+export function TransactionList({ workspaceId, initialAccountId }: TransactionListProps) {
+  const [filters, setFilters] = useState<TransactionFilters>({
+    accountId: initialAccountId,
+  });
   const [archivingId, setArchivingId] = useState<string | null>(null);
 
   const {

@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import { useServerFormValidationErrors } from "@/_commons/api";
 import type { Subcategory } from "../_api/category.types";
 import { subcategoryFormSchema, type SubcategoryFormData } from "../_schemas/category.schema";
+import { useEffect } from "react";
 
 interface SubcategoryFormProps {
   subcategory?: Subcategory;
@@ -39,6 +40,15 @@ export function SubcategoryForm({
     },
     resolver: zodResolver(subcategoryFormSchema),
   });
+
+  useEffect(() => {
+    if (subcategory) {
+      form.reset({
+        name: subcategory.name ?? "",
+        icon: subcategory.icon ?? "",
+      });
+    }
+  }, [form, subcategory]);
 
   const {
     register,
@@ -72,15 +82,6 @@ export function SubcategoryForm({
               errorMessage={errors.name?.message}
               variant="flat"
               isRequired
-            />
-
-            <Input
-              label="Icon (optional)"
-              placeholder="e.g., shopping-cart, coffee"
-              {...register("icon")}
-              isInvalid={!!errors.icon}
-              errorMessage={errors.icon?.message}
-              variant="flat"
             />
 
             {generalError && <p className="text-small text-danger">{generalError}</p>}

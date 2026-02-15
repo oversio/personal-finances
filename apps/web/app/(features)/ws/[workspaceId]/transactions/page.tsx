@@ -2,12 +2,14 @@
 
 import { Button } from "@heroui/react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { TransactionList } from "./_components/transaction-list";
 
 export default function TransactionsPage() {
   const params = useParams<{ workspaceId: string }>();
+  const searchParams = useSearchParams();
   const workspaceId = params.workspaceId;
+  const accountId = searchParams.get("accountId") ?? undefined;
 
   return (
     <div className="flex flex-col gap-6">
@@ -21,7 +23,7 @@ export default function TransactionsPage() {
         </Button>
       </div>
 
-      <TransactionList workspaceId={workspaceId} />
+      <TransactionList workspaceId={workspaceId} initialAccountId={accountId} />
     </div>
   );
 }
