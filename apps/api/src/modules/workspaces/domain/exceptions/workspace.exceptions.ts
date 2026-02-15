@@ -39,3 +39,53 @@ export class WorkspaceAccessDeniedError extends DomainException {
     });
   }
 }
+
+export class CannotRemoveOwnerError extends DomainException {
+  constructor() {
+    super("Cannot remove the workspace owner", {
+      errorCode: ErrorCodes.workspaces.cannotRemoveOwner,
+      fieldName: null,
+      handler: "user",
+    });
+  }
+}
+
+export class CannotChangeOwnerRoleError extends DomainException {
+  constructor() {
+    super("Cannot change the role of the workspace owner", {
+      errorCode: ErrorCodes.workspaces.cannotChangeOwnerRole,
+      fieldName: null,
+      handler: "user",
+    });
+  }
+}
+
+export class InsufficientPermissionsError extends DomainException {
+  constructor(action: string) {
+    super(`Insufficient permissions to ${action}`, {
+      errorCode: ErrorCodes.workspaces.insufficientPermissions,
+      fieldName: null,
+      handler: "user",
+    });
+  }
+}
+
+export class UserNotFoundByEmailError extends DomainException {
+  constructor(email: string) {
+    super(`User with email ${email} not found`, {
+      errorCode: ErrorCodes.workspaces.userNotFoundByEmail,
+      fieldName: "email",
+      handler: "user",
+    });
+  }
+}
+
+export class OnlyOwnerCanDeleteWorkspaceError extends DomainException {
+  constructor() {
+    super("Only the workspace owner can delete the workspace", {
+      errorCode: ErrorCodes.workspaces.onlyOwnerCanDelete,
+      fieldName: null,
+      handler: "user",
+    });
+  }
+}

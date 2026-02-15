@@ -36,6 +36,19 @@ export class Workspace {
     );
   }
 
+  update(params: { name?: string; currency?: string; timezone?: string }): Workspace {
+    return new Workspace(
+      this.id,
+      params.name ? new WorkspaceName(params.name) : this.name,
+      this.ownerId,
+      params.currency ? new Currency(params.currency) : this.currency,
+      params.timezone !== undefined ? params.timezone : this.timezone,
+      this.isDefault,
+      this.createdAt,
+      new Date(),
+    );
+  }
+
   toPrimitives() {
     return {
       id: this.id?.value,

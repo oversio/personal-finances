@@ -33,6 +33,11 @@ export const ErrorCodes = {
     userAlreadyMember: "workspaces.user_already_member",
     accessDenied: "workspaces.access_denied",
     limitReached: "workspaces.limit_reached",
+    cannotRemoveOwner: "workspaces.cannot_remove_owner",
+    cannotChangeOwnerRole: "workspaces.cannot_change_owner_role",
+    insufficientPermissions: "workspaces.insufficient_permissions",
+    userNotFoundByEmail: "workspaces.user_not_found_by_email",
+    onlyOwnerCanDelete: "workspaces.only_owner_can_delete",
   },
 
   // Account errors

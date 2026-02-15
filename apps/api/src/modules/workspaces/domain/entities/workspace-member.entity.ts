@@ -49,6 +49,19 @@ export class WorkspaceMember {
     );
   }
 
+  updateRole(role: string): WorkspaceMember {
+    return new WorkspaceMember(
+      this.id,
+      this.workspaceId,
+      this.userId,
+      new MemberRole(role),
+      this.invitedBy,
+      this.invitedAt,
+      this.joinedAt,
+      this.isActive,
+    );
+  }
+
   toPrimitives() {
     return {
       id: this.id?.value,
