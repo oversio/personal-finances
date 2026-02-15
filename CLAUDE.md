@@ -2,6 +2,29 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Documentation Maintenance Rule
+
+**After completing major implementations or refactoring tasks, proactively check and update (if needed) relevant documentation without being asked.**
+
+When to update:
+
+- After refactoring code structure or patterns
+- After implementing new features with reusable patterns
+- After changing naming conventions or architectural decisions
+- After completing multi-step implementation tasks
+
+What to update:
+
+- This file (CLAUDE.md) - architecture, patterns, structure
+- `apps/web/docs/MODULE_IMPLEMENTATION_GUIDE.md` - web implementation patterns
+- `apps/api/docs/MODULE_IMPLEMENTATION_GUIDE.md` - API implementation patterns
+- Feature-specific documentation
+- Code examples to match new patterns
+- File structure diagrams
+- Remove obsolete task-tracking documents
+
+Always mention documentation updates in the final summary.
+
 ## Build & Development Commands
 
 ```bash
