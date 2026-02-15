@@ -69,6 +69,7 @@ apps/web/app/(features)/ws/[workspaceId]/[feature]/
 - ❌ `get-accounts/` (incorrect - use `-list` suffix instead)
 
 This applies to:
+
 - Folder names: `get-account-list/`
 - File names: `get-account-list.ts`, `use-get-account-list.ts`
 - Function names: `getAccountList()`, `useGetAccountList()`
