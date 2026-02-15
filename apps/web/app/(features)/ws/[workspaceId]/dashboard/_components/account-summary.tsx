@@ -35,10 +35,7 @@ export function AccountSummary({ workspaceId }: AccountSummaryProps) {
     <Card>
       <CardHeader className="flex items-center justify-between px-6 pt-6">
         <h3 className="text-lg font-semibold">Accounts</h3>
-        <Link
-          href={`/ws/${workspaceId}/accounts`}
-          className="text-sm text-primary hover:underline"
-        >
+        <Link href={`/ws/${workspaceId}/accounts`} className="text-sm text-primary hover:underline">
           View all
         </Link>
       </CardHeader>
@@ -51,10 +48,7 @@ export function AccountSummary({ workspaceId }: AccountSummaryProps) {
           {accounts?.slice(0, 4).map(account => (
             <div key={account.id} className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div
-                  className="h-2 w-2 rounded-full"
-                  style={{ backgroundColor: account.color }}
-                />
+                <div className="h-2 w-2 rounded-full" style={{ backgroundColor: account.color }} />
                 <span className="text-sm">{account.name}</span>
               </div>
               <span className="text-sm font-medium">

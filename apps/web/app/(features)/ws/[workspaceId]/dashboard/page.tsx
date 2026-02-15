@@ -33,9 +33,8 @@ export default function DashboardPage() {
   // Calculate this month's income and expenses
   const now = new Date();
   const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  const thisMonthTransactions = transactions?.filter(
-    tx => new Date(tx.date) >= firstDayOfMonth
-  ) ?? [];
+  const thisMonthTransactions =
+    transactions?.filter(tx => new Date(tx.date) >= firstDayOfMonth) ?? [];
 
   const monthlyIncome = thisMonthTransactions
     .filter(tx => tx.type === "income")

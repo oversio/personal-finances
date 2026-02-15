@@ -55,7 +55,8 @@ export function BudgetOverview({ workspaceId }: BudgetOverviewProps) {
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">{budget.category.name}</span>
                   <span className="text-sm text-default-500">
-                    {formatCurrency(budget.spent, currency)} / {formatCurrency(budget.amount, currency)}
+                    {formatCurrency(budget.spent, currency)} /{" "}
+                    {formatCurrency(budget.amount, currency)}
                   </span>
                 </div>
                 <Progress

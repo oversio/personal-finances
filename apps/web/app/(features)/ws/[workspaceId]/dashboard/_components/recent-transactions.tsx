@@ -88,7 +88,9 @@ export function RecentTransactions({ workspaceId }: RecentTransactionsProps) {
                   <Chip size="sm" color={typeColors[transaction.type]} variant="flat">
                     {transaction.type}
                   </Chip>
-                  <span className="text-sm font-medium">{getAccountName(transaction.accountId)}</span>
+                  <span className="text-sm font-medium">
+                    {getAccountName(transaction.accountId)}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-default-400">
                   {getCategoryName(transaction.categoryId) && (
