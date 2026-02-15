@@ -10,9 +10,9 @@ export function useUpdateWorkspaceSettings() {
   return useMutation({
     mutationKey: [SETTINGS_QUERY_KEYS.updateSettings],
     mutationFn: updateWorkspaceSettings,
-    onSuccess: (_, variables) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [SETTINGS_QUERY_KEYS.settings, variables.workspaceId],
+        queryKey: [SETTINGS_QUERY_KEYS.settings],
       });
     },
   });
