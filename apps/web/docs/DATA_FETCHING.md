@@ -94,6 +94,7 @@ Each feature has its own `_api/` folder with endpoints **grouped by action** in 
 ```
 
 **Why grouped folders?**
+
 - Better organization as the feature grows
 - Easier to find related files (fetcher + hook together)
 - Cleaner imports

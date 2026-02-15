@@ -3,10 +3,10 @@
 import { Button, Card, CardBody, CardHeader, Spinner } from "@heroui/react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useGetAccounts } from "../../../accounts/_api/use-get-accounts";
-import { useGetCategories } from "../../../categories/_api/use-get-categories";
-import { useGetTransaction } from "../../_api/use-get-transaction";
-import { useUpdateTransaction } from "../../_api/use-update-transaction";
+import { useGetAccountList } from "../../../accounts/_api/get-account-list/use-get-account-list";
+import { useGetCategoryList } from "../../../categories/_api/get-category-list/use-get-category-list";
+import { useGetTransaction } from "../../_api/get-transaction/use-get-transaction";
+import { useUpdateTransaction } from "../../_api/update-transaction/use-update-transaction";
 import { TransactionForm } from "../../_components/transaction-form";
 import type { CreateTransactionFormData } from "../../_schemas/transaction.schema";
 
@@ -20,8 +20,8 @@ export default function EditTransactionPage() {
     isLoading: isLoadingTransaction,
     error: transactionError,
   } = useGetTransaction({ workspaceId, transactionId });
-  const { data: accounts, isLoading: isLoadingAccounts } = useGetAccounts({ workspaceId });
-  const { data: categories, isLoading: isLoadingCategories } = useGetCategories({ workspaceId });
+  const { data: accounts, isLoading: isLoadingAccounts } = useGetAccountList({ workspaceId });
+  const { data: categories, isLoading: isLoadingCategories } = useGetCategoryList({ workspaceId });
   const updateMutation = useUpdateTransaction();
 
   const handleSubmit = async (data: CreateTransactionFormData) => {

@@ -60,6 +60,20 @@ apps/web/app/(features)/ws/[workspaceId]/[feature]/
 
 ## API Layer
 
+### Naming Convention
+
+**Important:** List endpoints must use the `-list` suffix:
+
+- ✅ `get-account-list/` (for fetching multiple accounts)
+- ✅ `get-account/` (for fetching a single account)
+- ❌ `get-accounts/` (incorrect - use `-list` suffix instead)
+
+This applies to:
+- Folder names: `get-account-list/`
+- File names: `get-account-list.ts`, `use-get-account-list.ts`
+- Function names: `getAccountList()`, `useGetAccountList()`
+- Type names: `GetAccountListParams`
+
 ### Query Keys
 
 Use const objects (not enums) for query keys:
@@ -101,39 +115,41 @@ export type Account = z.infer<typeof AccountSchema>;
 export const AccountListSchema = z.array(AccountSchema);
 ```
 
-### Fetcher Function
+### Fetcher Function (List)
+
+**Important:** List endpoints use the `-list` suffix:
 
 ```typescript
-// _api/get-accounts/get-accounts.ts
-import { fetcher } from "@/_commons/api";
-import { AccountListSchema } from "../account.types";
+// _api/get-account-list/get-account-list.ts
+import { fetcher, listOf } from "@/_commons/api";
+import { AccountSchema } from "../account.types";
 
-export interface GetAccountsParams {
+export interface GetAccountListParams {
   workspaceId: string;
 }
 
-export async function getAccounts({ workspaceId }: GetAccountsParams) {
+export async function getAccountList({ workspaceId }: GetAccountListParams) {
   return fetcher(`/ws/${workspaceId}/accounts`, {
     method: "GET",
-    schema: AccountListSchema,
+    schema: listOf(AccountSchema),
   });
 }
 ```
 
-### Query Hook
+### Query Hook (List)
 
 ```typescript
-// _api/get-accounts/use-get-accounts.ts
+// _api/get-account-list/use-get-account-list.ts
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
 import { ACCOUNT_QUERY_KEYS } from "../_support/account-query-keys";
-import { getAccounts, type GetAccountsParams } from "./get-accounts";
+import { getAccountList, type GetAccountListParams } from "./get-account-list";
 
-export function useGetAccounts(params: GetAccountsParams) {
+export function useGetAccountList(params: GetAccountListParams) {
   return useQuery({
     queryKey: [ACCOUNT_QUERY_KEYS.list, params.workspaceId],
-    queryFn: () => getAccounts(params),
+    queryFn: () => getAccountList(params),
   });
 }
 ```
@@ -235,7 +251,13 @@ interface AccountFormProps {
   defaultValues?: Partial<CreateAccountFormData>;
 }
 
-export function AccountForm({ onSubmit, isPending, error, submitLabel, defaultValues }: AccountFormProps) {
+export function AccountForm({
+  onSubmit,
+  isPending,
+  error,
+  submitLabel,
+  defaultValues,
+}: AccountFormProps) {
   const form = useForm<CreateAccountFormData>({
     resolver: zodResolver(createAccountSchema),
     defaultValues,
@@ -271,7 +293,7 @@ export function AccountForm({ onSubmit, isPending, error, submitLabel, defaultVa
 "use client";
 
 import { Spinner } from "@heroui/react";
-import { useGetAccounts } from "../_api/get-accounts/use-get-accounts";
+import { useGetAccountList } from "../_api/get-account-list/use-get-account-list";
 import { AccountCard } from "./account-card";
 
 interface AccountListProps {
@@ -279,7 +301,7 @@ interface AccountListProps {
 }
 
 export function AccountList({ workspaceId }: AccountListProps) {
-  const { data: accounts, isLoading } = useGetAccounts({ workspaceId });
+  const { data: accounts, isLoading } = useGetAccountList({ workspaceId });
 
   if (isLoading) {
     return <Spinner />;
@@ -404,6 +426,7 @@ export default function NewAccountPage() {
 
 ### Verification
 
-- [ ] Run `pnpm check-types --filter=web`
-- [ ] Run `pnpm lint --filter=web`
+- [ ] Run `pnpm run format`
+- [ ] Run `pnpm run lint`
+- [ ] Run `pnpm build --filter=web`
 - [ ] Test all CRUD operations in browser

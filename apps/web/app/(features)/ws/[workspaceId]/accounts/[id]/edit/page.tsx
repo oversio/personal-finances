@@ -3,8 +3,8 @@
 import { Button, Card, CardBody, CardHeader, Spinner } from "@heroui/react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useGetAccount } from "../../_api/use-get-account";
-import { useUpdateAccount } from "../../_api/use-update-account";
+import { useGetAccount } from "../../_api/get-account/use-get-account";
+import { useUpdateAccount } from "../../_api/update-account/use-update-account";
 import { AccountForm } from "../../_components/account-form";
 import type { CreateAccountFormData } from "../../_schemas/account.schema";
 

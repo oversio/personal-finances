@@ -2,8 +2,8 @@
 
 import { Button, Spinner } from "@heroui/react";
 import Link from "next/link";
-import { useDeleteAccount } from "../_api/use-delete-account";
-import { useGetAccounts } from "../_api/use-get-accounts";
+import { useDeleteAccount } from "../_api/delete-account/use-delete-account";
+import { useGetAccountList } from "../_api/get-account-list/use-get-account-list";
 import { AccountCard } from "./account-card";
 
 interface AccountListProps {
@@ -11,7 +11,7 @@ interface AccountListProps {
 }
 
 export function AccountList({ workspaceId }: AccountListProps) {
-  const { data: accounts, isLoading, error } = useGetAccounts({ workspaceId });
+  const { data: accounts, isLoading, error } = useGetAccountList({ workspaceId });
   const { mutate: deleteAccount, isPending: isDeleting } = useDeleteAccount();
 
   const handleArchive = (accountId: string) => {

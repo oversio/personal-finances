@@ -13,9 +13,9 @@ import {
 } from "@heroui/react";
 import Link from "next/link";
 import type { Category, Subcategory } from "../_api/category.types";
-import { useAddSubcategory } from "../_api/use-add-subcategory";
-import { useRemoveSubcategory } from "../_api/use-remove-subcategory";
-import { useUpdateSubcategory } from "../_api/use-update-subcategory";
+import { useAddSubcategory } from "../_api/add-subcategory/use-add-subcategory";
+import { useRemoveSubcategory } from "../_api/remove-subcategory/use-remove-subcategory";
+import { useUpdateSubcategory } from "../_api/update-subcategory/use-update-subcategory";
 import { CATEGORY_TYPE_LABELS } from "../_schemas/category.schema";
 import { SubcategoryForm } from "./subcategory-form";
 import type { SubcategoryFormData } from "../_schemas/category.schema";

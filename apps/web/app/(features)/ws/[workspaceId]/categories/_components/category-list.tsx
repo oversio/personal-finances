@@ -2,8 +2,8 @@
 
 import { Button, Spinner, Tab, Tabs } from "@heroui/react";
 import Link from "next/link";
-import { useDeleteCategory } from "../_api/use-delete-category";
-import { useGetCategories } from "../_api/use-get-categories";
+import { useDeleteCategory } from "../_api/delete-category/use-delete-category";
+import { useGetCategoryList } from "../_api/get-category-list/use-get-category-list";
 import type { Category } from "../_api/category.types";
 import { CategoryCard } from "./category-card";
 
@@ -12,7 +12,7 @@ interface CategoryListProps {
 }
 
 export function CategoryList({ workspaceId }: CategoryListProps) {
-  const { data: categories, isLoading, error } = useGetCategories({ workspaceId });
+  const { data: categories, isLoading, error } = useGetCategoryList({ workspaceId });
   const { mutate: deleteCategory, isPending: isDeleting } = useDeleteCategory();
 
   const handleArchive = (categoryId: string) => {

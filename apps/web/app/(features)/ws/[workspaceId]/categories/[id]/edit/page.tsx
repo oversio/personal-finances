@@ -3,8 +3,8 @@
 import { Button, Card, CardBody, CardHeader, Spinner } from "@heroui/react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useGetCategory } from "../../_api/use-get-category";
-import { useUpdateCategory } from "../../_api/use-update-category";
+import { useGetCategory } from "../../_api/get-category/use-get-category";
+import { useUpdateCategory } from "../../_api/update-category/use-update-category";
 import { CategoryForm } from "../../_components/category-form";
 import type { CreateCategoryFormData } from "../../_schemas/category.schema";
 

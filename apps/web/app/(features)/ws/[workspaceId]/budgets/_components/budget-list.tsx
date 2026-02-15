@@ -2,8 +2,8 @@
 
 import { Button, Spinner } from "@heroui/react";
 import Link from "next/link";
-import { useDeleteBudget } from "../_api/use-delete-budget";
-import { useGetBudgets } from "../_api/use-get-budgets";
+import { useDeleteBudget } from "../_api/delete-budget/use-delete-budget";
+import { useGetBudgetList } from "../_api/get-budget-list/use-get-budget-list";
 import { BudgetCard } from "./budget-card";
 
 interface BudgetListProps {
@@ -11,7 +11,7 @@ interface BudgetListProps {
 }
 
 export function BudgetList({ workspaceId }: BudgetListProps) {
-  const { data: budgets, isLoading, error } = useGetBudgets({ workspaceId });
+  const { data: budgets, isLoading, error } = useGetBudgetList({ workspaceId });
   const { mutate: deleteBudget, isPending: isDeleting } = useDeleteBudget();
 
   const handleArchive = (budgetId: string) => {
