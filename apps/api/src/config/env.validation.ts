@@ -17,6 +17,10 @@ const envSchema = z.object({
   // Frontend
   FRONTEND_URL: z.string().url(),
 
+  // Resend (Email)
+  RESEND_API_KEY: z.string().min(1),
+  RESEND_FROM_EMAIL: z.string().email().default("onboarding@resend.dev"),
+
   // App
   PORT: z.coerce.number().default(9000),
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),

@@ -89,3 +89,63 @@ export class OnlyOwnerCanDeleteWorkspaceError extends DomainException {
     });
   }
 }
+
+export class InvitationNotFoundError extends DomainException {
+  constructor(tokenOrId: string) {
+    super(`Invitation ${tokenOrId} not found`, {
+      errorCode: ErrorCodes.workspaces.invitationNotFound,
+      fieldName: null,
+      handler: "user",
+    });
+  }
+}
+
+export class InvitationExpiredError extends DomainException {
+  constructor() {
+    super("This invitation has expired", {
+      errorCode: ErrorCodes.workspaces.invitationExpired,
+      fieldName: null,
+      handler: "user",
+    });
+  }
+}
+
+export class InvitationAlreadyAcceptedError extends DomainException {
+  constructor() {
+    super("This invitation has already been accepted", {
+      errorCode: ErrorCodes.workspaces.invitationAlreadyAccepted,
+      fieldName: null,
+      handler: "user",
+    });
+  }
+}
+
+export class InvitationRevokedError extends DomainException {
+  constructor() {
+    super("This invitation has been revoked", {
+      errorCode: ErrorCodes.workspaces.invitationRevoked,
+      fieldName: null,
+      handler: "user",
+    });
+  }
+}
+
+export class PendingInvitationExistsError extends DomainException {
+  constructor(email: string) {
+    super(`A pending invitation already exists for ${email}`, {
+      errorCode: ErrorCodes.workspaces.pendingInvitationExists,
+      fieldName: "email",
+      handler: "user",
+    });
+  }
+}
+
+export class InvitationEmailMismatchError extends DomainException {
+  constructor() {
+    super("This invitation was sent to a different email address", {
+      errorCode: ErrorCodes.workspaces.invitationEmailMismatch,
+      fieldName: null,
+      handler: "user",
+    });
+  }
+}

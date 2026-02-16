@@ -38,6 +38,12 @@ export const ErrorCodes = {
     insufficientPermissions: "workspaces.insufficient_permissions",
     userNotFoundByEmail: "workspaces.user_not_found_by_email",
     onlyOwnerCanDelete: "workspaces.only_owner_can_delete",
+    invitationNotFound: "workspaces.invitation_not_found",
+    invitationExpired: "workspaces.invitation_expired",
+    invitationAlreadyAccepted: "workspaces.invitation_already_accepted",
+    invitationRevoked: "workspaces.invitation_revoked",
+    pendingInvitationExists: "workspaces.pending_invitation_exists",
+    invitationEmailMismatch: "workspaces.invitation_email_mismatch",
   },
 
   // Account errors
