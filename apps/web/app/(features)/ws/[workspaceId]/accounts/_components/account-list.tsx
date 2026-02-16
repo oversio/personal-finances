@@ -15,7 +15,7 @@ export function AccountList({ workspaceId }: AccountListProps) {
   const { mutate: deleteAccount, isPending: isDeleting } = useDeleteAccount();
 
   const handleArchive = (accountId: string) => {
-    if (confirm("Are you sure you want to archive this account?")) {
+    if (confirm("¿Estás seguro de que deseas archivar esta cuenta?")) {
       deleteAccount({ workspaceId, accountId });
     }
   };
@@ -31,7 +31,7 @@ export function AccountList({ workspaceId }: AccountListProps) {
   if (error) {
     return (
       <div className="rounded-lg border border-danger-200 bg-danger-50 p-4 text-danger">
-        <p>Failed to load accounts. Please try again.</p>
+        <p>Error al cargar las cuentas. Por favor intenta de nuevo.</p>
       </div>
     );
   }
@@ -53,11 +53,11 @@ export function AccountList({ workspaceId }: AccountListProps) {
           />
         </svg>
         <div className="text-center">
-          <h3 className="text-lg font-semibold">No accounts yet</h3>
-          <p className="text-small text-default-500">Create your first account to get started</p>
+          <h3 className="text-lg font-semibold">Aún no hay cuentas</h3>
+          <p className="text-small text-default-500">Crea tu primera cuenta para comenzar</p>
         </div>
         <Button as={Link} href={`/ws/${workspaceId}/accounts/new`} color="primary">
-          Create Account
+          Crear Cuenta
         </Button>
       </div>
     );

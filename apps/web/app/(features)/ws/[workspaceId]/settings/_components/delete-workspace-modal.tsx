@@ -37,21 +37,21 @@ export function DeleteWorkspaceModal({
   return (
     <Modal isOpen={isOpen} onClose={handleClose}>
       <ModalContent>
-        <ModalHeader className="text-danger">Delete Workspace</ModalHeader>
+        <ModalHeader className="text-danger">Eliminar Espacio de Trabajo</ModalHeader>
         <ModalBody className="gap-4">
           <p className="text-default-600">
-            This action cannot be undone. This will permanently delete the workspace{" "}
-            <span className="font-medium">{workspaceName}</span> and all of its data including:
+            Esta acción no se puede deshacer. Esto eliminará permanentemente el espacio de trabajo{" "}
+            <span className="font-medium">{workspaceName}</span> y todos sus datos incluyendo:
           </p>
           <ul className="list-inside list-disc space-y-1 text-small text-default-500">
-            <li>All accounts and their balances</li>
-            <li>All transactions and transfers</li>
-            <li>All categories and budgets</li>
-            <li>All recurring transactions</li>
-            <li>All workspace members</li>
+            <li>Todas las cuentas y sus saldos</li>
+            <li>Todas las transacciones y transferencias</li>
+            <li>Todas las categorías y presupuestos</li>
+            <li>Todas las transacciones recurrentes</li>
+            <li>Todos los miembros del espacio de trabajo</li>
           </ul>
           <Input
-            label={`Type "${workspaceName}" to confirm`}
+            label={`Escribe "${workspaceName}" para confirmar`}
             placeholder={workspaceName}
             value={confirmText}
             onValueChange={setConfirmText}
@@ -60,7 +60,7 @@ export function DeleteWorkspaceModal({
         </ModalBody>
         <ModalFooter>
           <Button variant="flat" onPress={handleClose}>
-            Cancel
+            Cancelar
           </Button>
           <Button
             color="danger"
@@ -68,7 +68,7 @@ export function DeleteWorkspaceModal({
             isLoading={isPending}
             isDisabled={!isConfirmed}
           >
-            Delete Workspace
+            Eliminar Espacio de Trabajo
           </Button>
         </ModalFooter>
       </ModalContent>

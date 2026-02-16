@@ -16,7 +16,7 @@ export function CategoryList({ workspaceId }: CategoryListProps) {
   const { mutate: deleteCategory, isPending: isDeleting } = useDeleteCategory();
 
   const handleArchive = (categoryId: string) => {
-    if (confirm("Are you sure you want to archive this category?")) {
+    if (confirm("¿Estás seguro de que deseas archivar esta categoría?")) {
       deleteCategory({ workspaceId, categoryId });
     }
   };
@@ -32,7 +32,7 @@ export function CategoryList({ workspaceId }: CategoryListProps) {
   if (error) {
     return (
       <div className="rounded-lg border border-danger-200 bg-danger-50 p-4 text-danger">
-        <p>Failed to load categories. Please try again.</p>
+        <p>Error al cargar las categorías. Por favor intenta de nuevo.</p>
       </div>
     );
   }
@@ -55,11 +55,11 @@ export function CategoryList({ workspaceId }: CategoryListProps) {
           <path d="M6 6h.008v.008H6V6Z" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
         <div className="text-center">
-          <h3 className="text-lg font-semibold">No categories yet</h3>
-          <p className="text-small text-default-500">Create your first category to get started</p>
+          <h3 className="text-lg font-semibold">Aún no hay categorías</h3>
+          <p className="text-small text-default-500">Crea tu primera categoría para comenzar</p>
         </div>
         <Button as={Link} href={`/ws/${workspaceId}/categories/new`} color="primary">
-          Create Category
+          Crear Categoría
         </Button>
       </div>
     );
@@ -70,7 +70,7 @@ export function CategoryList({ workspaceId }: CategoryListProps) {
 
   return (
     <Tabs aria-label="Category types" variant="underlined" classNames={{ panel: "pt-4" }}>
-      <Tab key="expense" title={`Expenses (${expenseCategories.length})`}>
+      <Tab key="expense" title={`Gastos (${expenseCategories.length})`}>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {expenseCategories.map((category: Category) => (
             <CategoryCard
@@ -83,10 +83,10 @@ export function CategoryList({ workspaceId }: CategoryListProps) {
           ))}
         </div>
         {expenseCategories.length === 0 && (
-          <p className="py-8 text-center text-default-500">No expense categories</p>
+          <p className="py-8 text-center text-default-500">No hay categorías de gastos</p>
         )}
       </Tab>
-      <Tab key="income" title={`Income (${incomeCategories.length})`}>
+      <Tab key="income" title={`Ingresos (${incomeCategories.length})`}>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {incomeCategories.map((category: Category) => (
             <CategoryCard
@@ -99,7 +99,7 @@ export function CategoryList({ workspaceId }: CategoryListProps) {
           ))}
         </div>
         {incomeCategories.length === 0 && (
-          <p className="py-8 text-center text-default-500">No income categories</p>
+          <p className="py-8 text-center text-default-500">No hay categorías de ingresos</p>
         )}
       </Tab>
     </Tabs>

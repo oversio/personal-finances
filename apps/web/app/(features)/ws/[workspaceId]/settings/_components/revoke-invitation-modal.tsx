@@ -21,21 +21,21 @@ export function RevokeInvitationModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalContent>
-        <ModalHeader>Revoke Invitation</ModalHeader>
+        <ModalHeader>Revocar Invitación</ModalHeader>
         <ModalBody>
           <p>
-            Are you sure you want to revoke the invitation for <strong>{invitation?.email}</strong>?
+            ¿Estás seguro de que deseas revocar la invitación para <strong>{invitation?.email}</strong>?
           </p>
           <p className="text-small text-default-500">
-            They will no longer be able to use the invitation link to join the workspace.
+            Ya no podrán usar el enlace de invitación para unirse al espacio de trabajo.
           </p>
         </ModalBody>
         <ModalFooter>
           <Button variant="flat" onPress={onClose}>
-            Cancel
+            Cancelar
           </Button>
           <Button color="danger" onPress={onConfirm} isLoading={isPending}>
-            Revoke Invitation
+            Revocar Invitación
           </Button>
         </ModalFooter>
       </ModalContent>

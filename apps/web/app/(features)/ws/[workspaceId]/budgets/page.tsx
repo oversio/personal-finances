@@ -13,11 +13,11 @@ export default function BudgetsPage() {
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Budgets</h1>
-          <p className="text-default-500">Track spending against your budget limits</p>
+          <h1 className="text-2xl font-bold">Presupuestos</h1>
+          <p className="text-default-500">Controla tus gastos según tus límites de presupuesto</p>
         </div>
         <Button as={Link} href={`/ws/${workspaceId}/budgets/new`} color="primary">
-          New Budget
+          Nuevo Presupuesto
         </Button>
       </div>
 

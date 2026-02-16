@@ -13,11 +13,11 @@ export default function AccountsPage() {
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Accounts</h1>
-          <p className="text-default-500">Manage your financial accounts</p>
+          <h1 className="text-2xl font-bold">Cuentas</h1>
+          <p className="text-default-500">Administra tus cuentas financieras</p>
         </div>
         <Button as={Link} href={`/ws/${workspaceId}/accounts/new`} color="primary">
-          New Account
+          Nueva Cuenta
         </Button>
       </div>
 

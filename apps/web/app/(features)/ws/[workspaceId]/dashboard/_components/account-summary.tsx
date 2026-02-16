@@ -9,7 +9,7 @@ interface AccountSummaryProps {
 }
 
 function formatCurrency(amount: number, currency: string): string {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("es-CL", {
     style: "currency",
     currency,
   }).format(amount);
@@ -34,14 +34,14 @@ export function AccountSummary({ workspaceId }: AccountSummaryProps) {
   return (
     <Card>
       <CardHeader className="flex items-center justify-between px-6 pt-6">
-        <h3 className="text-lg font-semibold">Accounts</h3>
+        <h3 className="text-lg font-semibold">Cuentas</h3>
         <Link href={`/ws/${workspaceId}/accounts`} className="text-sm text-primary hover:underline">
-          View all
+          Ver todo
         </Link>
       </CardHeader>
       <CardBody className="px-6 pb-6">
         <div className="mb-4">
-          <p className="text-sm text-default-500">Total Balance</p>
+          <p className="text-sm text-default-500">Saldo Total</p>
           <p className="text-2xl font-bold">{formatCurrency(totalBalance, currency)}</p>
         </div>
         <div className="space-y-3">
@@ -57,7 +57,7 @@ export function AccountSummary({ workspaceId }: AccountSummaryProps) {
             </div>
           ))}
           {(accounts?.length ?? 0) === 0 && (
-            <p className="text-center text-sm text-default-400">No accounts yet</p>
+            <p className="text-center text-sm text-default-400">Aún no hay cuentas</p>
           )}
         </div>
       </CardBody>

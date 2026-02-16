@@ -37,8 +37,8 @@ export function TransactionFiltersComponent({
   return (
     <div className="flex flex-wrap items-end gap-4">
       <Select
-        label="Account"
-        placeholder="All accounts"
+        label="Cuenta"
+        placeholder="Todas las cuentas"
         size="sm"
         className="w-48"
         selectedKeys={filters.accountId ? [filters.accountId] : []}
@@ -54,8 +54,8 @@ export function TransactionFiltersComponent({
       </Select>
 
       <Select
-        label="Type"
-        placeholder="All types"
+        label="Tipo"
+        placeholder="Todos los tipos"
         size="sm"
         className="w-40"
         selectedKeys={filters.type ? [filters.type] : []}
@@ -71,8 +71,8 @@ export function TransactionFiltersComponent({
       </Select>
 
       <Select
-        label="Category"
-        placeholder="All categories"
+        label="Categoría"
+        placeholder="Todas las categorías"
         size="sm"
         className="w-48"
         selectedKeys={filters.categoryId ? [filters.categoryId] : []}
@@ -90,7 +90,7 @@ export function TransactionFiltersComponent({
       </Select>
 
       <DatePicker
-        label="From"
+        label="Desde"
         size="sm"
         className="w-40"
         granularity="day"
@@ -103,7 +103,7 @@ export function TransactionFiltersComponent({
       />
 
       <DatePicker
-        label="To"
+        label="Hasta"
         size="sm"
         className="w-40"
         granularity="day"
@@ -117,7 +117,7 @@ export function TransactionFiltersComponent({
 
       {hasFilters && (
         <Button size="sm" variant="light" onPress={handleClear}>
-          Clear filters
+          Limpiar filtros
         </Button>
       )}
     </div>

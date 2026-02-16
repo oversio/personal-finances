@@ -26,14 +26,14 @@ interface TransactionCardProps {
 }
 
 function formatCurrency(amount: number, currency: string): string {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("es-CL", {
     style: "currency",
     currency,
   }).format(amount);
 }
 
 function formatDate(date: Date): string {
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("es-CL", {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -100,14 +100,14 @@ export function TransactionCard({
             <div className="flex flex-wrap items-center gap-2 text-small">
               {account && (
                 <span className="font-medium">
-                  {transaction.type === "transfer" ? "From: " : ""}
+                  {transaction.type === "transfer" ? "Desde: " : ""}
                   {account.name}
                 </span>
               )}
               {toAccount && (
                 <>
                   <span className="text-default-500">→</span>
-                  <span className="font-medium">To: {toAccount.name}</span>
+                  <span className="font-medium">Hacia: {toAccount.name}</span>
                 </>
               )}
               {category && (
@@ -134,7 +134,7 @@ export function TransactionCard({
 
             <Dropdown>
               <DropdownTrigger>
-                <Button isIconOnly size="sm" variant="light" aria-label="Transaction actions">
+                <Button isIconOnly size="sm" variant="light" aria-label="Acciones de transacción">
                   <svg
                     className="size-5"
                     fill="none"
@@ -150,13 +150,13 @@ export function TransactionCard({
                   </svg>
                 </Button>
               </DropdownTrigger>
-              <DropdownMenu aria-label="Transaction actions">
+              <DropdownMenu aria-label="Acciones de transacción">
                 <DropdownItem
                   key="edit"
                   as={Link}
                   href={`/ws/${workspaceId}/transactions/${transaction.id}/edit`}
                 >
-                  Edit
+                  Editar
                 </DropdownItem>
                 <DropdownItem
                   key="archive"
@@ -165,7 +165,7 @@ export function TransactionCard({
                   onPress={() => onArchive(transaction.id!)}
                   isDisabled={isArchiving}
                 >
-                  Archive
+                  Archivar
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>

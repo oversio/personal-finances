@@ -44,15 +44,15 @@ export function ChangeRoleModal({
   return (
     <Modal isOpen={isOpen} onClose={handleClose}>
       <ModalContent>
-        <ModalHeader>Change Role</ModalHeader>
+        <ModalHeader>Cambiar Rol</ModalHeader>
         <ModalBody className="gap-4">
           <p className="text-default-600">
-            Change the role for <span className="font-medium">{member?.name}</span>
+            Cambiar el rol de <span className="font-medium">{member?.name}</span>
           </p>
 
           <Select
-            label="Role"
-            placeholder="Select role"
+            label="Rol"
+            placeholder="Selecciona un rol"
             selectedKeys={[role]}
             onSelectionChange={keys => {
               const value = Array.from(keys)[0] as "admin" | "member";
@@ -72,7 +72,7 @@ export function ChangeRoleModal({
         </ModalBody>
         <ModalFooter>
           <Button variant="flat" onPress={handleClose}>
-            Cancel
+            Cancelar
           </Button>
           <Button
             color="primary"
@@ -80,7 +80,7 @@ export function ChangeRoleModal({
             isLoading={isPending}
             isDisabled={member?.role === role}
           >
-            Save Changes
+            Guardar Cambios
           </Button>
         </ModalFooter>
       </ModalContent>

@@ -21,7 +21,7 @@ interface AccountCardProps {
 }
 
 function formatCurrency(amount: number, currency: string): string {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("es-CL", {
     style: "currency",
     currency,
   }).format(amount);
@@ -48,7 +48,7 @@ export function AccountCard({ account, workspaceId, onArchive, isArchiving }: Ac
           <div onClick={e => e.stopPropagation()}>
             <Dropdown>
               <DropdownTrigger>
-                <Button isIconOnly size="sm" variant="light" aria-label="Account actions">
+                <Button isIconOnly size="sm" variant="light" aria-label="Acciones de cuenta">
                   <svg
                     className="size-5"
                     fill="none"
@@ -64,13 +64,13 @@ export function AccountCard({ account, workspaceId, onArchive, isArchiving }: Ac
                   </svg>
                 </Button>
               </DropdownTrigger>
-              <DropdownMenu aria-label="Account actions">
+              <DropdownMenu aria-label="Acciones de cuenta">
                 <DropdownItem
                   key="edit"
                   as={Link}
                   href={`/ws/${workspaceId}/accounts/${account.id}/edit`}
                 >
-                  Edit
+                  Editar
                 </DropdownItem>
                 <DropdownItem
                   key="archive"
@@ -79,7 +79,7 @@ export function AccountCard({ account, workspaceId, onArchive, isArchiving }: Ac
                   onPress={() => onArchive(account.id)}
                   isDisabled={isArchiving}
                 >
-                  Archive
+                  Archivar
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
@@ -92,7 +92,7 @@ export function AccountCard({ account, workspaceId, onArchive, isArchiving }: Ac
           </p>
           {account.initialBalance !== account.currentBalance && (
             <p className="text-small text-default-400">
-              Initial: {formatCurrency(account.initialBalance, account.currency)}
+              Inicial: {formatCurrency(account.initialBalance, account.currency)}
             </p>
           )}
         </div>

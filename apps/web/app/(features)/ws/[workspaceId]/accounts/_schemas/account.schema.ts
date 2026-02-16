@@ -23,12 +23,12 @@ const HEX_COLOR_REGEX = /^#[0-9A-Fa-f]{6}$/;
 export const createAccountSchema = z.object({
   name: z
     .string()
-    .min(1, { message: "Account name is required" })
-    .max(100, { message: "Account name must be less than 100 characters" }),
-  type: z.enum(ACCOUNT_TYPES, { message: "Please select an account type" }),
-  currency: z.enum(CURRENCIES, { message: "Please select a currency" }),
-  initialBalance: z.number().finite({ message: "Initial balance must be a valid number" }),
-  color: z.string().regex(HEX_COLOR_REGEX, { message: "Invalid color format" }),
+    .min(1, { message: "El nombre de la cuenta es requerido" })
+    .max(100, { message: "El nombre debe tener menos de 100 caracteres" }),
+  type: z.enum(ACCOUNT_TYPES, { message: "Selecciona un tipo de cuenta" }),
+  currency: z.enum(CURRENCIES, { message: "Selecciona una moneda" }),
+  initialBalance: z.number().finite({ message: "El saldo inicial debe ser un número válido" }),
+  color: z.string().regex(HEX_COLOR_REGEX, { message: "Formato de color inválido" }),
   icon: z.string().max(50).optional(),
 });
 
@@ -37,38 +37,38 @@ export type CreateAccountFormData = z.infer<typeof createAccountSchema>;
 export const updateAccountSchema = z.object({
   name: z
     .string()
-    .min(1, { message: "Account name is required" })
-    .max(100, { message: "Account name must be less than 100 characters" })
+    .min(1, { message: "El nombre de la cuenta es requerido" })
+    .max(100, { message: "El nombre debe tener menos de 100 caracteres" })
     .optional(),
-  type: z.enum(ACCOUNT_TYPES, { message: "Please select an account type" }).optional(),
-  color: z.string().regex(HEX_COLOR_REGEX, { message: "Invalid color format" }).optional(),
+  type: z.enum(ACCOUNT_TYPES, { message: "Selecciona un tipo de cuenta" }).optional(),
+  color: z.string().regex(HEX_COLOR_REGEX, { message: "Formato de color inválido" }).optional(),
   icon: z.string().max(50).nullish(),
 });
 
 export type UpdateAccountFormData = z.infer<typeof updateAccountSchema>;
 
 export const ACCOUNT_TYPE_LABELS: Record<(typeof ACCOUNT_TYPES)[number], string> = {
-  checking: "Checking",
-  savings: "Savings",
-  credit_card: "Credit Card",
-  cash: "Cash",
-  investment: "Investment",
+  checking: "Cuenta Corriente",
+  savings: "Ahorros",
+  credit_card: "Tarjeta de Crédito",
+  cash: "Efectivo",
+  investment: "Inversión",
 };
 
 export const CURRENCY_LABELS: Record<(typeof CURRENCIES)[number], string> = {
-  USD: "USD - US Dollar",
+  USD: "USD - Dólar Estadounidense",
   EUR: "EUR - Euro",
-  GBP: "GBP - British Pound",
-  MXN: "MXN - Mexican Peso",
-  CAD: "CAD - Canadian Dollar",
-  AUD: "AUD - Australian Dollar",
-  JPY: "JPY - Japanese Yen",
-  CNY: "CNY - Chinese Yuan",
-  BRL: "BRL - Brazilian Real",
-  ARS: "ARS - Argentine Peso",
-  CLP: "CLP - Chilean Peso",
-  COP: "COP - Colombian Peso",
-  PEN: "PEN - Peruvian Sol",
+  GBP: "GBP - Libra Esterlina",
+  MXN: "MXN - Peso Mexicano",
+  CAD: "CAD - Dólar Canadiense",
+  AUD: "AUD - Dólar Australiano",
+  JPY: "JPY - Yen Japonés",
+  CNY: "CNY - Yuan Chino",
+  BRL: "BRL - Real Brasileño",
+  ARS: "ARS - Peso Argentino",
+  CLP: "CLP - Peso Chileno",
+  COP: "COP - Peso Colombiano",
+  PEN: "PEN - Sol Peruano",
 };
 
 export const DEFAULT_COLORS = [

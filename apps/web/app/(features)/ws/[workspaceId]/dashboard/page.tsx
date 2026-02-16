@@ -10,7 +10,7 @@ import { BudgetOverview } from "./_components/budget-overview";
 import { RecentTransactions } from "./_components/recent-transactions";
 
 function formatCurrency(amount: number, currency: string): string {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("es-CL", {
     style: "currency",
     currency,
     minimumFractionDigits: 0,
@@ -49,14 +49,14 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <p className="text-default-500">Welcome{user?.name ? `, ${user.name}` : ""}! 👋</p>
+        <h1 className="text-2xl font-bold">Inicio</h1>
+        <p className="text-default-500">¡Bienvenido{user?.name ? `, ${user.name}` : ""}! 👋</p>
       </div>
 
       {/* Stats Overview */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
-          title="Total Balance"
+          title="Saldo Total"
           value={formatCurrency(totalBalance, currency)}
           icon={
             <svg
@@ -76,7 +76,7 @@ export default function DashboardPage() {
           color="primary"
         />
         <StatCard
-          title="Monthly Income"
+          title="Ingresos del Mes"
           value={formatCurrency(monthlyIncome, currency)}
           icon={
             <svg
@@ -96,7 +96,7 @@ export default function DashboardPage() {
           color="success"
         />
         <StatCard
-          title="Monthly Expenses"
+          title="Gastos del Mes"
           value={formatCurrency(monthlyExpenses, currency)}
           icon={
             <svg
@@ -116,7 +116,7 @@ export default function DashboardPage() {
           color="danger"
         />
         <StatCard
-          title="Net Income"
+          title="Balance Neto"
           value={formatCurrency(netIncome, currency)}
           icon={
             <svg

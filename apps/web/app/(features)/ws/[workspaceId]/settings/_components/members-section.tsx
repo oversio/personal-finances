@@ -94,13 +94,13 @@ export function MembersSection({ workspaceId, currentUserRole }: MembersSectionP
             }
             onPress={() => setShowInviteModal(true)}
           >
-            Invite Member
+            Invitar Miembro
           </Button>
         </div>
       )}
 
-      <Tabs aria-label="Members and Invitations" variant="underlined">
-        <Tab key="members" title="Members">
+      <Tabs aria-label="Miembros e Invitaciones" variant="underlined">
+        <Tab key="members" title="Miembros">
           <div className="mt-4 rounded-lg border border-divider bg-content1 p-4">
             {members && members.length > 0 ? (
               <div className="divide-y divide-divider">
@@ -117,12 +117,12 @@ export function MembersSection({ workspaceId, currentUserRole }: MembersSectionP
                 ))}
               </div>
             ) : (
-              <p className="py-4 text-center text-default-500">No members yet</p>
+              <p className="py-4 text-center text-default-500">Aún no hay miembros</p>
             )}
           </div>
         </Tab>
         {canManage && (
-          <Tab key="invitations" title="Pending Invitations">
+          <Tab key="invitations" title="Invitaciones Pendientes">
             <div className="mt-4 rounded-lg border border-divider bg-content1 p-4">
               <PendingInvitationsTable workspaceId={workspaceId} />
             </div>

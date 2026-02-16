@@ -21,22 +21,22 @@ export function RemoveMemberModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalContent>
-        <ModalHeader>Remove Member</ModalHeader>
+        <ModalHeader>Eliminar Miembro</ModalHeader>
         <ModalBody>
           <p className="text-default-600">
-            Are you sure you want to remove <span className="font-medium">{member?.name}</span> from
-            this workspace?
+            ¿Estás seguro de que deseas eliminar a <span className="font-medium">{member?.name}</span> de
+            este espacio de trabajo?
           </p>
           <p className="text-small text-default-500">
-            They will lose access to all workspace data immediately.
+            Perderá acceso a todos los datos del espacio de trabajo inmediatamente.
           </p>
         </ModalBody>
         <ModalFooter>
           <Button variant="flat" onPress={onClose}>
-            Cancel
+            Cancelar
           </Button>
           <Button color="danger" onPress={onConfirm} isLoading={isPending}>
-            Remove Member
+            Eliminar Miembro
           </Button>
         </ModalFooter>
       </ModalContent>

@@ -25,7 +25,7 @@ export function CategoryForm({
   onSubmit,
   isPending,
   error,
-  submitLabel = "Create Category",
+  submitLabel = "Crear Categoría",
 }: CategoryFormProps) {
   const form = useForm<CreateCategoryFormData>({
     defaultValues: {
@@ -52,8 +52,8 @@ export function CategoryForm({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
       <Input
-        label="Category Name"
-        placeholder="e.g., Food & Dining, Salary"
+        label="Nombre de la Categoría"
+        placeholder="Ej: Alimentación, Salario"
         {...register("name")}
         isInvalid={!!errors.name}
         errorMessage={errors.name?.message}
@@ -62,8 +62,8 @@ export function CategoryForm({
       />
 
       <Select
-        label="Category Type"
-        placeholder="Select category type"
+        label="Tipo de Categoría"
+        placeholder="Selecciona un tipo"
         selectedKeys={[watch("type")]}
         onSelectionChange={keys => {
           const value = Array.from(keys)[0] as CreateCategoryFormData["type"];
@@ -80,7 +80,7 @@ export function CategoryForm({
       </Select>
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-foreground">Color</label>
+        <label className="text-sm font-medium text-foreground">Color de la Categoría</label>
         <div className="flex flex-wrap gap-2">
           {DEFAULT_COLORS.map(color => (
             <button
@@ -93,7 +93,7 @@ export function CategoryForm({
                 outline: selectedColor === color ? "2px solid currentColor" : "none",
                 outlineOffset: "2px",
               }}
-              aria-label={`Select color ${color}`}
+              aria-label={`Seleccionar color ${color}`}
             />
           ))}
         </div>

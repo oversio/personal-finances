@@ -72,11 +72,11 @@ export function SubcategoryForm({
     <Modal isOpen={isOpen} onClose={handleClose}>
       <ModalContent>
         <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <ModalHeader>{subcategory ? "Edit Subcategory" : "Add Subcategory"}</ModalHeader>
+          <ModalHeader>{subcategory ? "Editar Subcategoría" : "Agregar Subcategoría"}</ModalHeader>
           <ModalBody className="flex flex-col gap-4">
             <Input
-              label="Subcategory Name"
-              placeholder="e.g., Groceries, Restaurants"
+              label="Nombre de la Subcategoría"
+              placeholder="Ej: Supermercado, Restaurantes"
               {...register("name")}
               isInvalid={!!errors.name}
               errorMessage={errors.name?.message}
@@ -88,10 +88,10 @@ export function SubcategoryForm({
           </ModalBody>
           <ModalFooter>
             <Button variant="light" onPress={handleClose}>
-              Cancel
+              Cancelar
             </Button>
             <Button type="submit" color="primary" isLoading={isPending}>
-              {subcategory ? "Update" : "Add"}
+              {subcategory ? "Actualizar" : "Agregar"}
             </Button>
           </ModalFooter>
         </form>

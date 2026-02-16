@@ -38,13 +38,13 @@ function formatGroupDate(dateString: string): string {
   const yesterdayStr = yesterday.toISOString().split("T")[0];
 
   if (dateString === todayStr) {
-    return "Today";
+    return "Hoy";
   }
   if (dateString === yesterdayStr) {
-    return "Yesterday";
+    return "Ayer";
   }
 
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("es-CL", {
     weekday: "long",
     month: "long",
     day: "numeric",
@@ -91,7 +91,7 @@ export function TransactionList({ workspaceId, initialAccountId }: TransactionLi
   if (transactionsError) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-danger">
-        <p>Failed to load transactions</p>
+        <p>Error al cargar las transacciones</p>
         <p className="text-small">{transactionsError.message}</p>
       </div>
     );
@@ -111,8 +111,8 @@ export function TransactionList({ workspaceId, initialAccountId }: TransactionLi
 
       {transactions?.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 text-default-500">
-          <p className="text-lg">No transactions yet</p>
-          <p className="text-small">Create your first transaction to get started</p>
+          <p className="text-lg">Aún no hay transacciones</p>
+          <p className="text-small">Crea tu primera transacción para comenzar</p>
         </div>
       ) : (
         <div className="flex flex-col gap-6">

@@ -41,7 +41,7 @@ export function TransactionForm({
   onSubmit,
   isPending,
   error,
-  submitLabel = "Create Transaction",
+  submitLabel = "Crear Transacción",
 }: TransactionFormProps) {
   const form = useForm<CreateTransactionFormData>({
     defaultValues: {
@@ -127,8 +127,8 @@ export function TransactionForm({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
       <Select
-        label="Type"
-        placeholder="Select transaction type"
+        label="Tipo"
+        placeholder="Selecciona un tipo"
         selectedKeys={[selectedType]}
         onSelectionChange={keys => {
           const value = Array.from(keys)[0] as TransactionType;
@@ -154,8 +154,8 @@ export function TransactionForm({
       </Select>
 
       <Select
-        label={selectedType === "transfer" ? "From Account" : "Account"}
-        placeholder="Select account"
+        label={selectedType === "transfer" ? "Desde Cuenta" : "Cuenta"}
+        placeholder="Selecciona una cuenta"
         selectedKeys={watch("accountId") ? [watch("accountId")] : []}
         onSelectionChange={keys => {
           const value = Array.from(keys)[0] as string;
@@ -173,8 +173,8 @@ export function TransactionForm({
 
       {showToAccount && (
         <Select
-          label="To Account"
-          placeholder="Select destination account"
+          label="Hacia Cuenta"
+          placeholder="Selecciona cuenta de destino"
           selectedKeys={watch("toAccountId") ? [watch("toAccountId")!] : []}
           onSelectionChange={keys => {
             const value = Array.from(keys)[0] as string;
@@ -193,8 +193,8 @@ export function TransactionForm({
 
       {showCategory && (
         <Select
-          label="Category"
-          placeholder="Select category"
+          label="Categoría"
+          placeholder="Selecciona una categoría"
           selectedKeys={getCategorySelectionKey()}
           onSelectionChange={keys => {
             const key = Array.from(keys)[0] as string;
@@ -232,7 +232,7 @@ export function TransactionForm({
       <div className="grid grid-cols-2 gap-4">
         <Input
           type="number"
-          label="Amount"
+          label="Monto"
           placeholder="0.00"
           step="0.01"
           endContent={<span className="text-small text-default-400">{watch("currency")}</span>}
@@ -244,7 +244,7 @@ export function TransactionForm({
         />
 
         <DatePicker
-          label="Date"
+          label="Fecha"
           granularity="day"
           value={dateValue}
           onChange={(value: CalendarDate | null) => {
@@ -261,8 +261,8 @@ export function TransactionForm({
       </div>
 
       <Textarea
-        label="Notes"
-        placeholder="Additional details (optional)"
+        label="Notas"
+        placeholder="Detalles adicionales (opcional)"
         {...register("notes")}
         isInvalid={!!errors.notes}
         errorMessage={errors.notes?.message}

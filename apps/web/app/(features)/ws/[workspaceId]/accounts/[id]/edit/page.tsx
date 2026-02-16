@@ -47,9 +47,9 @@ export default function EditAccountPage() {
   if (fetchError || !account) {
     return (
       <div className="rounded-lg border border-danger-200 bg-danger-50 p-4 text-danger">
-        <p>Account not found or failed to load.</p>
+        <p>Cuenta no encontrada o error al cargar.</p>
         <Button as={Link} href={`/ws/${workspaceId}/accounts`} className="mt-4" variant="flat">
-          Back to Accounts
+          Volver a Cuentas
         </Button>
       </div>
     );
@@ -74,14 +74,14 @@ export default function EditAccountPage() {
           </svg>
         </Button>
         <div>
-          <h1 className="text-2xl font-bold">Edit Account</h1>
+          <h1 className="text-2xl font-bold">Editar Cuenta</h1>
           <p className="text-default-500">{account.name}</p>
         </div>
       </div>
 
       <Card>
         <CardHeader>
-          <h2 className="text-lg font-semibold">Account Details</h2>
+          <h2 className="text-lg font-semibold">Detalles de la Cuenta</h2>
         </CardHeader>
         <CardBody>
           <AccountForm
@@ -89,7 +89,7 @@ export default function EditAccountPage() {
             onSubmit={handleSubmit}
             isPending={isPending}
             error={updateError}
-            submitLabel="Save Changes"
+            submitLabel="Guardar Cambios"
           />
         </CardBody>
       </Card>

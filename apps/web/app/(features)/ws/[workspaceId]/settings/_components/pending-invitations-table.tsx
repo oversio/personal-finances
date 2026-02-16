@@ -47,7 +47,7 @@ export function PendingInvitationsTable({ workspaceId }: PendingInvitationsTable
   }
 
   if (!invitations || invitations.length === 0) {
-    return <p className="py-4 text-center text-small text-default-500">No pending invitations</p>;
+    return <p className="py-4 text-center text-small text-default-500">No hay invitaciones pendientes</p>;
   }
 
   return (
@@ -87,7 +87,7 @@ function InvitationRow({ invitation, onResend, onRevoke, isResending }: Invitati
   const isExpired = invitation.isExpired;
 
   const formatDate = (date: Date) => {
-    return date.toLocaleDateString("en-US", {
+    return date.toLocaleDateString("es-CL", {
       month: "short",
       day: "numeric",
       year: "numeric",
@@ -104,33 +104,33 @@ function InvitationRow({ invitation, onResend, onRevoke, isResending }: Invitati
             variant="flat"
             color={invitation.role === "admin" ? "secondary" : "default"}
           >
-            {invitation.role}
+            {invitation.role === "admin" ? "Administrador" : "Miembro"}
           </Chip>
           {isExpired && (
             <Chip size="sm" variant="flat" color="warning">
-              Expired
+              Expirada
             </Chip>
           )}
         </div>
         <span className="text-small text-default-500">
-          {isExpired ? "Expired on" : "Expires"} {formatDate(expiresAt)}
+          {isExpired ? "Expiró el" : "Expira el"} {formatDate(expiresAt)}
         </span>
       </div>
 
       <div className="flex items-center gap-2">
-        <Tooltip content={isExpired ? "Send new invitation" : "Resend invitation"}>
+        <Tooltip content={isExpired ? "Enviar nueva invitación" : "Reenviar invitación"}>
           <Button
             size="sm"
             variant="flat"
             isLoading={isResending}
             onPress={() => onResend(invitation)}
           >
-            {isExpired ? "Resend" : "Resend"}
+            Reenviar
           </Button>
         </Tooltip>
-        <Tooltip content="Revoke invitation" color="danger">
+        <Tooltip content="Revocar invitación" color="danger">
           <Button size="sm" variant="flat" color="danger" onPress={() => onRevoke(invitation)}>
-            Revoke
+            Revocar
           </Button>
         </Tooltip>
       </div>

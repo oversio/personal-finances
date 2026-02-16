@@ -34,9 +34,9 @@ export function DangerZone({ workspaceId, workspaceName }: DangerZoneProps) {
       <div className="rounded-lg border border-danger-200 bg-danger-50 p-6 dark:border-danger-800 dark:bg-danger-900/20">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h3 className="font-semibold text-danger">Delete this workspace</h3>
+            <h3 className="font-semibold text-danger">Eliminar este espacio de trabajo</h3>
             <p className="text-small text-danger-600 dark:text-danger-400">
-              Once you delete a workspace, there is no going back. Please be certain.
+              Una vez que elimines un espacio de trabajo, no hay vuelta atrás. Por favor, asegúrate.
             </p>
           </div>
           <Button
@@ -45,7 +45,7 @@ export function DangerZone({ workspaceId, workspaceName }: DangerZoneProps) {
             onPress={() => setShowDeleteModal(true)}
             className="shrink-0"
           >
-            Delete Workspace
+            Eliminar Espacio de Trabajo
           </Button>
         </div>
       </div>

@@ -26,7 +26,7 @@ export function AccountForm({
   onSubmit,
   isPending,
   error,
-  submitLabel = "Create Account",
+  submitLabel = "Crear Cuenta",
 }: AccountFormProps) {
   const form = useForm<CreateAccountFormData>({
     defaultValues: {
@@ -54,8 +54,8 @@ export function AccountForm({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
       <Input
-        label="Account Name"
-        placeholder="e.g., Main Checking, Savings Account"
+        label="Nombre de la Cuenta"
+        placeholder="Ej: Cuenta Corriente, Ahorros"
         {...register("name")}
         isInvalid={!!errors.name}
         errorMessage={errors.name?.message}
@@ -64,8 +64,8 @@ export function AccountForm({
       />
 
       <Select
-        label="Account Type"
-        placeholder="Select account type"
+        label="Tipo de Cuenta"
+        placeholder="Selecciona un tipo"
         selectedKeys={[watch("type")]}
         onSelectionChange={keys => {
           const value = Array.from(keys)[0] as CreateAccountFormData["type"];
@@ -82,8 +82,8 @@ export function AccountForm({
       </Select>
 
       <Select
-        label="Currency"
-        placeholder="Select currency"
+        label="Moneda"
+        placeholder="Selecciona una moneda"
         selectedKeys={[watch("currency")]}
         onSelectionChange={keys => {
           const value = Array.from(keys)[0] as CreateAccountFormData["currency"];
@@ -103,7 +103,7 @@ export function AccountForm({
       {!account && (
         <Input
           type="number"
-          label="Initial Balance"
+          label="Saldo Inicial"
           placeholder="0.00"
           step="0.01"
           {...register("initialBalance", { valueAsNumber: true })}
@@ -115,7 +115,7 @@ export function AccountForm({
       )}
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-foreground">Color</label>
+        <label className="text-sm font-medium text-foreground">Color de la Cuenta</label>
         <div className="flex flex-wrap gap-2">
           {DEFAULT_COLORS.map(color => (
             <button
@@ -128,7 +128,7 @@ export function AccountForm({
                 outline: selectedColor === color ? "2px solid currentColor" : "none",
                 outlineOffset: "2px",
               }}
-              aria-label={`Select color ${color}`}
+              aria-label={`Seleccionar color ${color}`}
             />
           ))}
         </div>

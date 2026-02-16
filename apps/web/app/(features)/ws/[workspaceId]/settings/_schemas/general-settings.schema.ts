@@ -19,31 +19,31 @@ const CURRENCIES = [
 export const generalSettingsSchema = z.object({
   name: z
     .string()
-    .min(1, { message: "Workspace name is required" })
-    .max(100, { message: "Workspace name must be less than 100 characters" }),
-  currency: z.enum(CURRENCIES, { message: "Please select a currency" }),
+    .min(1, { message: "El nombre del espacio de trabajo es requerido" })
+    .max(100, { message: "El nombre debe tener menos de 100 caracteres" }),
+  currency: z.enum(CURRENCIES, { message: "Selecciona una moneda" }),
   timezone: z
     .string()
-    .max(100, { message: "Timezone must be less than 100 characters" })
+    .max(100, { message: "La zona horaria debe tener menos de 100 caracteres" })
     .optional(),
 });
 
 export type GeneralSettingsFormData = z.infer<typeof generalSettingsSchema>;
 
 export const CURRENCY_LABELS: Record<(typeof CURRENCIES)[number], string> = {
-  USD: "USD - US Dollar",
+  USD: "USD - Dólar Estadounidense",
   EUR: "EUR - Euro",
-  GBP: "GBP - British Pound",
-  MXN: "MXN - Mexican Peso",
-  CAD: "CAD - Canadian Dollar",
-  AUD: "AUD - Australian Dollar",
-  JPY: "JPY - Japanese Yen",
-  CNY: "CNY - Chinese Yuan",
-  BRL: "BRL - Brazilian Real",
-  ARS: "ARS - Argentine Peso",
-  CLP: "CLP - Chilean Peso",
-  COP: "COP - Colombian Peso",
-  PEN: "PEN - Peruvian Sol",
+  GBP: "GBP - Libra Esterlina",
+  MXN: "MXN - Peso Mexicano",
+  CAD: "CAD - Dólar Canadiense",
+  AUD: "AUD - Dólar Australiano",
+  JPY: "JPY - Yen Japonés",
+  CNY: "CNY - Yuan Chino",
+  BRL: "BRL - Real Brasileño",
+  ARS: "ARS - Peso Argentino",
+  CLP: "CLP - Peso Chileno",
+  COP: "COP - Peso Colombiano",
+  PEN: "PEN - Sol Peruano",
 };
 
 export const COMMON_TIMEZONES = [

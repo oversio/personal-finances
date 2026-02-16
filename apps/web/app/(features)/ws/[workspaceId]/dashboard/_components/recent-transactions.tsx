@@ -11,7 +11,7 @@ interface RecentTransactionsProps {
 }
 
 function formatCurrency(amount: number, currency: string): string {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("es-CL", {
     style: "currency",
     currency,
   }).format(amount);
@@ -23,11 +23,11 @@ function formatDate(date: Date): string {
   const diffTime = Math.abs(today.getTime() - transactionDate.getTime());
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-  if (diffDays === 0) return "Today";
-  if (diffDays === 1) return "Yesterday";
-  if (diffDays < 7) return `${diffDays} days ago`;
+  if (diffDays === 0) return "Hoy";
+  if (diffDays === 1) return "Ayer";
+  if (diffDays < 7) return `Hace ${diffDays} días`;
 
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("es-CL", {
     month: "short",
     day: "numeric",
   }).format(transactionDate);
@@ -54,13 +54,19 @@ export function RecentTransactions({ workspaceId }: RecentTransactionsProps) {
   const recentTransactions = transactions?.slice(0, 5) ?? [];
 
   const getAccountName = (accountId: string) => {
-    return accounts?.find(a => a.id === accountId)?.name ?? "Unknown";
+    return accounts?.find(a => a.id === accountId)?.name ?? "Desconocido";
   };
 
   const getCategoryName = (categoryId: string | null | undefined) => {
     if (!categoryId) return null;
-    return categories?.find(c => c.id === categoryId)?.name ?? "Unknown";
+    return categories?.find(c => c.id === categoryId)?.name ?? "Desconocido";
   };
+
+  const typeLabels = {
+    income: "ingreso",
+    expense: "gasto",
+    transfer: "transferencia",
+  } as const;
 
   const typeColors = {
     income: "success",
@@ -71,12 +77,12 @@ export function RecentTransactions({ workspaceId }: RecentTransactionsProps) {
   return (
     <Card>
       <CardHeader className="flex items-center justify-between px-6 pt-6">
-        <h3 className="text-lg font-semibold">Recent Transactions</h3>
+        <h3 className="text-lg font-semibold">Transacciones Recientes</h3>
         <Link
           href={`/ws/${workspaceId}/transactions`}
           className="text-sm text-primary hover:underline"
         >
-          View all
+          Ver todo
         </Link>
       </CardHeader>
       <CardBody className="px-6 pb-6">
@@ -86,7 +92,7 @@ export function RecentTransactions({ workspaceId }: RecentTransactionsProps) {
               <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-2">
                   <Chip size="sm" color={typeColors[transaction.type]} variant="flat">
-                    {transaction.type}
+                    {typeLabels[transaction.type]}
                   </Chip>
                   <span className="text-sm font-medium">
                     {getAccountName(transaction.accountId)}
@@ -109,7 +115,7 @@ export function RecentTransactions({ workspaceId }: RecentTransactionsProps) {
             </div>
           ))}
           {recentTransactions.length === 0 && (
-            <p className="text-center text-sm text-default-400">No transactions yet</p>
+            <p className="text-center text-sm text-default-400">Aún no hay transacciones</p>
           )}
         </div>
       </CardBody>

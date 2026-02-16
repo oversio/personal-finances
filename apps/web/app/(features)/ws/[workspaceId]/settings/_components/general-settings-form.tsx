@@ -50,8 +50,8 @@ export function GeneralSettingsForm({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
       <Input
-        label="Workspace Name"
-        placeholder="e.g., Personal Finances, Family Budget"
+        label="Nombre del Espacio de Trabajo"
+        placeholder="Ej: Finanzas Personales, Presupuesto Familiar"
         {...register("name")}
         isInvalid={!!errors.name}
         errorMessage={errors.name?.message}
@@ -61,8 +61,8 @@ export function GeneralSettingsForm({
       />
 
       <Select
-        label="Currency"
-        placeholder="Select currency"
+        label="Moneda"
+        placeholder="Selecciona una moneda"
         selectedKeys={[watch("currency")]}
         onSelectionChange={keys => {
           const value = Array.from(keys)[0] as GeneralSettingsFormData["currency"];
@@ -80,8 +80,8 @@ export function GeneralSettingsForm({
       </Select>
 
       <Select
-        label="Timezone"
-        placeholder="Select timezone"
+        label="Zona Horaria"
+        placeholder="Selecciona una zona horaria"
         selectedKeys={watch("timezone") ? [watch("timezone")!] : []}
         onSelectionChange={keys => {
           const value = Array.from(keys)[0] as string;
@@ -107,7 +107,7 @@ export function GeneralSettingsForm({
           isDisabled={!isDirty}
           className="mt-2 w-fit"
         >
-          Save Changes
+          Guardar Cambios
         </Button>
       )}
     </form>

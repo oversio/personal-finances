@@ -10,6 +10,7 @@ This document provides AI-specific instructions for working with the web applica
 | Error Handling   | [docs/ERROR_HANDLING.md](docs/ERROR_HANDLING.md)     |
 | Auth Flow        | [docs/AUTH_FLOW.md](docs/AUTH_FLOW.md)               |
 | State Management | [docs/STATE_MANAGEMENT.md](docs/STATE_MANAGEMENT.md) |
+| Localization     | Spanish (es-CL) - see [Localization](#localization)  |
 
 ## Folder Structure Conventions
 
@@ -141,6 +142,51 @@ const { user, isLoading } = useAuthStore();
 4. Add `_components/` folder for UI components
 5. Use `useServerFormValidationErrors` for forms with mutations
 6. Add query keys to `_support/` folder if shared within module
+
+## Localization
+
+This application is in **Spanish (Chilean locale: `es-CL`)**. All user-facing text must be in Spanish.
+
+### UI Text Guidelines
+
+- **All UI text in Spanish**: Labels, buttons, placeholders, error messages, empty states, tooltips
+- **Locale for formatting**: Use `es-CL` for `Intl.NumberFormat` and `Intl.DateTimeFormat`
+- **Validation messages**: Zod schemas in `_schemas/` folders must have Spanish error messages
+
+### Examples
+
+```typescript
+// Date formatting
+date.toLocaleDateString("es-CL", { month: "short", day: "numeric", year: "numeric" });
+
+// Currency formatting
+new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP" }).format(amount);
+
+// Zod validation messages
+z.string().min(1, { message: "El nombre es requerido" });
+z.email({ message: "Por favor ingresa un correo electrónico válido" });
+
+// Label constants
+export const ACCOUNT_TYPE_LABELS = {
+  checking: "Cuenta Corriente",
+  savings: "Ahorros",
+  credit_card: "Tarjeta de Crédito",
+} as const;
+```
+
+### Common Translations
+
+| English | Spanish |
+|---------|---------|
+| Save | Guardar |
+| Cancel | Cancelar |
+| Delete | Eliminar |
+| Edit | Editar |
+| Create | Crear |
+| Loading... | Cargando... |
+| No results | Sin resultados |
+| Required field | Campo requerido |
+| Invalid email | Correo electrónico inválido |
 
 ## API Communication
 

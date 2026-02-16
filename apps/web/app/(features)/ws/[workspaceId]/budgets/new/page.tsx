@@ -50,14 +50,14 @@ export default function NewBudgetPage() {
           </svg>
         </Button>
         <div>
-          <h1 className="text-2xl font-bold">New Budget</h1>
-          <p className="text-default-500">Set a spending limit for a category</p>
+          <h1 className="text-2xl font-bold">Nuevo Presupuesto</h1>
+          <p className="text-default-500">Establece un límite de gasto para una categoría</p>
         </div>
       </div>
 
       <Card>
         <CardHeader>
-          <h2 className="text-lg font-semibold">Budget Details</h2>
+          <h2 className="text-lg font-semibold">Detalles del Presupuesto</h2>
         </CardHeader>
         <CardBody>
           <BudgetForm

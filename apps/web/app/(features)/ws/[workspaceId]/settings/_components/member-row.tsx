@@ -25,9 +25,9 @@ const roleColors: Record<MemberRole, "success" | "warning" | "default"> = {
 };
 
 const roleLabels: Record<MemberRole, string> = {
-  owner: "Owner",
-  admin: "Admin",
-  member: "Member",
+  owner: "Propietario",
+  admin: "Administrador",
+  member: "Miembro",
 };
 
 export function MemberRow({ member, currentUserRole, onChangeRole, onRemove }: MemberRowProps) {
@@ -76,9 +76,9 @@ export function MemberRow({ member, currentUserRole, onChangeRole, onRemove }: M
                 </svg>
               </Button>
             </DropdownTrigger>
-            <DropdownMenu aria-label="Member actions">
+            <DropdownMenu aria-label="Acciones de miembro">
               <DropdownItem key="change-role" onPress={() => onChangeRole(member)}>
-                Change role
+                Cambiar rol
               </DropdownItem>
               <DropdownItem
                 key="remove"
@@ -86,7 +86,7 @@ export function MemberRow({ member, currentUserRole, onChangeRole, onRemove }: M
                 color="danger"
                 onPress={() => onRemove(member)}
               >
-                Remove from workspace
+                Eliminar del espacio de trabajo
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>

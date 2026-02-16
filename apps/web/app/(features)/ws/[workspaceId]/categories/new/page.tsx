@@ -44,14 +44,14 @@ export default function NewCategoryPage() {
           </svg>
         </Button>
         <div>
-          <h1 className="text-2xl font-bold">New Category</h1>
-          <p className="text-default-500">Create a new category for transactions</p>
+          <h1 className="text-2xl font-bold">Nueva Categoría</h1>
+          <p className="text-default-500">Crea una nueva categoría para tus transacciones</p>
         </div>
       </div>
 
       <Card>
         <CardHeader>
-          <h2 className="text-lg font-semibold">Category Details</h2>
+          <h2 className="text-lg font-semibold">Detalles de la Categoría</h2>
         </CardHeader>
         <CardBody>
           <CategoryForm onSubmit={handleSubmit} isPending={isPending} error={error} />

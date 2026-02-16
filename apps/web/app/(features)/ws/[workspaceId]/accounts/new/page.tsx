@@ -44,14 +44,14 @@ export default function NewAccountPage() {
           </svg>
         </Button>
         <div>
-          <h1 className="text-2xl font-bold">New Account</h1>
-          <p className="text-default-500">Create a new financial account</p>
+          <h1 className="text-2xl font-bold">Nueva Cuenta</h1>
+          <p className="text-default-500">Crea una nueva cuenta financiera</p>
         </div>
       </div>
 
       <Card>
         <CardHeader>
-          <h2 className="text-lg font-semibold">Account Details</h2>
+          <h2 className="text-lg font-semibold">Detalles de la Cuenta</h2>
         </CardHeader>
         <CardBody>
           <AccountForm onSubmit={handleSubmit} isPending={isPending} error={error} />

@@ -20,24 +20,24 @@ export const CURRENCIES = [
 
 export const createTransactionSchema = z
   .object({
-    type: z.enum(TRANSACTION_TYPES, { message: "Please select a transaction type" }),
-    accountId: z.string().min(1, { message: "Please select an account" }),
+    type: z.enum(TRANSACTION_TYPES, { message: "Selecciona un tipo de transacción" }),
+    accountId: z.string().min(1, { message: "Selecciona una cuenta" }),
     toAccountId: z.string().optional(),
     categoryId: z.string().optional(),
     subcategoryId: z.string().optional(),
     amount: z
-      .number({ message: "Amount is required" })
-      .positive({ message: "Amount must be greater than 0" }),
-    currency: z.enum(CURRENCIES, { message: "Please select a currency" }),
-    notes: z.string().max(2000, { message: "Notes must be less than 2000 characters" }).optional(),
-    date: z.date({ message: "Please select a date" }),
+      .number({ message: "El monto es requerido" })
+      .positive({ message: "El monto debe ser mayor a 0" }),
+    currency: z.enum(CURRENCIES, { message: "Selecciona una moneda" }),
+    notes: z.string().max(2000, { message: "Las notas deben tener menos de 2000 caracteres" }).optional(),
+    date: z.date({ message: "Selecciona una fecha" }),
   })
   .superRefine((data, ctx) => {
     // Transfer requires toAccountId
     if (data.type === "transfer" && !data.toAccountId) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Please select a destination account for the transfer",
+        message: "Selecciona una cuenta de destino para la transferencia",
         path: ["toAccountId"],
       });
     }
@@ -46,7 +46,7 @@ export const createTransactionSchema = z
     if ((data.type === "income" || data.type === "expense") && !data.categoryId) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Please select a category",
+        message: "Selecciona una categoría",
         path: ["categoryId"],
       });
     }
@@ -55,7 +55,7 @@ export const createTransactionSchema = z
     if (data.type === "transfer" && data.accountId === data.toAccountId) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Cannot transfer to the same account",
+        message: "No se puede transferir a la misma cuenta",
         path: ["toAccountId"],
       });
     }
@@ -65,21 +65,21 @@ export type CreateTransactionFormData = z.infer<typeof createTransactionSchema>;
 
 export const updateTransactionSchema = z
   .object({
-    type: z.enum(TRANSACTION_TYPES, { message: "Please select a transaction type" }).optional(),
-    accountId: z.string().min(1, { message: "Please select an account" }).optional(),
+    type: z.enum(TRANSACTION_TYPES, { message: "Selecciona un tipo de transacción" }).optional(),
+    accountId: z.string().min(1, { message: "Selecciona una cuenta" }).optional(),
     toAccountId: z.string().nullish(),
     categoryId: z.string().nullish(),
     subcategoryId: z.string().nullish(),
-    amount: z.number().positive({ message: "Amount must be greater than 0" }).optional(),
-    notes: z.string().max(2000, { message: "Notes must be less than 2000 characters" }).nullish(),
-    date: z.date({ message: "Please select a date" }).optional(),
+    amount: z.number().positive({ message: "El monto debe ser mayor a 0" }).optional(),
+    notes: z.string().max(2000, { message: "Las notas deben tener menos de 2000 caracteres" }).nullish(),
+    date: z.date({ message: "Selecciona una fecha" }).optional(),
   })
   .superRefine((data, ctx) => {
     // Cannot transfer to same account when both are being set
     if (data.accountId && data.toAccountId && data.accountId === data.toAccountId) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Cannot transfer to the same account",
+        message: "No se puede transferir a la misma cuenta",
         path: ["toAccountId"],
       });
     }
@@ -88,9 +88,9 @@ export const updateTransactionSchema = z
 export type UpdateTransactionFormData = z.infer<typeof updateTransactionSchema>;
 
 export const TRANSACTION_TYPE_LABELS: Record<(typeof TRANSACTION_TYPES)[number], string> = {
-  income: "Income",
-  expense: "Expense",
-  transfer: "Transfer",
+  income: "Ingreso",
+  expense: "Gasto",
+  transfer: "Transferencia",
 };
 
 export const TRANSACTION_TYPE_COLORS: Record<(typeof TRANSACTION_TYPES)[number], string> = {

@@ -31,8 +31,8 @@ export default function SettingsPage() {
   if (error || !settings) {
     return (
       <div className="flex h-64 flex-col items-center justify-center gap-2">
-        <p className="text-danger">Failed to load workspace settings</p>
-        <p className="text-small text-default-500">Please try again later</p>
+        <p className="text-danger">Error al cargar la configuración del espacio de trabajo</p>
+        <p className="text-small text-default-500">Por favor intenta de nuevo más tarde</p>
       </div>
     );
   }
@@ -43,12 +43,12 @@ export default function SettingsPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-6">
-      <h1 className="mb-6 text-2xl font-bold">Workspace Settings</h1>
+      <h1 className="mb-6 text-2xl font-bold">Configuración</h1>
 
-      <Tabs aria-label="Settings sections" variant="underlined" classNames={{ tabList: "mb-6" }}>
+      <Tabs aria-label="Secciones de configuración" variant="underlined" classNames={{ tabList: "mb-6" }}>
         <Tab key="general" title="General">
           <div className="rounded-lg border border-divider bg-content1 p-6">
-            <h2 className="mb-4 text-lg font-semibold">General Settings</h2>
+            <h2 className="mb-4 text-lg font-semibold">Configuración General</h2>
             <GeneralSettingsForm
               settings={settings}
               onSubmit={handleUpdateSettings}
@@ -59,12 +59,12 @@ export default function SettingsPage() {
           </div>
         </Tab>
 
-        <Tab key="members" title="Members">
+        <Tab key="members" title="Miembros">
           <MembersSection workspaceId={workspaceId} currentUserRole={currentUserRole} />
         </Tab>
 
         {isOwner && (
-          <Tab key="danger" title="Danger Zone">
+          <Tab key="danger" title="Zona de Peligro">
             <DangerZone workspaceId={workspaceId} workspaceName={settings.name} />
           </Tab>
         )}

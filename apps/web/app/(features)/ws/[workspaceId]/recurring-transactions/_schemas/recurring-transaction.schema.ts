@@ -21,25 +21,25 @@ export const CURRENCIES = [
 
 export const createRecurringTransactionSchema = z
   .object({
-    type: z.enum(RECURRING_TRANSACTION_TYPES, { message: "Please select a transaction type" }),
-    accountId: z.string().min(1, { message: "Please select an account" }),
-    categoryId: z.string().min(1, { message: "Please select a category" }),
+    type: z.enum(RECURRING_TRANSACTION_TYPES, { message: "Selecciona un tipo de transacción" }),
+    accountId: z.string().min(1, { message: "Selecciona una cuenta" }),
+    categoryId: z.string().min(1, { message: "Selecciona una categoría" }),
     subcategoryId: z.string().optional(),
     amount: z
-      .number({ message: "Amount is required" })
-      .positive({ message: "Amount must be greater than 0" }),
-    currency: z.enum(CURRENCIES, { message: "Please select a currency" }),
-    notes: z.string().max(2000, { message: "Notes must be less than 2000 characters" }).optional(),
-    frequency: z.enum(FREQUENCIES, { message: "Please select a frequency" }),
+      .number({ message: "El monto es requerido" })
+      .positive({ message: "El monto debe ser mayor a 0" }),
+    currency: z.enum(CURRENCIES, { message: "Selecciona una moneda" }),
+    notes: z.string().max(2000, { message: "Las notas deben tener menos de 2000 caracteres" }).optional(),
+    frequency: z.enum(FREQUENCIES, { message: "Selecciona una frecuencia" }),
     interval: z
-      .number({ message: "Interval is required" })
-      .int({ message: "Interval must be a whole number" })
-      .min(1, { message: "Interval must be at least 1" })
-      .max(365, { message: "Interval must be at most 365" }),
+      .number({ message: "El intervalo es requerido" })
+      .int({ message: "El intervalo debe ser un número entero" })
+      .min(1, { message: "El intervalo debe ser al menos 1" })
+      .max(365, { message: "El intervalo debe ser como máximo 365" }),
     dayOfWeek: z.number().int().min(0).max(6).optional(),
     dayOfMonth: z.number().int().min(1).max(31).optional(),
     monthOfYear: z.number().int().min(1).max(12).optional(),
-    startDate: z.date({ message: "Please select a start date" }),
+    startDate: z.date({ message: "Selecciona una fecha de inicio" }),
     endDate: z.date().optional(),
   })
   .superRefine((data, ctx) => {
@@ -47,7 +47,7 @@ export const createRecurringTransactionSchema = z
     if (data.frequency === "weekly" && data.dayOfWeek === undefined) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Please select a day of week",
+        message: "Selecciona un día de la semana",
         path: ["dayOfWeek"],
       });
     }
@@ -56,7 +56,7 @@ export const createRecurringTransactionSchema = z
     if (data.frequency === "monthly" && data.dayOfMonth === undefined) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Please select a day of month",
+        message: "Selecciona un día del mes",
         path: ["dayOfMonth"],
       });
     }
@@ -66,14 +66,14 @@ export const createRecurringTransactionSchema = z
       if (data.dayOfMonth === undefined) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Please select a day of month",
+          message: "Selecciona un día del mes",
           path: ["dayOfMonth"],
         });
       }
       if (data.monthOfYear === undefined) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Please select a month",
+          message: "Selecciona un mes",
           path: ["monthOfYear"],
         });
       }
@@ -83,7 +83,7 @@ export const createRecurringTransactionSchema = z
     if (data.endDate && data.endDate <= data.startDate) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "End date must be after start date",
+        message: "La fecha de fin debe ser posterior a la fecha de inicio",
         path: ["endDate"],
       });
     }
@@ -95,8 +95,8 @@ export const RECURRING_TRANSACTION_TYPE_LABELS: Record<
   (typeof RECURRING_TRANSACTION_TYPES)[number],
   string
 > = {
-  income: "Income",
-  expense: "Expense",
+  income: "Ingreso",
+  expense: "Gasto",
 };
 
 export const RECURRING_TRANSACTION_TYPE_COLORS: Record<
@@ -108,33 +108,33 @@ export const RECURRING_TRANSACTION_TYPE_COLORS: Record<
 };
 
 export const FREQUENCY_LABELS: Record<(typeof FREQUENCIES)[number], string> = {
-  daily: "Daily",
-  weekly: "Weekly",
-  monthly: "Monthly",
-  yearly: "Yearly",
+  daily: "Diario",
+  weekly: "Semanal",
+  monthly: "Mensual",
+  yearly: "Anual",
 };
 
 export const DAY_OF_WEEK_LABELS: Record<number, string> = {
-  0: "Sunday",
-  1: "Monday",
-  2: "Tuesday",
-  3: "Wednesday",
-  4: "Thursday",
-  5: "Friday",
-  6: "Saturday",
+  0: "Domingo",
+  1: "Lunes",
+  2: "Martes",
+  3: "Miércoles",
+  4: "Jueves",
+  5: "Viernes",
+  6: "Sábado",
 };
 
 export const MONTH_LABELS: Record<number, string> = {
-  1: "January",
-  2: "February",
-  3: "March",
-  4: "April",
-  5: "May",
-  6: "June",
-  7: "July",
-  8: "August",
-  9: "September",
-  10: "October",
-  11: "November",
-  12: "December",
+  1: "Enero",
+  2: "Febrero",
+  3: "Marzo",
+  4: "Abril",
+  5: "Mayo",
+  6: "Junio",
+  7: "Julio",
+  8: "Agosto",
+  9: "Septiembre",
+  10: "Octubre",
+  11: "Noviembre",
+  12: "Diciembre",
 };

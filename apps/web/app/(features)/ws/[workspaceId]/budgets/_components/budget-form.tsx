@@ -28,7 +28,7 @@ export function BudgetForm({
   onSubmit,
   isPending,
   error,
-  submitLabel = "Create Budget",
+  submitLabel = "Crear Presupuesto",
 }: BudgetFormProps) {
   // Fetch expense categories for the dropdown (budgets are typically for expenses)
   const { data: categories, isLoading: categoriesLoading } = useGetCategoryList({
@@ -85,8 +85,8 @@ export function BudgetForm({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
       <Input
-        label="Budget Name"
-        placeholder="e.g., Monthly Groceries, Entertainment"
+        label="Nombre del Presupuesto"
+        placeholder="Ej: Supermercado Mensual, Entretenimiento"
         {...register("name")}
         isInvalid={!!errors.name}
         errorMessage={errors.name?.message}
@@ -95,8 +95,8 @@ export function BudgetForm({
       />
 
       <Select
-        label="Category"
-        placeholder="Select a category"
+        label="Categoría"
+        placeholder="Selecciona una categoría"
         selectedKeys={selectedCategoryId ? [selectedCategoryId] : []}
         onSelectionChange={keys => {
           const value = Array.from(keys)[0] as string;
@@ -116,8 +116,8 @@ export function BudgetForm({
 
       {hasSubcategories && !budget && (
         <Select
-          label="Subcategory (Optional)"
-          placeholder="All subcategories"
+          label="Subcategoría (Opcional)"
+          placeholder="Todas las subcategorías"
           selectedKeys={watch("subcategoryId") ? [watch("subcategoryId")!] : []}
           onSelectionChange={keys => {
             const value = Array.from(keys)[0] as string;
@@ -133,7 +133,7 @@ export function BudgetForm({
 
       <Input
         type="number"
-        label="Budget Amount"
+        label="Monto del Presupuesto"
         placeholder="0.00"
         step="0.01"
         {...register("amount", { valueAsNumber: true })}
@@ -144,8 +144,8 @@ export function BudgetForm({
       />
 
       <Select
-        label="Period"
-        placeholder="Select period"
+        label="Período"
+        placeholder="Selecciona un período"
         selectedKeys={[watch("period")]}
         onSelectionChange={keys => {
           const value = Array.from(keys)[0] as CreateBudgetFormData["period"];
@@ -162,7 +162,7 @@ export function BudgetForm({
       </Select>
 
       <DatePicker
-        label="Start Date"
+        label="Fecha de Inicio"
         granularity="day"
         value={startDateValue}
         onChange={(value: CalendarDate | null) => {
@@ -181,9 +181,9 @@ export function BudgetForm({
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium">Alert Threshold</p>
+            <p className="text-sm font-medium">Umbral de Alerta</p>
             <p className="text-tiny text-default-400">
-              Get notified when spending reaches a percentage
+              Recibe notificaciones cuando el gasto alcance un porcentaje
             </p>
           </div>
           <Switch

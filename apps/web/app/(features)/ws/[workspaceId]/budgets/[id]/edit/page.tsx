@@ -49,7 +49,7 @@ export default function EditBudgetPage() {
     return (
       <div className="mx-auto max-w-xl">
         <div className="rounded-lg border border-danger-200 bg-danger-50 p-4 text-danger">
-          <p>Failed to load budget. It may have been deleted or you don&apos;t have access.</p>
+          <p>Error al cargar el presupuesto. Puede haber sido eliminado o no tienes acceso.</p>
           <Button
             as={Link}
             href={`/ws/${workspaceId}/budgets`}
@@ -57,7 +57,7 @@ export default function EditBudgetPage() {
             variant="flat"
             className="mt-4"
           >
-            Back to Budgets
+            Volver a Presupuestos
           </Button>
         </div>
       </div>
@@ -83,14 +83,14 @@ export default function EditBudgetPage() {
           </svg>
         </Button>
         <div>
-          <h1 className="text-2xl font-bold">Edit Budget</h1>
-          <p className="text-default-500">Update budget settings</p>
+          <h1 className="text-2xl font-bold">Editar Presupuesto</h1>
+          <p className="text-default-500">Actualiza la configuración del presupuesto</p>
         </div>
       </div>
 
       <Card>
         <CardHeader>
-          <h2 className="text-lg font-semibold">Budget Details</h2>
+          <h2 className="text-lg font-semibold">Detalles del Presupuesto</h2>
         </CardHeader>
         <CardBody>
           <BudgetForm
@@ -99,7 +99,7 @@ export default function EditBudgetPage() {
             onSubmit={handleSubmit}
             isPending={isPending}
             error={error}
-            submitLabel="Save Changes"
+            submitLabel="Guardar Cambios"
           />
         </CardBody>
       </Card>

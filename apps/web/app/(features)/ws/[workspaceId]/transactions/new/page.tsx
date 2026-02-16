@@ -70,14 +70,14 @@ export default function NewTransactionPage() {
             </svg>
           }
         >
-          Back to Transactions
+          Volver a Transacciones
         </Button>
       </div>
 
       <Card>
         <CardHeader className="flex flex-col items-start gap-1 px-6 pt-6">
-          <h1 className="text-xl font-bold">New Transaction</h1>
-          <p className="text-small text-default-500">Record a new income, expense, or transfer</p>
+          <h1 className="text-xl font-bold">Nueva Transacción</h1>
+          <p className="text-small text-default-500">Registra un nuevo ingreso, gasto o transferencia</p>
         </CardHeader>
         <CardBody className="px-6 pb-6">
           <TransactionForm
@@ -86,7 +86,7 @@ export default function NewTransactionPage() {
             onSubmit={handleSubmit}
             isPending={createMutation.isPending}
             error={createMutation.error}
-            submitLabel="Create Transaction"
+            submitLabel="Crear Transacción"
           />
         </CardBody>
       </Card>

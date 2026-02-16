@@ -23,7 +23,7 @@ interface BudgetCardProps {
 }
 
 function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("es-CL", {
     style: "currency",
     currency: "USD",
     minimumFractionDigits: 0,
@@ -33,8 +33,8 @@ function formatCurrency(amount: number): string {
 
 function formatPeriodRange(start: Date, end: Date): string {
   const options: Intl.DateTimeFormatOptions = { month: "short", day: "numeric" };
-  const startStr = new Intl.DateTimeFormat("en-US", options).format(start);
-  const endStr = new Intl.DateTimeFormat("en-US", options).format(end);
+  const startStr = new Intl.DateTimeFormat("es-CL", options).format(start);
+  const endStr = new Intl.DateTimeFormat("es-CL", options).format(end);
   return `${startStr} - ${endStr}`;
 }
 
@@ -61,7 +61,7 @@ export function BudgetCard({ budget, workspaceId, onArchive, isArchiving }: Budg
 
           <Dropdown>
             <DropdownTrigger>
-              <Button isIconOnly size="sm" variant="light" aria-label="Budget actions">
+              <Button isIconOnly size="sm" variant="light" aria-label="Acciones del presupuesto">
                 <svg
                   className="size-5"
                   fill="none"
@@ -77,13 +77,13 @@ export function BudgetCard({ budget, workspaceId, onArchive, isArchiving }: Budg
                 </svg>
               </Button>
             </DropdownTrigger>
-            <DropdownMenu aria-label="Budget actions">
+            <DropdownMenu aria-label="Acciones del presupuesto">
               <DropdownItem
                 key="edit"
                 as={Link}
                 href={`/ws/${workspaceId}/budgets/${budget.id}/edit`}
               >
-                Edit
+                Editar
               </DropdownItem>
               <DropdownItem
                 key="archive"
@@ -92,7 +92,7 @@ export function BudgetCard({ budget, workspaceId, onArchive, isArchiving }: Budg
                 onPress={() => onArchive(budget.id)}
                 isDisabled={isArchiving}
               >
-                Archive
+                Archivar
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
@@ -101,7 +101,7 @@ export function BudgetCard({ budget, workspaceId, onArchive, isArchiving }: Budg
         <div className="mt-4 space-y-3">
           <div className="flex items-baseline justify-between">
             <span className="text-2xl font-bold">{formatCurrency(budget.spent)}</span>
-            <span className="text-default-500">of {formatCurrency(budget.amount)}</span>
+            <span className="text-default-500">de {formatCurrency(budget.amount)}</span>
           </div>
 
           <BudgetProgressBar
@@ -116,10 +116,10 @@ export function BudgetCard({ budget, workspaceId, onArchive, isArchiving }: Budg
             </span>
             <Chip size="sm" color={statusColor} variant="flat">
               {budget.isExceeded
-                ? "Exceeded"
+                ? "Excedido"
                 : budget.isWarning
-                  ? "Warning"
-                  : `${formatCurrency(budget.remaining)} left`}
+                  ? "Alerta"
+                  : `${formatCurrency(budget.remaining)} restante`}
             </Chip>
           </div>
         </div>

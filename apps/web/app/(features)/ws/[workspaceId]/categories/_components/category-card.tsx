@@ -58,7 +58,7 @@ export function CategoryCard({ category, workspaceId, onArchive, isArchiving }: 
   };
 
   const handleRemoveSubcategory = (subcategoryId: string) => {
-    if (confirm("Are you sure you want to remove this subcategory?")) {
+    if (confirm("¿Estás seguro de que deseas eliminar esta subcategoría?")) {
       removeSubcategory({
         workspaceId,
         categoryId: category.id,
@@ -118,7 +118,7 @@ export function CategoryCard({ category, workspaceId, onArchive, isArchiving }: 
 
             <Dropdown>
               <DropdownTrigger>
-                <Button isIconOnly size="sm" variant="light" aria-label="Category actions">
+                <Button isIconOnly size="sm" variant="light" aria-label="Acciones de categoría">
                   <svg
                     className="size-5"
                     fill="none"
@@ -134,16 +134,16 @@ export function CategoryCard({ category, workspaceId, onArchive, isArchiving }: 
                   </svg>
                 </Button>
               </DropdownTrigger>
-              <DropdownMenu aria-label="Category actions">
+              <DropdownMenu aria-label="Acciones de categoría">
                 <DropdownItem
                   key="edit"
                   as={Link}
                   href={`/ws/${workspaceId}/categories/${category.id}/edit`}
                 >
-                  Edit
+                  Editar
                 </DropdownItem>
                 <DropdownItem key="add-subcategory" onPress={handleAddSubcategory}>
-                  Add Subcategory
+                  Agregar Subcategoría
                 </DropdownItem>
                 <DropdownItem
                   key="archive"
@@ -152,7 +152,7 @@ export function CategoryCard({ category, workspaceId, onArchive, isArchiving }: 
                   onPress={() => onArchive(category.id)}
                   isDisabled={isArchiving}
                 >
-                  Archive
+                  Archivar
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
@@ -160,7 +160,7 @@ export function CategoryCard({ category, workspaceId, onArchive, isArchiving }: 
 
           {category.subcategories.length > 0 && (
             <div className="mt-4">
-              <p className="mb-2 text-small font-medium text-default-500">Subcategories</p>
+              <p className="mb-2 text-small font-medium text-default-500">Subcategorías</p>
               <div className="flex flex-wrap gap-2">
                 {category.subcategories.map(subcategory => (
                   <Chip
@@ -184,7 +184,7 @@ export function CategoryCard({ category, workspaceId, onArchive, isArchiving }: 
           {category.subcategories.length === 0 && (
             <div className="mt-4">
               <Button size="sm" variant="flat" onPress={handleAddSubcategory}>
-                + Add Subcategory
+                + Agregar Subcategoría
               </Button>
             </div>
           )}

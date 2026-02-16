@@ -68,11 +68,11 @@ export function InviteMemberModal({
     <Modal isOpen={isOpen} onClose={handleClose}>
       <ModalContent>
         <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <ModalHeader>Invite Member</ModalHeader>
+          <ModalHeader>Invitar Miembro</ModalHeader>
           <ModalBody className="gap-4">
             <Input
-              label="Email Address"
-              placeholder="user@example.com"
+              label="Correo Electrónico"
+              placeholder="usuario@ejemplo.com"
               type="email"
               {...register("email")}
               isInvalid={!!errors.email}
@@ -82,8 +82,8 @@ export function InviteMemberModal({
             />
 
             <Select
-              label="Role"
-              placeholder="Select role"
+              label="Rol"
+              placeholder="Selecciona un rol"
               selectedKeys={[watch("role")]}
               onSelectionChange={keys => {
                 const value = Array.from(keys)[0] as InviteMemberFormData["role"];
@@ -105,18 +105,18 @@ export function InviteMemberModal({
             </Select>
 
             <p className="text-small text-default-500">
-              An email invitation will be sent to this address. The recipient can accept the
-              invitation to join the workspace.
+              Se enviará una invitación por correo a esta dirección. El destinatario podrá aceptar
+              la invitación para unirse al espacio de trabajo.
             </p>
 
             {generalError && <p className="text-small text-danger">{generalError}</p>}
           </ModalBody>
           <ModalFooter>
             <Button variant="flat" onPress={handleClose}>
-              Cancel
+              Cancelar
             </Button>
             <Button color="primary" type="submit" isLoading={isPending}>
-              Send Invite
+              Enviar Invitación
             </Button>
           </ModalFooter>
         </form>

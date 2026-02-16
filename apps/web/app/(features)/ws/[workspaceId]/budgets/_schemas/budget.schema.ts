@@ -3,15 +3,15 @@ import { z } from "zod";
 const BUDGET_PERIODS = ["weekly", "monthly", "yearly"] as const;
 
 export const createBudgetSchema = z.object({
-  categoryId: z.string().min(1, { message: "Please select a category" }),
+  categoryId: z.string().min(1, { message: "Selecciona una categoría" }),
   subcategoryId: z.string().optional(),
   name: z
     .string()
-    .min(1, { message: "Budget name is required" })
-    .max(100, { message: "Budget name must be less than 100 characters" }),
-  amount: z.number().positive({ message: "Amount must be greater than 0" }),
-  period: z.enum(BUDGET_PERIODS, { message: "Please select a period" }),
-  startDate: z.date({ message: "Please select a start date" }),
+    .min(1, { message: "El nombre del presupuesto es requerido" })
+    .max(100, { message: "El nombre debe tener menos de 100 caracteres" }),
+  amount: z.number().positive({ message: "El monto debe ser mayor a 0" }),
+  period: z.enum(BUDGET_PERIODS, { message: "Selecciona un período" }),
+  startDate: z.date({ message: "Selecciona una fecha de inicio" }),
   alertThreshold: z.number().min(1).max(100).optional(),
 });
 
@@ -20,18 +20,18 @@ export type CreateBudgetFormData = z.infer<typeof createBudgetSchema>;
 export const updateBudgetSchema = z.object({
   name: z
     .string()
-    .min(1, { message: "Budget name is required" })
-    .max(100, { message: "Budget name must be less than 100 characters" })
+    .min(1, { message: "El nombre del presupuesto es requerido" })
+    .max(100, { message: "El nombre debe tener menos de 100 caracteres" })
     .optional(),
-  amount: z.number().positive({ message: "Amount must be greater than 0" }).optional(),
-  period: z.enum(BUDGET_PERIODS, { message: "Please select a period" }).optional(),
+  amount: z.number().positive({ message: "El monto debe ser mayor a 0" }).optional(),
+  period: z.enum(BUDGET_PERIODS, { message: "Selecciona un período" }).optional(),
   alertThreshold: z.number().min(1).max(100).nullish(),
 });
 
 export type UpdateBudgetFormData = z.infer<typeof updateBudgetSchema>;
 
 export const BUDGET_PERIOD_LABELS: Record<(typeof BUDGET_PERIODS)[number], string> = {
-  weekly: "Weekly",
-  monthly: "Monthly",
-  yearly: "Yearly",
+  weekly: "Semanal",
+  monthly: "Mensual",
+  yearly: "Anual",
 };

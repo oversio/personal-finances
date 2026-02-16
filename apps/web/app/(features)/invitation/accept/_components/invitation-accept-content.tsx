@@ -54,12 +54,12 @@ export function InvitationAcceptContent({ token }: Props) {
 
   if (error) {
     const errorMessage =
-      error instanceof ApiError ? error.message : "Failed to load invitation details";
+      error instanceof ApiError ? error.message : "Error al cargar los detalles de la invitación";
 
     return (
       <Card className="mx-auto mt-20 max-w-md p-4 shadow-lg">
         <CardBody className="text-center">
-          <h1 className="mb-2 text-xl font-semibold text-danger">Invitation Not Found</h1>
+          <h1 className="mb-2 text-xl font-semibold text-danger">Invitación No Encontrada</h1>
           <p className="text-default-500">{errorMessage}</p>
         </CardBody>
       </Card>
@@ -96,29 +96,29 @@ export function InvitationAcceptContent({ token }: Props) {
   return (
     <Card className="mx-auto mt-20 max-w-md p-4 shadow-lg">
       <CardHeader className="flex flex-col gap-1 pb-0">
-        <h1 className="text-2xl font-bold">Workspace Invitation</h1>
-        <p className="text-small text-default-500">You&apos;ve been invited to join a workspace</p>
+        <h1 className="text-2xl font-bold">Invitación al Espacio de Trabajo</h1>
+        <p className="text-small text-default-500">Has sido invitado a unirte a un espacio de trabajo</p>
       </CardHeader>
       <CardBody className="flex flex-col gap-4 pt-4">
         <div className="rounded-lg bg-default-100 p-4">
           <div className="mb-3">
-            <span className="text-small text-default-500">Workspace</span>
+            <span className="text-small text-default-500">Espacio de Trabajo</span>
             <p className="font-semibold">{invitation.workspaceName}</p>
           </div>
           <div className="mb-3">
-            <span className="text-small text-default-500">Role</span>
+            <span className="text-small text-default-500">Rol</span>
             <div className="mt-1">
               <Chip
                 size="sm"
                 variant="flat"
                 color={invitation.role === "admin" ? "secondary" : "default"}
               >
-                {invitation.role}
+                {invitation.role === "admin" ? "Administrador" : "Miembro"}
               </Chip>
             </div>
           </div>
           <div>
-            <span className="text-small text-default-500">Invited by</span>
+            <span className="text-small text-default-500">Invitado por</span>
             <p>{invitation.invitedByName}</p>
           </div>
         </div>
@@ -126,9 +126,9 @@ export function InvitationAcceptContent({ token }: Props) {
         {emailMismatch && (
           <div className="rounded-lg border border-warning-200 bg-warning-50 p-3">
             <p className="text-small text-warning-700">
-              This invitation was sent to <strong>{invitation.email}</strong>, but you&apos;re
-              signed in as <strong>{user?.email}</strong>. You need to sign in with the correct
-              email to accept this invitation.
+              Esta invitación fue enviada a <strong>{invitation.email}</strong>, pero has iniciado
+              sesión como <strong>{user?.email}</strong>. Necesitas iniciar sesión con el correo
+              correcto para aceptar esta invitación.
             </p>
           </div>
         )}
@@ -142,18 +142,18 @@ export function InvitationAcceptContent({ token }: Props) {
         {!isAuthenticated ? (
           <div className="flex flex-col gap-2">
             <p className="text-center text-small text-default-500">
-              Sign in to accept this invitation
+              Inicia sesión para aceptar esta invitación
             </p>
             <Button color="primary" onPress={handleSignIn}>
-              Sign In
+              Iniciar Sesión
             </Button>
             <Button variant="flat" onPress={handleRegister}>
-              Create Account
+              Crear Cuenta
             </Button>
           </div>
         ) : emailMismatch ? (
           <Button variant="flat" onPress={handleSignIn}>
-            Sign in with different account
+            Iniciar sesión con otra cuenta
           </Button>
         ) : (
           <Button
@@ -162,7 +162,7 @@ export function InvitationAcceptContent({ token }: Props) {
             isLoading={isAccepting}
             isDisabled={isAccepting}
           >
-            Accept Invitation
+            Aceptar Invitación
           </Button>
         )}
       </CardBody>
@@ -174,21 +174,21 @@ function getStatusContent(status: InvitationStatus, workspaceName: string) {
   switch (status) {
     case "accepted":
       return {
-        title: "Already Accepted",
-        message: `This invitation to ${workspaceName} has already been accepted.`,
+        title: "Ya Aceptada",
+        message: `Esta invitación a ${workspaceName} ya ha sido aceptada.`,
         titleClass: "text-success",
       };
     case "expired":
       return {
-        title: "Invitation Expired",
+        title: "Invitación Expirada",
         message:
-          "This invitation has expired. Please ask the workspace admin to send a new invitation.",
+          "Esta invitación ha expirado. Por favor, pide al administrador del espacio de trabajo que envíe una nueva invitación.",
         titleClass: "text-warning",
       };
     case "revoked":
       return {
-        title: "Invitation Revoked",
-        message: "This invitation has been revoked by the workspace admin.",
+        title: "Invitación Revocada",
+        message: "Esta invitación ha sido revocada por el administrador del espacio de trabajo.",
         titleClass: "text-danger",
       };
     case "pending":

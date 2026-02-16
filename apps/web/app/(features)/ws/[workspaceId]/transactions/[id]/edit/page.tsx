@@ -55,10 +55,10 @@ export default function EditTransactionPage() {
   if (transactionError) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
-        <p className="text-danger">Failed to load transaction</p>
+        <p className="text-danger">Error al cargar la transacción</p>
         <p className="text-small text-default-500">{transactionError.message}</p>
         <Button as={Link} href={`/ws/${workspaceId}/transactions`} variant="light" className="mt-4">
-          Back to Transactions
+          Volver a Transacciones
         </Button>
       </div>
     );
@@ -67,9 +67,9 @@ export default function EditTransactionPage() {
   if (!transaction) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
-        <p className="text-default-500">Transaction not found</p>
+        <p className="text-default-500">Transacción no encontrada</p>
         <Button as={Link} href={`/ws/${workspaceId}/transactions`} variant="light" className="mt-4">
-          Back to Transactions
+          Volver a Transacciones
         </Button>
       </div>
     );
@@ -99,14 +99,14 @@ export default function EditTransactionPage() {
             </svg>
           }
         >
-          Back to Transactions
+          Volver a Transacciones
         </Button>
       </div>
 
       <Card>
         <CardHeader className="flex flex-col items-start gap-1 px-6 pt-6">
-          <h1 className="text-xl font-bold">Edit Transaction</h1>
-          <p className="text-small text-default-500">Update transaction details</p>
+          <h1 className="text-xl font-bold">Editar Transacción</h1>
+          <p className="text-small text-default-500">Actualiza los detalles de la transacción</p>
         </CardHeader>
         <CardBody className="px-6 pb-6">
           <TransactionForm
@@ -116,7 +116,7 @@ export default function EditTransactionPage() {
             onSubmit={handleSubmit}
             isPending={updateMutation.isPending}
             error={updateMutation.error}
-            submitLabel="Save Changes"
+            submitLabel="Guardar Cambios"
           />
         </CardBody>
       </Card>

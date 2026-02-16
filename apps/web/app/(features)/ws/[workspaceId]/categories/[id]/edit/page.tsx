@@ -52,9 +52,9 @@ export default function EditCategoryPage() {
   if (fetchError || !category) {
     return (
       <div className="rounded-lg border border-danger-200 bg-danger-50 p-4 text-danger">
-        <p>Category not found or failed to load.</p>
+        <p>Categoría no encontrada o error al cargar.</p>
         <Button as={Link} href={`/ws/${workspaceId}/categories`} className="mt-4" variant="flat">
-          Back to Categories
+          Volver a Categorías
         </Button>
       </div>
     );
@@ -79,14 +79,14 @@ export default function EditCategoryPage() {
           </svg>
         </Button>
         <div>
-          <h1 className="text-2xl font-bold">Edit Category</h1>
+          <h1 className="text-2xl font-bold">Editar Categoría</h1>
           <p className="text-default-500">{category.name}</p>
         </div>
       </div>
 
       <Card>
         <CardHeader>
-          <h2 className="text-lg font-semibold">Category Details</h2>
+          <h2 className="text-lg font-semibold">Detalles de la Categoría</h2>
         </CardHeader>
         <CardBody>
           <CategoryForm
@@ -94,7 +94,7 @@ export default function EditCategoryPage() {
             onSubmit={handleSubmit}
             isPending={isPending}
             error={updateError}
-            submitLabel="Save Changes"
+            submitLabel="Guardar Cambios"
           />
         </CardBody>
       </Card>

@@ -15,7 +15,7 @@ export function BudgetList({ workspaceId }: BudgetListProps) {
   const { mutate: deleteBudget, isPending: isDeleting } = useDeleteBudget();
 
   const handleArchive = (budgetId: string) => {
-    if (confirm("Are you sure you want to archive this budget?")) {
+    if (confirm("¿Estás seguro de que deseas archivar este presupuesto?")) {
       deleteBudget({ workspaceId, budgetId });
     }
   };
@@ -31,7 +31,7 @@ export function BudgetList({ workspaceId }: BudgetListProps) {
   if (error) {
     return (
       <div className="rounded-lg border border-danger-200 bg-danger-50 p-4 text-danger">
-        <p>Failed to load budgets. Please try again.</p>
+        <p>Error al cargar los presupuestos. Por favor intenta de nuevo.</p>
       </div>
     );
   }
@@ -53,13 +53,13 @@ export function BudgetList({ workspaceId }: BudgetListProps) {
           />
         </svg>
         <div className="text-center">
-          <h3 className="text-lg font-semibold">No budgets yet</h3>
+          <h3 className="text-lg font-semibold">Aún no hay presupuestos</h3>
           <p className="text-small text-default-500">
-            Create your first budget to start tracking spending
+            Crea tu primer presupuesto para controlar tus gastos
           </p>
         </div>
         <Button as={Link} href={`/ws/${workspaceId}/budgets/new`} color="primary">
-          Create Budget
+          Crear Presupuesto
         </Button>
       </div>
     );

@@ -10,7 +10,7 @@ interface BudgetOverviewProps {
 }
 
 function formatCurrency(amount: number, currency: string): string {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("es-CL", {
     style: "currency",
     currency,
     minimumFractionDigits: 0,
@@ -38,9 +38,9 @@ export function BudgetOverview({ workspaceId }: BudgetOverviewProps) {
   return (
     <Card>
       <CardHeader className="flex items-center justify-between px-6 pt-6">
-        <h3 className="text-lg font-semibold">Budgets</h3>
+        <h3 className="text-lg font-semibold">Presupuestos</h3>
         <Link href={`/ws/${workspaceId}/budgets`} className="text-sm text-primary hover:underline">
-          View all
+          Ver todo
         </Link>
       </CardHeader>
       <CardBody className="px-6 pb-6">
@@ -63,13 +63,13 @@ export function BudgetOverview({ workspaceId }: BudgetOverviewProps) {
                   value={Math.min(percentage, 100)}
                   color={color}
                   size="sm"
-                  aria-label={`${budget.category.name} budget progress`}
+                  aria-label={`Progreso del presupuesto de ${budget.category.name}`}
                 />
               </div>
             );
           })}
           {activeBudgets.length === 0 && (
-            <p className="text-center text-sm text-default-400">No budgets set</p>
+            <p className="text-center text-sm text-default-400">Sin presupuestos</p>
           )}
         </div>
       </CardBody>
