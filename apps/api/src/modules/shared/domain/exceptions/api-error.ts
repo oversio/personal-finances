@@ -40,6 +40,8 @@ export interface StandardErrorResponse {
   path: string;
   error: string;
   message: string;
+  /** Dot notation code for i18n lookup (e.g., "workspaces.not_found") */
+  errorCode?: string;
 }
 
 /**

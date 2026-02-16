@@ -1,3 +1,5 @@
+import { getErrorMessage } from "@/_commons/i18n/error-messages";
+
 type ValidationError = {
   code: string;
   description: string;
@@ -51,16 +53,9 @@ export class ValidationErrors extends Error {
     return Object.keys(this._fieldErrors);
   }
 
-  // Translation and formatting helper
+  // Translation helper - uses Spanish translations with fallback to API description
   private static _validationErrorsMessage(errors: ValidationError[] | undefined) {
-    return errors
-      ?.map(error => {
-        // TODO: Add translation
-        // const key = `serverValidation.${error.code}`;
-        // return hasTranslationKey(key) ? i18n.intl.formatMessage({ id: key }) : error.description;
-        return error.description;
-      })
-      .join(" ");
+    return errors?.map(error => getErrorMessage(error.code, error.description)).join(" ");
   }
 }
 

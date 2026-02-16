@@ -182,6 +182,7 @@ export class DomainExceptionFilter implements ExceptionFilter {
         path,
         error: getErrorName(status),
         message: exception.message,
+        errorCode: exception.errorCode,
       };
     }
 
