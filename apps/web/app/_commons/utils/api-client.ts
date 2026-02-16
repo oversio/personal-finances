@@ -57,7 +57,7 @@ async function refreshAccessToken(): Promise<string | null> {
       refreshToken,
     });
 
-    const { accessToken, refreshToken: newRefreshToken } = response.data;
+    const { accessToken, refreshToken: newRefreshToken } = response.data.tokens;
 
     setTokens({
       accessToken,

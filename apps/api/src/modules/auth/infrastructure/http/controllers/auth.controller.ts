@@ -95,12 +95,21 @@ export class AuthController {
   @ApiOperation({ summary: "Refresh access token" })
   @ApiResponse({ status: 200, description: "Token refreshed successfully" })
   @ApiResponse({ status: 401, description: "Invalid refresh token" })
-  async refresh(@Body() dto: RefreshTokenDto, @Req() req: Request) {
+  async refresh(
+    @Body() dto: RefreshTokenDto,
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const command = new RefreshTokenCommand(dto.refreshToken);
-    return this.refreshTokenHandler.execute(command, {
+    const result = await this.refreshTokenHandler.execute(command, {
       userAgent: req.headers["user-agent"],
       ipAddress: req.ip,
     });
+
+    // Update cookies with new tokens
+    this.setAuthCookies(res, result.tokens.accessToken, result.tokens.refreshToken);
+
+    return result;
   }
 
   @Post("logout")

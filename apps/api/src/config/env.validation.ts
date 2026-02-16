@@ -12,14 +12,14 @@ const envSchema = z.object({
   // Google OAuth
   GOOGLE_CLIENT_ID: z.string().min(1),
   GOOGLE_CLIENT_SECRET: z.string().min(1),
-  GOOGLE_CALLBACK_URL: z.string().url(),
+  GOOGLE_CALLBACK_URL: z.url(),
 
   // Frontend
-  FRONTEND_URL: z.string().url(),
+  FRONTEND_URL: z.url(),
 
   // Resend (Email)
   RESEND_API_KEY: z.string().min(1),
-  RESEND_FROM_EMAIL: z.string().email().default("onboarding@resend.dev"),
+  RESEND_FROM_EMAIL: z.email().default("info@omasolutions.cl"),
 
   // App
   PORT: z.coerce.number().default(9000),
