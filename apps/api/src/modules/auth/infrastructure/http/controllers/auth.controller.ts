@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Inject,
   Post,
   Req,
   Res,
@@ -24,6 +25,11 @@ import {
   RegisterCommand,
   RegisterHandler,
 } from "../../../application";
+import {
+  RecaptchaTokenMissingError,
+  RecaptchaVerificationFailedError,
+} from "../../../domain/exceptions/auth.exceptions";
+import { RECAPTCHA_SERVICE, type RecaptchaService } from "@/modules/shared/application";
 import { CurrentUser } from "../../decorators/current-user.decorator";
 import type { AuthenticatedUser } from "../../decorators/current-user.decorator";
 import { Public } from "../../decorators/public.decorator";
@@ -41,6 +47,7 @@ export class AuthController {
     private readonly googleAuthHandler: GoogleAuthHandler,
     private readonly logoutHandler: LogoutHandler,
     private readonly configService: ConfigService,
+    @Inject(RECAPTCHA_SERVICE) private readonly recaptchaService: RecaptchaService,
   ) {}
 
   @Public()
@@ -54,6 +61,8 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
+    await this.verifyRecaptcha(dto.recaptchaToken, "register");
+
     const command = new RegisterCommand(dto.email, dto.password, dto.name);
     const result = await this.registerHandler.execute(command, {
       userAgent: req.headers["user-agent"],
@@ -77,6 +86,8 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
+    await this.verifyRecaptcha(dto.recaptchaToken, "login");
+
     const command = new LoginCommand(dto.email, dto.password);
     const result = await this.loginHandler.execute(command, {
       userAgent: req.headers["user-agent"],
@@ -194,5 +205,24 @@ export class AuthController {
       ...cookieOptions,
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
+  }
+
+  /**
+   * Verify reCAPTCHA token if enabled
+   * Throws error if verification fails when reCAPTCHA is enabled
+   */
+  private async verifyRecaptcha(token: string | undefined, action: string): Promise<void> {
+    if (!this.recaptchaService.isEnabled()) {
+      return;
+    }
+
+    if (!token) {
+      throw new RecaptchaTokenMissingError();
+    }
+
+    const result = await this.recaptchaService.verify(token, action);
+    if (!result.success) {
+      throw new RecaptchaVerificationFailedError();
+    }
   }
 }

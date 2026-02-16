@@ -19,6 +19,12 @@ export const ErrorCodes = {
     passwordRequired: "auth.password_required",
   },
 
+  // reCAPTCHA errors
+  recaptcha: {
+    verificationFailed: "recaptcha.verification_failed",
+    tokenMissing: "recaptcha.token_missing",
+  },
+
   // User errors
   users: {
     notFound: "users.not_found",
@@ -116,6 +122,7 @@ export const ErrorCodes = {
 
 export type ErrorCode =
   | (typeof ErrorCodes.auth)[keyof typeof ErrorCodes.auth]
+  | (typeof ErrorCodes.recaptcha)[keyof typeof ErrorCodes.recaptcha]
   | (typeof ErrorCodes.users)[keyof typeof ErrorCodes.users]
   | (typeof ErrorCodes.workspaces)[keyof typeof ErrorCodes.workspaces]
   | (typeof ErrorCodes.accounts)[keyof typeof ErrorCodes.accounts]

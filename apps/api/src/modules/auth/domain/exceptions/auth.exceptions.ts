@@ -40,3 +40,23 @@ export class PasswordRequiredError extends DomainException {
     });
   }
 }
+
+export class RecaptchaVerificationFailedError extends DomainException {
+  constructor() {
+    super("reCAPTCHA verification failed", {
+      errorCode: ErrorCodes.recaptcha.verificationFailed,
+      fieldName: null,
+      handler: "user",
+    });
+  }
+}
+
+export class RecaptchaTokenMissingError extends DomainException {
+  constructor() {
+    super("reCAPTCHA token is required", {
+      errorCode: ErrorCodes.recaptcha.tokenMissing,
+      fieldName: "recaptchaToken",
+      handler: "user",
+    });
+  }
+}

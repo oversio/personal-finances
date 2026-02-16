@@ -24,6 +24,11 @@ const envSchema = z.object({
   // App
   PORT: z.coerce.number().default(9000),
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
+
+  // reCAPTCHA
+  RECAPTCHA_SECRET_KEY: z.string().min(1).optional(),
+  RECAPTCHA_MIN_SCORE: z.coerce.number().min(0).max(1).default(0.5),
+  RECAPTCHA_ENABLED: z.coerce.boolean().default(false),
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;
