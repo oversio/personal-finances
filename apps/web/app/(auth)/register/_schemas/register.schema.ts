@@ -3,15 +3,15 @@ import { z } from "zod";
 export const registerSchema = z.object({
   name: z
     .string()
-    .min(2, { message: "Name must be at least 2 characters" })
-    .max(100, { message: "Name must be less than 100 characters" }),
-  email: z.email({ message: "Please enter a valid email address" }),
+    .min(2, { message: "El nombre debe tener al menos 2 caracteres" })
+    .max(100, { message: "El nombre debe tener menos de 100 caracteres" }),
+  email: z.email({ message: "Por favor ingresa un correo electrónico válido" }),
   password: z
     .string()
-    .min(8, { message: "Password must be at least 8 characters" })
-    .regex(/[A-Z]/, { message: "Password must contain an uppercase letter" })
-    .regex(/[a-z]/, { message: "Password must contain a lowercase letter" })
-    .regex(/[0-9]/, { message: "Password must contain a number" }),
+    .min(8, { message: "La contraseña debe tener al menos 8 caracteres" })
+    .regex(/[A-Z]/, { message: "La contraseña debe contener una mayúscula" })
+    .regex(/[a-z]/, { message: "La contraseña debe contener una minúscula" })
+    .regex(/[0-9]/, { message: "La contraseña debe contener un número" }),
 });
 
 export type RegisterFormData = z.infer<typeof registerSchema>;

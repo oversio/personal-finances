@@ -65,8 +65,8 @@ export function RegisterForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
       <Input
         type="text"
-        label="Name"
-        placeholder="Enter your name"
+        label="Nombre"
+        placeholder="Ingresa tu nombre"
         {...register("name")}
         isInvalid={!!errors.name}
         errorMessage={errors.name?.message}
@@ -77,8 +77,8 @@ export function RegisterForm() {
 
       <Input
         type="email"
-        label="Email"
-        placeholder="Enter your email"
+        label="Correo electrónico"
+        placeholder="Ingresa tu correo"
         {...register("email")}
         isInvalid={!!errors.email}
         errorMessage={errors.email?.message}
@@ -89,12 +89,12 @@ export function RegisterForm() {
 
       <Input
         type={isPasswordVisible ? "text" : "password"}
-        label="Password"
-        placeholder="Create a password"
+        label="Contraseña"
+        placeholder="Crea una contraseña"
         {...register("password")}
         isInvalid={!!errors.password}
         errorMessage={errors.password?.message}
-        description="At least 8 characters with uppercase, lowercase, and number"
+        description="Mínimo 8 caracteres con mayúscula, minúscula y número"
         variant="flat"
         isRequired
         autoComplete="new-password"
@@ -103,7 +103,7 @@ export function RegisterForm() {
             type="button"
             onClick={() => setIsPasswordVisible(!isPasswordVisible)}
             className="focus:outline-none"
-            aria-label={isPasswordVisible ? "Hide password" : "Show password"}
+            aria-label={isPasswordVisible ? "Ocultar contraseña" : "Mostrar contraseña"}
           >
             {isPasswordVisible ? (
               <EyeSlashIcon className="text-2xl text-default-400" />
@@ -117,7 +117,7 @@ export function RegisterForm() {
       {generalError && <p className="text-small text-danger">{generalError}</p>}
 
       <Button type="submit" color="primary" isLoading={isPending} className="mt-2">
-        Create Account
+        Crear Cuenta
       </Button>
 
       <Divider className="my-4" />
@@ -128,13 +128,13 @@ export function RegisterForm() {
         startContent={<GoogleIcon className="text-xl" />}
         onPress={handleGoogleSignup}
       >
-        Sign up with Google
+        Registrarse con Google
       </Button>
 
       <p className="mt-4 text-center text-small text-default-500">
-        Already have an account?{" "}
+        ¿Ya tienes una cuenta?{" "}
         <Link href="/login" size="sm">
-          Sign in
+          Inicia sesión
         </Link>
       </p>
     </form>

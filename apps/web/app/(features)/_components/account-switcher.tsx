@@ -98,27 +98,27 @@ export function AccountSwitcher() {
             <Spinner size="sm" />
           ) : (
             <span className="max-w-32 truncate text-sm font-medium">
-              {currentWorkspace?.name || "Select Workspace"}
+              {currentWorkspace?.name || "Seleccionar espacio"}
             </span>
           )}
         </Button>
       </DropdownTrigger>
-      <DropdownMenu aria-label="Account menu" variant="flat" className="w-64">
+      <DropdownMenu aria-label="Menú de cuenta" variant="flat" className="w-64">
         {/* User profile section */}
         <DropdownSection showDivider>
-          <DropdownItem key="profile" className="h-14 gap-2" textValue="User profile" isReadOnly>
-            <p className="font-semibold">{user?.name ?? "User"}</p>
+          <DropdownItem key="profile" className="h-14 gap-2" textValue="Perfil de usuario" isReadOnly>
+            <p className="font-semibold">{user?.name ?? "Usuario"}</p>
             <p className="text-small text-default-500">{user?.email ?? ""}</p>
           </DropdownItem>
         </DropdownSection>
 
         {/* Workspaces section */}
-        <DropdownSection title="Workspaces" showDivider>
+        <DropdownSection title="Espacios de trabajo" showDivider>
           {isLoading ? (
-            <DropdownItem key="loading" textValue="Loading" isReadOnly>
+            <DropdownItem key="loading" textValue="Cargando" isReadOnly>
               <div className="flex items-center gap-2">
                 <Spinner size="sm" />
-                <span className="text-default-500">Loading workspaces...</span>
+                <span className="text-default-500">Cargando espacios...</span>
               </div>
             </DropdownItem>
           ) : workspaces && workspaces.length > 0 ? (
@@ -141,8 +141,8 @@ export function AccountSwitcher() {
               </DropdownItem>
             ))
           ) : (
-            <DropdownItem key="no-workspaces" textValue="No workspaces" isReadOnly>
-              <span className="text-default-500">No workspaces available</span>
+            <DropdownItem key="no-workspaces" textValue="Sin espacios" isReadOnly>
+              <span className="text-default-500">No hay espacios disponibles</span>
             </DropdownItem>
           )}
         </DropdownSection>
@@ -150,7 +150,7 @@ export function AccountSwitcher() {
         {/* Logout section */}
         <DropdownSection>
           <DropdownItem key="logout" color="danger" onPress={handleLogout}>
-            Log out
+            Cerrar sesión
           </DropdownItem>
         </DropdownSection>
       </DropdownMenu>

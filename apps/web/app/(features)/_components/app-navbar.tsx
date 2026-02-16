@@ -53,14 +53,14 @@ export function AppNavbar() {
       <NavbarContent justify="start">
         <Button
           isIconOnly
-          aria-label={isMobileOpen ? "Close menu" : "Open menu"}
+          aria-label={isMobileOpen ? "Cerrar menú" : "Abrir menú"}
           variant="light"
           onPress={handleToggle}
         >
           <HamburgerIcon isOpen={isMobileOpen} />
         </Button>
         <NavbarBrand className="hidden sm:flex">
-          <p className="font-semibold text-inherit">Personal Finances</p>
+          <p className="font-semibold text-inherit">Finanzas Personales</p>
         </NavbarBrand>
       </NavbarContent>
 

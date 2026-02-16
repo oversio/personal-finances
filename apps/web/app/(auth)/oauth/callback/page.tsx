@@ -47,7 +47,7 @@ export default function AuthCallbackPage() {
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       <Spinner size="lg" />
-      <p className="text-default-500">Completing sign in...</p>
+      <p className="text-default-500">Completando inicio de sesión...</p>
     </div>
   );
 }

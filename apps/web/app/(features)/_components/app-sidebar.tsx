@@ -14,7 +14,7 @@ function getWorkspaceNavItems(workspaceId: string) {
   return [
     {
       key: "dashboard",
-      label: "Dashboard",
+      label: "Inicio",
       icon: (
         <svg
           className="size-5"
@@ -35,7 +35,7 @@ function getWorkspaceNavItems(workspaceId: string) {
     },
     {
       key: "accounts",
-      label: "Accounts",
+      label: "Cuentas",
       icon: (
         <svg
           className="size-5"
@@ -56,7 +56,7 @@ function getWorkspaceNavItems(workspaceId: string) {
     },
     {
       key: "categories",
-      label: "Categories",
+      label: "Categorías",
       icon: (
         <svg
           className="size-5"
@@ -78,7 +78,7 @@ function getWorkspaceNavItems(workspaceId: string) {
     },
     {
       key: "transactions",
-      label: "Transactions",
+      label: "Transacciones",
       icon: (
         <svg
           className="size-5"
@@ -99,7 +99,7 @@ function getWorkspaceNavItems(workspaceId: string) {
     },
     {
       key: "budgets",
-      label: "Budgets",
+      label: "Presupuestos",
       icon: (
         <svg
           className="size-5"
@@ -120,7 +120,7 @@ function getWorkspaceNavItems(workspaceId: string) {
     },
     {
       key: "recurring",
-      label: "Recurring",
+      label: "Recurrentes",
       icon: (
         <svg
           className="size-5"
@@ -141,7 +141,7 @@ function getWorkspaceNavItems(workspaceId: string) {
     },
     {
       key: "settings",
-      label: "Settings",
+      label: "Configuración",
       icon: (
         <svg
           className="size-5"
@@ -191,7 +191,7 @@ export function AppSidebar() {
           onKeyDown={e => e.key === "Escape" && closeMobile()}
           role="button"
           tabIndex={0}
-          aria-label="Close sidebar"
+          aria-label="Cerrar menú"
         />
       )}
 

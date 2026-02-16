@@ -63,8 +63,8 @@ export function LoginForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
       <Input
         type="email"
-        label="Email"
-        placeholder="Enter your email"
+        label="Correo electrónico"
+        placeholder="Ingresa tu correo"
         {...register("email")}
         isInvalid={!!errors.email}
         errorMessage={errors.email?.message}
@@ -75,8 +75,8 @@ export function LoginForm() {
 
       <Input
         type={isPasswordVisible ? "text" : "password"}
-        label="Password"
-        placeholder="Enter your password"
+        label="Contraseña"
+        placeholder="Ingresa tu contraseña"
         {...register("password")}
         isInvalid={!!errors.password}
         errorMessage={errors.password?.message}
@@ -88,7 +88,7 @@ export function LoginForm() {
             type="button"
             onClick={() => setIsPasswordVisible(!isPasswordVisible)}
             className="focus:outline-none"
-            aria-label={isPasswordVisible ? "Hide password" : "Show password"}
+            aria-label={isPasswordVisible ? "Ocultar contraseña" : "Mostrar contraseña"}
           >
             {isPasswordVisible ? (
               <EyeSlashIcon className="text-2xl text-default-400" />
@@ -102,7 +102,7 @@ export function LoginForm() {
       {generalError && <p className="text-small text-danger">{generalError}</p>}
 
       <Button type="submit" color="primary" isLoading={isPending} className="mt-2">
-        Sign In
+        Iniciar Sesión
       </Button>
 
       <Divider className="my-4" />
@@ -113,13 +113,13 @@ export function LoginForm() {
         startContent={<GoogleIcon className="text-xl" />}
         onPress={handleGoogleLogin}
       >
-        Continue with Google
+        Continuar con Google
       </Button>
 
       <p className="mt-4 text-center text-small text-default-500">
-        Don&apos;t have an account?{" "}
+        ¿No tienes una cuenta?{" "}
         <Link href="/register" size="sm">
-          Sign up
+          Regístrate
         </Link>
       </p>
     </form>
