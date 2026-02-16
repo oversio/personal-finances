@@ -8,4 +8,10 @@ export {
   InsufficientPermissionsError,
   UserNotFoundByEmailError,
   OnlyOwnerCanDeleteWorkspaceError,
+  InvitationNotFoundError,
+  InvitationExpiredError,
+  InvitationAlreadyAcceptedError,
+  InvitationRevokedError,
+  PendingInvitationExistsError,
+  InvitationEmailMismatchError,
 } from "./workspace.exceptions";
