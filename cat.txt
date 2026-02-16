@@ -1,0 +1,125 @@
+Gastos comida
+	Supermercado
+	Otros
+	Compras Especiales
+
+Bancos/Impuestos
+	CC 1
+	CC 2
+	TDC 1
+	TC 2
+	TC 3
+	Impuestos (nacionales)
+	Otros
+
+Ocio
+	Conciertos o espectáculos
+	Actividades al aire libre
+	Deporte
+	Cine
+	Juegos
+
+Gastos Ocasionales
+	Restaurantes
+	Lavandería o tintorería
+	Otros
+
+Ayudas
+	Familia 1
+	Familia 2
+	Colaboraciòn
+
+Salud/médicos
+	Médicos
+	Laboratorio/Exámenes
+	Farmacia
+	Urgencias
+	Seguro vida 1
+	Seguro vida 2
+	Seguro salud 1
+	Seguro salud 2
+
+Vivienda
+	Gastos Comunes / Comunidad
+	Muebles
+	Artículos para el hogar
+	Arriendo/Hipoteca
+	Otros
+
+Auto
+	Seguro
+	Permiso Circ.-Rev.Tec
+	Bencina
+	Pulilavado
+	Tax
+	Parking
+	Peajes
+	Suministros
+	Mantenimiento
+
+Transporte
+	Pasajes tarjeta transporte
+	Transporte público
+	Taxi/Uber
+
+Viajes
+	Billetes de avión
+	Hoteles
+	Comida
+	Transporte (TREN)
+	Compras generales
+	Alquiler de Auto
+	Intereses/Impuestos/comision internacional
+	Cambio de Moneda
+	Seguros
+
+Servicios básicos
+	Celulares
+	Televisión
+	Internet
+	Electricidad
+	Agua
+	Gas
+	Otros
+
+Comodidades
+	Ropa
+	Varios
+	Asesorias
+	Articulos Personales
+	Articulos Oficina
+	Documentación
+	Cursos
+
+Gastos Anuales
+	Peluquería o belleza
+	Suscripciones
+	Odontólogo
+	Dermatólogo
+	Regalos
+	Regalos oficina
+
+Contribuciones
+	Departamento
+	Estacionamiento
+	Bodega / Trastero
+	Derecho Aseo
+
+Ahorro
+	Mantenimiento 1
+	Seguro 1
+	Jubilaciòn 1
+	Jubilaciòn 2
+	Brocker 1
+	DAP
+	Dolares
+	Contribuciones
+	Ahorro
+	Gastos Anuales
+	Cuenta Individual 1
+	Cuenta Individual 2
+
+
+
+	omafinances-admin:eXkcFxXZhLB6dcnP
+	omafinancesdb
