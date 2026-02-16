@@ -104,6 +104,11 @@ export function InviteMemberModal({
               ))}
             </Select>
 
+            <p className="text-small text-default-500">
+              An email invitation will be sent to this address. The recipient can accept the
+              invitation to join the workspace.
+            </p>
+
             {generalError && <p className="text-small text-danger">{generalError}</p>}
           </ModalBody>
           <ModalFooter>

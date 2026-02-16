@@ -48,3 +48,39 @@ export interface InviteMemberInput {
 export interface ChangeMemberRoleInput {
   role: "admin" | "member";
 }
+
+// Workspace Invitations
+
+export const PendingInvitationSchema = z.object({
+  id: z.string(),
+  email: z.string(),
+  role: z.enum(["admin", "member"]),
+  expiresAt: z.coerce.date(),
+  createdAt: z.coerce.date(),
+  isExpired: z.boolean(),
+});
+
+export type PendingInvitation = z.infer<typeof PendingInvitationSchema>;
+
+export const PendingInvitationListSchema = z.array(PendingInvitationSchema);
+
+export const SendInvitationResultSchema = z.object({
+  id: z.string(),
+  workspaceId: z.string(),
+  email: z.string(),
+  role: z.string(),
+  token: z.string(),
+  expiresAt: z.coerce.date(),
+  invitedBy: z.string(),
+  createdAt: z.coerce.date(),
+  acceptedAt: z.coerce.date().nullable().optional(),
+  revokedAt: z.coerce.date().nullable().optional(),
+  acceptedByUserId: z.string().nullable().optional(),
+});
+
+export type SendInvitationResult = z.infer<typeof SendInvitationResultSchema>;
+
+export interface SendInvitationInput {
+  email: string;
+  role?: "admin" | "member";
+}

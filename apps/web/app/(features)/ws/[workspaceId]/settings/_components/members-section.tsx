@@ -1,16 +1,17 @@
 "use client";
 
-import { Button, Divider, Spinner } from "@heroui/react";
+import { Button, Divider, Spinner, Tab, Tabs } from "@heroui/react";
 import { useState } from "react";
 import type { MemberRole, WorkspaceMember } from "../_api/settings.types";
 import { useChangeMemberRole } from "../_api/change-member-role/use-change-member-role";
 import { useGetMemberList } from "../_api/get-member-list/use-get-member-list";
-import { useInviteMember } from "../_api/invite-member/use-invite-member";
+import { useSendInvitation } from "../_api/send-invitation/use-send-invitation";
 import { useRemoveMember } from "../_api/remove-member/use-remove-member";
 import type { InviteMemberFormData } from "../_schemas/invite-member.schema";
 import { ChangeRoleModal } from "./change-role-modal";
 import { InviteMemberModal } from "./invite-member-modal";
 import { MemberRow } from "./member-row";
+import { PendingInvitationsTable } from "./pending-invitations-table";
 import { RemoveMemberModal } from "./remove-member-modal";
 
 interface MembersSectionProps {
@@ -20,7 +21,7 @@ interface MembersSectionProps {
 
 export function MembersSection({ workspaceId, currentUserRole }: MembersSectionProps) {
   const { data: members, isLoading } = useGetMemberList({ workspaceId });
-  const inviteMemberMutation = useInviteMember();
+  const sendInvitationMutation = useSendInvitation();
   const changeMemberRoleMutation = useChangeMemberRole();
   const removeMemberMutation = useRemoveMember();
 
@@ -31,7 +32,7 @@ export function MembersSection({ workspaceId, currentUserRole }: MembersSectionP
   const canManage = currentUserRole === "owner" || currentUserRole === "admin";
 
   const handleInvite = (data: InviteMemberFormData) => {
-    inviteMemberMutation.mutate(
+    sendInvitationMutation.mutate(
       { workspaceId, data },
       {
         onSuccess: () => {
@@ -98,32 +99,43 @@ export function MembersSection({ workspaceId, currentUserRole }: MembersSectionP
         </div>
       )}
 
-      <div className="rounded-lg border border-divider bg-content1 p-4">
-        {members && members.length > 0 ? (
-          <div className="divide-y divide-divider">
-            {members.map((member, index) => (
-              <div key={member.id}>
-                {index > 0 && <Divider />}
-                <MemberRow
-                  member={member}
-                  currentUserRole={currentUserRole}
-                  onChangeRole={setMemberToChangeRole}
-                  onRemove={setMemberToRemove}
-                />
+      <Tabs aria-label="Members and Invitations" variant="underlined">
+        <Tab key="members" title="Members">
+          <div className="mt-4 rounded-lg border border-divider bg-content1 p-4">
+            {members && members.length > 0 ? (
+              <div className="divide-y divide-divider">
+                {members.map((member, index) => (
+                  <div key={member.id}>
+                    {index > 0 && <Divider />}
+                    <MemberRow
+                      member={member}
+                      currentUserRole={currentUserRole}
+                      onChangeRole={setMemberToChangeRole}
+                      onRemove={setMemberToRemove}
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
+            ) : (
+              <p className="py-4 text-center text-default-500">No members yet</p>
+            )}
           </div>
-        ) : (
-          <p className="py-4 text-center text-default-500">No members yet</p>
+        </Tab>
+        {canManage && (
+          <Tab key="invitations" title="Pending Invitations">
+            <div className="mt-4 rounded-lg border border-divider bg-content1 p-4">
+              <PendingInvitationsTable workspaceId={workspaceId} />
+            </div>
+          </Tab>
         )}
-      </div>
+      </Tabs>
 
       <InviteMemberModal
         isOpen={showInviteModal}
         onClose={() => setShowInviteModal(false)}
         onSubmit={handleInvite}
-        isPending={inviteMemberMutation.isPending}
-        error={inviteMemberMutation.error}
+        isPending={sendInvitationMutation.isPending}
+        error={sendInvitationMutation.error}
       />
 
       <ChangeRoleModal
