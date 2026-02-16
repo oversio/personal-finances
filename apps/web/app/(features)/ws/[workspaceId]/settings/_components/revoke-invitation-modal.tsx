@@ -24,7 +24,8 @@ export function RevokeInvitationModal({
         <ModalHeader>Revocar Invitación</ModalHeader>
         <ModalBody>
           <p>
-            ¿Estás seguro de que deseas revocar la invitación para <strong>{invitation?.email}</strong>?
+            ¿Estás seguro de que deseas revocar la invitación para{" "}
+            <strong>{invitation?.email}</strong>?
           </p>
           <p className="text-small text-default-500">
             Ya no podrán usar el enlace de invitación para unirse al espacio de trabajo.

@@ -8,8 +8,15 @@ export const ERROR_MESSAGES: Record<string, string> = {
   "auth.email_already_exists": "Este correo electrónico ya está registrado",
   "auth.token_expired": "Tu sesión ha expirado. Por favor, inicia sesión nuevamente",
   "auth.invalid_refresh_token": "Sesión inválida. Por favor, inicia sesión nuevamente",
-  "auth.oauth_account_not_linked": "Esta cuenta no está vinculada. Por favor, inicia sesión con tu correo y contraseña",
+  "auth.oauth_account_not_linked":
+    "Esta cuenta no está vinculada. Por favor, inicia sesión con tu correo y contraseña",
   "auth.password_required": "Se requiere una contraseña para esta cuenta",
+
+  // reCAPTCHA errors
+  "recaptcha.verification_failed":
+    "La verificación de seguridad falló. Por favor, intenta de nuevo",
+  "recaptcha.token_missing":
+    "Se requiere verificación de seguridad. Por favor, recarga la página e intenta de nuevo",
 
   // User errors
   "users.not_found": "Usuario no encontrado",
@@ -66,7 +73,8 @@ export const ERROR_MESSAGES: Record<string, string> = {
   "recurring_transactions.invalid_date_range": "Rango de fechas inválido",
   "recurring_transactions.already_paused": "Esta transacción recurrente ya está pausada",
   "recurring_transactions.already_active": "Esta transacción recurrente ya está activa",
-  "recurring_transactions.transfer_not_allowed": "Las transferencias no están permitidas para transacciones recurrentes",
+  "recurring_transactions.transfer_not_allowed":
+    "Las transferencias no están permitidas para transacciones recurrentes",
 
   // Generic entity errors
   "entity.not_found": "No encontrado",

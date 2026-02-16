@@ -77,7 +77,9 @@ export default function NewTransactionPage() {
       <Card>
         <CardHeader className="flex flex-col items-start gap-1 px-6 pt-6">
           <h1 className="text-xl font-bold">Nueva Transacción</h1>
-          <p className="text-small text-default-500">Registra un nuevo ingreso, gasto o transferencia</p>
+          <p className="text-small text-default-500">
+            Registra un nuevo ingreso, gasto o transferencia
+          </p>
         </CardHeader>
         <CardBody className="px-6 pb-6">
           <TransactionForm

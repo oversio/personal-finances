@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useServerFormValidationErrors } from "@/_commons/api";
+import { useRecaptcha } from "@/_commons/hooks";
 import { useAuthStore } from "@/_commons/stores/auth.store";
 
 import { GoogleIcon } from "../../login/_components/google-icon";
@@ -38,22 +39,27 @@ export function RegisterForm() {
   } = form;
 
   const { mutate: registerMutation, isPending, error } = useRegister();
+  const { getToken } = useRecaptcha();
 
   // Auto-apply server validation errors to form fields
   const generalError = useServerFormValidationErrors(form, error);
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  const onSubmit = (data: RegisterFormData) => {
-    registerMutation(data, {
-      onSuccess: response => {
-        setAuth(response.user, {
-          accessToken: response.tokens.accessToken,
-          refreshToken: response.tokens.refreshToken,
-        });
-        router.push(redirectTo);
+  const onSubmit = async (data: RegisterFormData) => {
+    const recaptchaToken = await getToken("register");
+    registerMutation(
+      { ...data, recaptchaToken },
+      {
+        onSuccess: response => {
+          setAuth(response.user, {
+            accessToken: response.tokens.accessToken,
+            refreshToken: response.tokens.refreshToken,
+          });
+          router.push(redirectTo);
+        },
       },
-    });
+    );
   };
 
   const handleGoogleSignup = () => {

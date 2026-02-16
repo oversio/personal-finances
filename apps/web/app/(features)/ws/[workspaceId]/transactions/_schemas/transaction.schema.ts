@@ -29,7 +29,10 @@ export const createTransactionSchema = z
       .number({ message: "El monto es requerido" })
       .positive({ message: "El monto debe ser mayor a 0" }),
     currency: z.enum(CURRENCIES, { message: "Selecciona una moneda" }),
-    notes: z.string().max(2000, { message: "Las notas deben tener menos de 2000 caracteres" }).optional(),
+    notes: z
+      .string()
+      .max(2000, { message: "Las notas deben tener menos de 2000 caracteres" })
+      .optional(),
     date: z.date({ message: "Selecciona una fecha" }),
   })
   .superRefine((data, ctx) => {
@@ -71,7 +74,10 @@ export const updateTransactionSchema = z
     categoryId: z.string().nullish(),
     subcategoryId: z.string().nullish(),
     amount: z.number().positive({ message: "El monto debe ser mayor a 0" }).optional(),
-    notes: z.string().max(2000, { message: "Las notas deben tener menos de 2000 caracteres" }).nullish(),
+    notes: z
+      .string()
+      .max(2000, { message: "Las notas deben tener menos de 2000 caracteres" })
+      .nullish(),
     date: z.date({ message: "Selecciona una fecha" }).optional(),
   })
   .superRefine((data, ctx) => {
