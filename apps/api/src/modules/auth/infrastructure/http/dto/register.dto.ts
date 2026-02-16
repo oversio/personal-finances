@@ -10,6 +10,7 @@ const registerSchema = z.object({
     .regex(/[a-z]/, "Must contain at least one lowercase letter")
     .regex(/[0-9]/, "Must contain at least one number"),
   name: z.string().min(2).max(100),
+  recaptchaToken: z.string().min(1).optional(),
 });
 
 export class RegisterDto extends createZodDto(registerSchema) {}
