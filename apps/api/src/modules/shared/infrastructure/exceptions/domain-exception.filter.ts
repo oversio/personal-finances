@@ -1,4 +1,11 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus, Logger } from "@nestjs/common";
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpException,
+  HttpStatus,
+  Logger,
+} from "@nestjs/common";
 import { Request, Response } from "express";
 import type { ZodIssue } from "zod";
 import { ZodError } from "zod";
@@ -113,6 +120,37 @@ export class DomainExceptionFilter implements ExceptionFilter {
         timestamp,
         path,
         errors,
+      };
+    }
+
+    // NestJS HTTP exceptions (e.g., UnauthorizedException from passport)
+    if (exception instanceof HttpException) {
+      const status = exception.getStatus();
+      const exceptionResponse = exception.getResponse();
+
+      // Handle string responses
+      if (typeof exceptionResponse === "string") {
+        return {
+          statusCode: status,
+          timestamp,
+          path,
+          error: getErrorName(status),
+          message: exceptionResponse,
+        };
+      }
+
+      // Handle object responses (NestJS default format)
+      const responseObj = exceptionResponse as { message?: string | string[]; error?: string };
+      const message = Array.isArray(responseObj.message)
+        ? responseObj.message.join(", ")
+        : responseObj.message ?? exception.message;
+
+      return {
+        statusCode: status,
+        timestamp,
+        path,
+        error: responseObj.error ?? getErrorName(status),
+        message,
       };
     }
 

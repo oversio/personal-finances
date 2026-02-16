@@ -78,7 +78,7 @@ export const useAuthStore = create<AuthStore>()(set => ({
 
   logout: () => {
     clearAuthCookies();
-    set(initialState);
+    set({ ...initialState, isInitialized: true });
   },
 }));
 
