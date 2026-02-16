@@ -143,7 +143,7 @@ export class DomainExceptionFilter implements ExceptionFilter {
       const responseObj = exceptionResponse as { message?: string | string[]; error?: string };
       const message = Array.isArray(responseObj.message)
         ? responseObj.message.join(", ")
-        : responseObj.message ?? exception.message;
+        : (responseObj.message ?? exception.message);
 
       return {
         statusCode: status,
