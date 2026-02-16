@@ -164,12 +164,26 @@ export class AuthController {
    */
   private setAuthCookies(res: Response, accessToken: string, refreshToken: string): void {
     const isProduction = this.configService.get("NODE_ENV") === "production";
-    const cookieOptions = {
+    // For cross-subdomain cookies (e.g., api.example.com -> app.example.com)
+    const cookieDomain = this.configService.get<string>("COOKIE_DOMAIN");
+
+    const cookieOptions: {
+      httpOnly: boolean;
+      secure: boolean;
+      sameSite: "lax";
+      path: string;
+      domain?: string;
+    } = {
       httpOnly: false, // Frontend needs to read tokens to send via Authorization header
       secure: isProduction,
       sameSite: "lax" as const,
       path: "/",
     };
+
+    // Only set domain in production for cross-subdomain sharing
+    if (cookieDomain) {
+      cookieOptions.domain = cookieDomain;
+    }
 
     res.cookie("accessToken", accessToken, {
       ...cookieOptions,
