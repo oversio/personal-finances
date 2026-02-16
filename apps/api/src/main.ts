@@ -7,6 +7,15 @@ import { DomainExceptionFilter } from "./modules/shared/infrastructure/exception
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // CORS configuration
+  const frontendUrl = process.env.FRONTEND_URL ?? "http://localhost:3000";
+  app.enableCors({
+    origin: [frontendUrl, "http://localhost:3000"],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  });
+
   // API versioning
   app.setGlobalPrefix("api/v1");
 
