@@ -4,6 +4,7 @@ import { fetcher } from "@/_commons/api";
 export interface LoginInput {
   email: string;
   password: string;
+  recaptchaToken?: string;
 }
 
 export async function login(credentials: LoginInput) {

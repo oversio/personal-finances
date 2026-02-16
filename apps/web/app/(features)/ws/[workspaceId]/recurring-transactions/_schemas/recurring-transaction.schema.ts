@@ -29,7 +29,10 @@ export const createRecurringTransactionSchema = z
       .number({ message: "El monto es requerido" })
       .positive({ message: "El monto debe ser mayor a 0" }),
     currency: z.enum(CURRENCIES, { message: "Selecciona una moneda" }),
-    notes: z.string().max(2000, { message: "Las notas deben tener menos de 2000 caracteres" }).optional(),
+    notes: z
+      .string()
+      .max(2000, { message: "Las notas deben tener menos de 2000 caracteres" })
+      .optional(),
     frequency: z.enum(FREQUENCIES, { message: "Selecciona una frecuencia" }),
     interval: z
       .number({ message: "El intervalo es requerido" })

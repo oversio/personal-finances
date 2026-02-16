@@ -106,7 +106,12 @@ export function AccountSwitcher() {
       <DropdownMenu aria-label="Menú de cuenta" variant="flat" className="w-64">
         {/* User profile section */}
         <DropdownSection showDivider>
-          <DropdownItem key="profile" className="h-14 gap-2" textValue="Perfil de usuario" isReadOnly>
+          <DropdownItem
+            key="profile"
+            className="h-14 gap-2"
+            textValue="Perfil de usuario"
+            isReadOnly
+          >
             <p className="font-semibold">{user?.name ?? "Usuario"}</p>
             <p className="text-small text-default-500">{user?.email ?? ""}</p>
           </DropdownItem>

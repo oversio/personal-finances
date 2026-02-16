@@ -97,7 +97,9 @@ export function InvitationAcceptContent({ token }: Props) {
     <Card className="mx-auto mt-20 max-w-md p-4 shadow-lg">
       <CardHeader className="flex flex-col gap-1 pb-0">
         <h1 className="text-2xl font-bold">Invitación al Espacio de Trabajo</h1>
-        <p className="text-small text-default-500">Has sido invitado a unirte a un espacio de trabajo</p>
+        <p className="text-small text-default-500">
+          Has sido invitado a unirte a un espacio de trabajo
+        </p>
       </CardHeader>
       <CardBody className="flex flex-col gap-4 pt-4">
         <div className="rounded-lg bg-default-100 p-4">

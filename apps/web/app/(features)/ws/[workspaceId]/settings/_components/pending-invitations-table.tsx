@@ -47,7 +47,9 @@ export function PendingInvitationsTable({ workspaceId }: PendingInvitationsTable
   }
 
   if (!invitations || invitations.length === 0) {
-    return <p className="py-4 text-center text-small text-default-500">No hay invitaciones pendientes</p>;
+    return (
+      <p className="py-4 text-center text-small text-default-500">No hay invitaciones pendientes</p>
+    );
   }
 
   return (

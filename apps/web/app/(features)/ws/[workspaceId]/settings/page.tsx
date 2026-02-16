@@ -45,7 +45,11 @@ export default function SettingsPage() {
     <div className="mx-auto max-w-4xl px-4 py-6">
       <h1 className="mb-6 text-2xl font-bold">Configuración</h1>
 
-      <Tabs aria-label="Secciones de configuración" variant="underlined" classNames={{ tabList: "mb-6" }}>
+      <Tabs
+        aria-label="Secciones de configuración"
+        variant="underlined"
+        classNames={{ tabList: "mb-6" }}
+      >
         <Tab key="general" title="General">
           <div className="rounded-lg border border-divider bg-content1 p-6">
             <h2 className="mb-4 text-lg font-semibold">Configuración General</h2>

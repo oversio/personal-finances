@@ -176,17 +176,17 @@ export const ACCOUNT_TYPE_LABELS = {
 
 ### Common Translations
 
-| English | Spanish |
-|---------|---------|
-| Save | Guardar |
-| Cancel | Cancelar |
-| Delete | Eliminar |
-| Edit | Editar |
-| Create | Crear |
-| Loading... | Cargando... |
-| No results | Sin resultados |
-| Required field | Campo requerido |
-| Invalid email | Correo electrónico inválido |
+| English        | Spanish                     |
+| -------------- | --------------------------- |
+| Save           | Guardar                     |
+| Cancel         | Cancelar                    |
+| Delete         | Eliminar                    |
+| Edit           | Editar                      |
+| Create         | Crear                       |
+| Loading...     | Cargando...                 |
+| No results     | Sin resultados              |
+| Required field | Campo requerido             |
+| Invalid email  | Correo electrónico inválido |
 
 ## API Communication
 

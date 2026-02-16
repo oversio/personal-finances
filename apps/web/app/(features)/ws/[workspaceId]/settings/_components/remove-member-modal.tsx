@@ -24,8 +24,8 @@ export function RemoveMemberModal({
         <ModalHeader>Eliminar Miembro</ModalHeader>
         <ModalBody>
           <p className="text-default-600">
-            ¿Estás seguro de que deseas eliminar a <span className="font-medium">{member?.name}</span> de
-            este espacio de trabajo?
+            ¿Estás seguro de que deseas eliminar a{" "}
+            <span className="font-medium">{member?.name}</span> de este espacio de trabajo?
           </p>
           <p className="text-small text-default-500">
             Perderá acceso a todos los datos del espacio de trabajo inmediatamente.
