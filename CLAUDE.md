@@ -68,7 +68,7 @@ This is a **Turborepo monorepo** with pnpm workspaces.
 
 ### Packages
 
-- `packages/ui` (`@repo/ui`) - Shared React component library, exports via `@repo/ui/*` pattern (e.g., `@repo/ui/button`)
+- `packages/ui` (`@repo/ui`) - Shared React component library, exports via `@repo/ui/*` pattern (e.g., `@repo/ui/icons`). See [packages/ui/CLAUDE.md](packages/ui/CLAUDE.md)
 - `packages/eslint-config` (`@repo/eslint-config`) - ESLint configs: `base`, `next-js`, `react-internal`
 - `packages/typescript-config` (`@repo/typescript-config`) - Shared tsconfig files
 
