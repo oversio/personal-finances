@@ -123,11 +123,37 @@ const { user, isLoading } = useAuthStore();
 
 ## Import Aliases
 
-| Alias            | Path               |
-| ---------------- | ------------------ |
-| `@/_commons/*`   | `app/_commons/*`   |
-| `@/(auth)/*`     | `app/(auth)/*`     |
-| `@/(features)/*` | `app/(features)/*` |
+| Alias            | Path                                    |
+| ---------------- | --------------------------------------- |
+| `@/_commons/*`   | `app/_commons/*`                        |
+| `@/(auth)/*`     | `app/(auth)/*`                          |
+| `@/(features)/*` | `app/(features)/*`                      |
+| `@repo/ui/*`     | `packages/ui/src/*` (shared UI package) |
+
+## Icons
+
+**Always use icons from the shared UI package** (`@repo/ui/icons`). Do not create inline SVGs in components.
+
+### Usage
+
+```typescript
+import { ListIcon, PencilIcon, ArchiveIcon } from "@repo/ui/icons";
+
+<ListIcon className="size-5" />
+<PencilIcon className="size-4 text-primary" />
+```
+
+### When the Required Icon Doesn't Exist
+
+If you need an icon that's not in `@repo/ui/icons`:
+
+1. **First, create the icon** in the UI package before using it
+2. Find the icon at [Heroicons](https://heroicons.com/) (outline style, 24x24)
+3. Create `packages/ui/src/icons/[icon-name]-icon.tsx`
+4. Export it from `packages/ui/src/icons/index.tsx`
+5. Then import and use it in the web app
+
+See [packages/ui/CLAUDE.md](../../packages/ui/CLAUDE.md) for detailed instructions on adding new icons.
 
 ## When Creating New Features
 
