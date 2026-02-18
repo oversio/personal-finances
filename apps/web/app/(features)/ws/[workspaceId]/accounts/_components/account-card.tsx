@@ -1,14 +1,7 @@
 "use client";
 
-import {
-  Button,
-  Card,
-  CardBody,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-} from "@heroui/react";
+import { Button, Card, CardBody, Tooltip } from "@heroui/react";
+import { ArchiveIcon, ListIcon, PencilIcon } from "@repo/ui/icons";
 import Link from "next/link";
 import type { Account } from "../_api/account.types";
 import { ACCOUNT_TYPE_LABELS } from "../_schemas/account.schema";
@@ -29,12 +22,7 @@ function formatCurrency(amount: number, currency: string): string {
 
 export function AccountCard({ account, workspaceId, onArchive, isArchiving }: AccountCardProps) {
   return (
-    <Card
-      as={Link}
-      href={`/ws/${workspaceId}/transactions?accountId=${account.id}`}
-      isPressable
-      className="overflow-hidden"
-    >
+    <Card className="overflow-hidden">
       <div className="h-1 w-full" style={{ backgroundColor: account.color }} />
       <CardBody className="p-4">
         <div className="flex items-start justify-between">
@@ -45,44 +33,46 @@ export function AccountCard({ account, workspaceId, onArchive, isArchiving }: Ac
             </p>
           </div>
 
-          <div onClick={e => e.stopPropagation()}>
-            <Dropdown>
-              <DropdownTrigger>
-                <Button isIconOnly size="sm" variant="light" aria-label="Acciones de cuenta">
-                  <svg
-                    className="size-5"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={1.5}
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu aria-label="Acciones de cuenta">
-                <DropdownItem
-                  key="edit"
-                  as={Link}
-                  href={`/ws/${workspaceId}/accounts/${account.id}/edit`}
-                >
-                  Editar
-                </DropdownItem>
-                <DropdownItem
-                  key="archive"
-                  className="text-danger"
-                  color="danger"
-                  onPress={() => onArchive(account.id)}
-                  isDisabled={isArchiving}
-                >
-                  Archivar
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+          <div className="flex gap-1">
+            <Tooltip content="Ver transacciones">
+              <Button
+                as={Link}
+                href={`/ws/${workspaceId}/transactions?accountId=${account.id}`}
+                isIconOnly
+                size="sm"
+                variant="light"
+                aria-label="Ver transacciones"
+              >
+                <ListIcon className="size-5" />
+              </Button>
+            </Tooltip>
+
+            <Tooltip content="Editar">
+              <Button
+                as={Link}
+                href={`/ws/${workspaceId}/accounts/${account.id}/edit`}
+                isIconOnly
+                size="sm"
+                variant="light"
+                aria-label="Editar cuenta"
+              >
+                <PencilIcon className="size-5" />
+              </Button>
+            </Tooltip>
+
+            <Tooltip content="Archivar">
+              <Button
+                isIconOnly
+                size="sm"
+                variant="light"
+                color="danger"
+                aria-label="Archivar cuenta"
+                onPress={() => onArchive(account.id)}
+                isDisabled={isArchiving}
+              >
+                <ArchiveIcon className="size-5" />
+              </Button>
+            </Tooltip>
           </div>
         </div>
 
