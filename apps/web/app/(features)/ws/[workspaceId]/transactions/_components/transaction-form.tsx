@@ -1,12 +1,14 @@
 "use client";
 
 import {
+  Autocomplete,
+  AutocompleteItem,
+  AutocompleteSection,
   Button,
   DatePicker,
   Input,
   Select,
   SelectItem,
-  SelectSection,
   Textarea,
 } from "@heroui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -93,9 +95,9 @@ export function TransactionForm({
   const getCategorySelectionKey = () => {
     const categoryId = watch("categoryId");
     const subcategoryId = watch("subcategoryId");
-    if (!categoryId) return [];
-    if (subcategoryId) return [`${categoryId}:${subcategoryId}`];
-    return [`${categoryId}:`];
+    if (!categoryId) return null;
+    if (subcategoryId) return `${categoryId}:${subcategoryId}`;
+    return `${categoryId}:`;
   };
 
   // Parse composite key back to categoryId and subcategoryId
@@ -118,6 +120,10 @@ export function TransactionForm({
   const dateToCalendarDate = (date: Date) => {
     const isoDate = date.toISOString().split("T")[0]!;
     return parseDate(isoDate);
+  };
+
+  const customFilter = (textValue: string, inputValue: string) => {
+    return textValue.toLowerCase().includes(inputValue.toLowerCase());
   };
 
   const currentDate = watch("date");
@@ -192,14 +198,15 @@ export function TransactionForm({
       )}
 
       {showCategory && (
-        <Select
+        <Autocomplete
           label="Categoría"
-          placeholder="Selecciona una categoría"
-          selectedKeys={getCategorySelectionKey()}
-          onSelectionChange={keys => {
-            const key = Array.from(keys)[0] as string;
+          placeholder="Busca o selecciona una categoría"
+          selectedKey={getCategorySelectionKey()}
+          defaultFilter={customFilter}
+          onSelectionChange={key => {
+            console.log("key", key);
             if (key) {
-              const { categoryId, subcategoryId } = parseCategorySelection(key);
+              const { categoryId, subcategoryId } = parseCategorySelection(key as string);
               setValue("categoryId", categoryId);
               setValue("subcategoryId", subcategoryId);
             } else {
@@ -212,21 +219,24 @@ export function TransactionForm({
           variant="flat"
           isRequired
         >
-          {filteredCategories.flatMap(category => {
-            // Build items for this category section
+          {filteredCategories.map(category => {
             const items = [
-              <SelectItem key={`${category.id}:`}>{category.name} (General)</SelectItem>,
               ...category.subcategories.map(sub => (
-                <SelectItem key={`${category.id}:${sub.id}`}>{sub.name}</SelectItem>
+                <AutocompleteItem
+                  key={`${category.id}:${sub.id}`}
+                  textValue={`${category.name} / ${sub.name}`}
+                >
+                  {sub.name}
+                </AutocompleteItem>
               )),
             ];
             return (
-              <SelectSection key={category.id} title={category.name} showDivider>
+              <AutocompleteSection key={category.id} title={category.name} showDivider>
                 {items}
-              </SelectSection>
+              </AutocompleteSection>
             );
           })}
-        </Select>
+        </Autocomplete>
       )}
 
       <div className="grid grid-cols-2 gap-4">
