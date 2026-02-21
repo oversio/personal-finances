@@ -69,26 +69,26 @@ export async function fetcher<
   >,
 ): Promise<output<ZodType<Out, In, Int>>> {
   const { method, params, schema } = options;
-  const axiosRequest: Parameters<typeof apiClient.request>[0] = {
+  const requestConfig: Parameters<typeof apiClient.request>[0] = {
     url,
     method,
     params,
   };
 
   if (options.method === "GET") {
-    axiosRequest.signal = options.signal;
+    requestConfig.signal = options.signal;
   }
 
   if (options.method === "POST" || options.method === "PUT" || options.method === "PATCH") {
-    axiosRequest.data = options.body;
+    requestConfig.data = options.body;
   }
 
   try {
-    const response = await apiClient.request(axiosRequest);
+    const response = await apiClient.request(requestConfig);
 
     if (schema) return schema.parse(response.data);
 
-    return response.data;
+    return response.data as output<ZodType<Out, In, Int>>;
   } catch (error) {
     // Transform to ValidationErrors or ApiError and throw
     parseApiError(error);

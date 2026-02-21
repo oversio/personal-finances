@@ -1,11 +1,26 @@
-import { isAxiosError } from "axios";
-
 import { ApiError } from "./api-error";
 import { ApiValidationErrorsSchema } from "./api-validation-errors-schema";
 import { ValidationErrors } from "./validation-errors";
 
+interface ErrorWithResponse {
+  response?: {
+    status: number;
+    data: unknown;
+  };
+}
+
+function hasResponse(error: unknown): error is ErrorWithResponse {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "response" in error &&
+    typeof (error as ErrorWithResponse).response === "object" &&
+    (error as ErrorWithResponse).response !== null
+  );
+}
+
 /**
- * Parses an API error from an axios error response.
+ * Parses an API error from an HTTP response.
  *
  * - 422 errors are parsed into ValidationErrors
  * - Other errors are parsed into ApiError
@@ -14,7 +29,7 @@ import { ValidationErrors } from "./validation-errors";
  * @throws ApiError for all other error responses
  */
 export function parseApiError(error: unknown): never {
-  if (isAxiosError(error) && error.response) {
+  if (hasResponse(error) && error.response) {
     const { status, data } = error.response;
 
     // 422 Validation errors -> throw ValidationErrors
@@ -33,7 +48,7 @@ export function parseApiError(error: unknown): never {
     throw ApiError.fromResponse(data);
   }
 
-  // Network error or other non-axios error
+  // Network error or other error without response
   if (error instanceof Error) {
     throw new ApiError(0, "Network Error", error.message);
   }
