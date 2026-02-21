@@ -18,22 +18,28 @@ export default function NewTransactionPage() {
   const { data: categories, isLoading: isLoadingCategories } = useGetCategoryList({ workspaceId });
   const createMutation = useCreateTransaction();
 
-  const handleSubmit = async (data: CreateTransactionFormData) => {
-    await createMutation.mutateAsync({
-      workspaceId,
-      data: {
-        type: data.type,
-        accountId: data.accountId,
-        toAccountId: data.toAccountId,
-        categoryId: data.categoryId,
-        subcategoryId: data.subcategoryId,
-        amount: data.amount,
-        currency: data.currency,
-        notes: data.notes,
-        date: data.date,
+  const handleSubmit = (data: CreateTransactionFormData) => {
+    createMutation.mutate(
+      {
+        workspaceId,
+        data: {
+          type: data.type,
+          accountId: data.accountId,
+          toAccountId: data.toAccountId,
+          categoryId: data.categoryId,
+          subcategoryId: data.subcategoryId,
+          amount: data.amount,
+          currency: data.currency,
+          notes: data.notes,
+          date: data.date,
+        },
       },
-    });
-    router.push(`/ws/${workspaceId}/transactions`);
+      {
+        onSuccess: () => {
+          router.push(`/ws/${workspaceId}/transactions`);
+        },
+      },
+    );
   };
 
   const isLoading = isLoadingAccounts || isLoadingCategories;
