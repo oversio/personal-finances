@@ -92,6 +92,7 @@ export default function NewRecurringTransactionPage() {
         </CardHeader>
         <CardBody className="px-6 pb-6">
           <RecurringTransactionForm
+            workspaceId={workspaceId}
             accounts={accounts ?? []}
             categories={categories ?? []}
             onSubmit={handleSubmit}

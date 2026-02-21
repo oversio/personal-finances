@@ -89,6 +89,7 @@ export default function NewTransactionPage() {
         </CardHeader>
         <CardBody className="px-6 pb-6">
           <TransactionForm
+            workspaceId={workspaceId}
             accounts={accounts ?? []}
             categories={categories ?? []}
             onSubmit={handleSubmit}

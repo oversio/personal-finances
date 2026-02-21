@@ -13,11 +13,19 @@ import {
 } from "@heroui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getLocalTimeZone, parseDate, today, type CalendarDate } from "@internationalized/date";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useServerFormValidationErrors } from "@/_commons/api";
 import type { Account } from "../../accounts/_api/account.types";
+import { useAddSubcategory } from "../../categories/_api/add-subcategory/use-add-subcategory";
 import type { Category } from "../../categories/_api/category.types";
+import { useCreateCategory } from "../../categories/_api/create-category/use-create-category";
+import { CategoryFormModal } from "../../categories/_components/category-form-modal";
+import { SubcategoryForm } from "../../categories/_components/subcategory-form";
+import type {
+  CreateCategoryFormData,
+  SubcategoryFormData,
+} from "../../categories/_schemas/category.schema";
 import type { Frequency, RecurringTransaction } from "../_api/recurring-transaction.types";
 import {
   createRecurringTransactionSchema,
@@ -31,6 +39,7 @@ import {
 } from "../_schemas/recurring-transaction.schema";
 
 interface RecurringTransactionFormProps {
+  workspaceId: string;
   recurringTransaction?: RecurringTransaction;
   accounts: Account[];
   categories: Category[];
@@ -41,6 +50,7 @@ interface RecurringTransactionFormProps {
 }
 
 export function RecurringTransactionForm({
+  workspaceId,
   recurringTransaction,
   accounts,
   categories,
@@ -49,6 +59,15 @@ export function RecurringTransactionForm({
   error,
   submitLabel = "Create Recurring Transaction",
 }: RecurringTransactionFormProps) {
+  // Modal states for creating categories/subcategories
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [isSubcategoryModalOpen, setIsSubcategoryModalOpen] = useState(false);
+  const [selectedCategoryForSubcategory, setSelectedCategoryForSubcategory] =
+    useState<Category | null>(null);
+
+  // Category/Subcategory creation hooks
+  const createCategoryMutation = useCreateCategory();
+  const addSubcategoryMutation = useAddSubcategory();
   const form = useForm<CreateRecurringTransactionFormData>({
     defaultValues: {
       type: recurringTransaction?.type ?? "expense",
@@ -83,6 +102,32 @@ export function RecurringTransactionForm({
   const sourceAccountId = watch("accountId");
 
   const generalError = useServerFormValidationErrors(form, error);
+
+  // Handle category creation success via useEffect
+  useEffect(() => {
+    if (createCategoryMutation.isSuccess && createCategoryMutation.data) {
+      setIsCategoryModalOpen(false);
+      setValue("categoryId", createCategoryMutation.data.id);
+      setValue("subcategoryId", undefined);
+      createCategoryMutation.reset();
+    }
+  }, [createCategoryMutation, setValue]);
+
+  // Handle subcategory creation success via useEffect
+  useEffect(() => {
+    if (addSubcategoryMutation.isSuccess && addSubcategoryMutation.data) {
+      setIsSubcategoryModalOpen(false);
+      setSelectedCategoryForSubcategory(null);
+      const updatedCategory = addSubcategoryMutation.data;
+      const newSubcategory =
+        updatedCategory.subcategories[updatedCategory.subcategories.length - 1];
+      if (newSubcategory) {
+        setValue("categoryId", updatedCategory.id);
+        setValue("subcategoryId", newSubcategory.id);
+      }
+      addSubcategoryMutation.reset();
+    }
+  }, [addSubcategoryMutation, setValue]);
 
   // Auto-fill currency from selected account
   useEffect(() => {
@@ -119,6 +164,31 @@ export function RecurringTransactionForm({
       categoryId: categoryId || undefined,
       subcategoryId: subcategoryId || undefined,
     };
+  };
+
+  // Handle creating a new category
+  const handleCreateCategory = (data: CreateCategoryFormData) => {
+    createCategoryMutation.mutate({ workspaceId, data });
+  };
+
+  // Handle adding a subcategory to a category
+  const handleAddSubcategory = (data: SubcategoryFormData) => {
+    if (!selectedCategoryForSubcategory) return;
+    addSubcategoryMutation.mutate({
+      workspaceId,
+      categoryId: selectedCategoryForSubcategory.id,
+      data,
+    });
+  };
+
+  // Open subcategory modal for a specific category
+  const openSubcategoryModal = (category: Category) => {
+    setSelectedCategoryForSubcategory(category);
+    setIsSubcategoryModalOpen(true);
+  };
+
+  const customFilter = (textValue: string, inputValue: string) => {
+    return textValue.toLowerCase().includes(inputValue.toLowerCase());
   };
 
   // Determine which schedule fields to show
@@ -187,34 +257,124 @@ export function RecurringTransactionForm({
         label="Categoría"
         placeholder="Busca o selecciona una categoría"
         selectedKey={getCategorySelectionKey()}
+        defaultFilter={customFilter}
         onSelectionChange={key => {
-          if (key) {
-            const { categoryId, subcategoryId } = parseCategorySelection(key as string);
-            setValue("categoryId", categoryId ?? "");
-            setValue("subcategoryId", subcategoryId);
-          } else {
+          if (!key) {
             setValue("categoryId", "");
             setValue("subcategoryId", undefined);
+            return;
           }
+
+          const keyStr = key as string;
+
+          // Handle "create new category" action
+          if (keyStr === "__create_category__") {
+            setIsCategoryModalOpen(true);
+            return;
+          }
+
+          // Handle "add subcategory" action
+          if (keyStr.startsWith("__add_subcategory__:")) {
+            const categoryId = keyStr.replace("__add_subcategory__:", "");
+            const category = filteredCategories.find(c => c.id === categoryId);
+            if (category) {
+              openSubcategoryModal(category);
+            }
+            return;
+          }
+
+          // Normal category/subcategory selection
+          const { categoryId, subcategoryId } = parseCategorySelection(keyStr);
+          setValue("categoryId", categoryId ?? "");
+          setValue("subcategoryId", subcategoryId);
         }}
         isInvalid={!!errors.categoryId}
         errorMessage={errors.categoryId?.message}
         isRequired
       >
-        {filteredCategories.map(category => {
-          const items = [
-            <AutocompleteItem key={`${category.id}:`}>{category.name} (General)</AutocompleteItem>,
-            ...category.subcategories.map(sub => (
-              <AutocompleteItem key={`${category.id}:${sub.id}`}>{sub.name}</AutocompleteItem>
-            )),
-          ];
-          return (
-            <AutocompleteSection key={category.id} title={category.name} showDivider>
-              {items}
-            </AutocompleteSection>
+        {(() => {
+          const sections = filteredCategories.map(category => {
+            const items = [
+              ...category.subcategories.map(sub => (
+                <AutocompleteItem
+                  key={`${category.id}:${sub.id}`}
+                  textValue={`${category.name} / ${sub.name}`}
+                >
+                  {sub.name}
+                </AutocompleteItem>
+              )),
+              <AutocompleteItem
+                key={`__add_subcategory__:${category.id}`}
+                textValue={`Agregar subcategoría a ${category.name}`}
+                className="text-primary"
+              >
+                <span className="flex items-center gap-2">
+                  <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 4v16m8-8H4"
+                    />
+                  </svg>
+                  Nueva subcategoría
+                </span>
+              </AutocompleteItem>,
+            ];
+            return (
+              <AutocompleteSection key={category.id} title={category.name} showDivider>
+                {items}
+              </AutocompleteSection>
+            );
+          });
+
+          sections.push(
+            <AutocompleteSection key="__create_section__" title="" showDivider={false}>
+              <AutocompleteItem
+                key="__create_category__"
+                textValue="Nueva categoría"
+                className="text-primary"
+              >
+                <span className="flex items-center gap-2 font-medium">
+                  <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 4v16m8-8H4"
+                    />
+                  </svg>
+                  Nueva categoría
+                </span>
+              </AutocompleteItem>
+            </AutocompleteSection>,
           );
-        })}
+
+          return sections;
+        })()}
       </Autocomplete>
+
+      {/* Category creation modal */}
+      <CategoryFormModal
+        isOpen={isCategoryModalOpen}
+        onClose={() => setIsCategoryModalOpen(false)}
+        defaultType={selectedType}
+        onSubmit={handleCreateCategory}
+        isPending={createCategoryMutation.isPending}
+        error={createCategoryMutation.error}
+      />
+
+      {/* Subcategory creation modal */}
+      <SubcategoryForm
+        isOpen={isSubcategoryModalOpen}
+        onClose={() => {
+          setIsSubcategoryModalOpen(false);
+          setSelectedCategoryForSubcategory(null);
+        }}
+        onSubmit={handleAddSubcategory}
+        isPending={addSubcategoryMutation.isPending}
+        error={addSubcategoryMutation.error}
+      />
 
       <div className="grid grid-cols-2 gap-4">
         <Input
