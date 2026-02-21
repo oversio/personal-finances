@@ -114,6 +114,7 @@ export default function EditRecurringTransactionPage() {
         </CardHeader>
         <CardBody className="px-6 pb-6">
           <RecurringTransactionForm
+            workspaceId={workspaceId}
             recurringTransaction={recurringTransaction}
             accounts={accounts ?? []}
             categories={categories ?? []}

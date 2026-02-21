@@ -116,6 +116,7 @@ export default function EditTransactionPage() {
         </CardHeader>
         <CardBody className="px-6 pb-6">
           <TransactionForm
+            workspaceId={workspaceId}
             transaction={transaction}
             accounts={accounts ?? []}
             categories={categories ?? []}

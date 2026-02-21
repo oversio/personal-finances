@@ -14,6 +14,7 @@ import {
 
 interface CategoryFormProps {
   category?: Category;
+  defaultType?: "income" | "expense";
   onSubmit: (data: CreateCategoryFormData) => void;
   isPending: boolean;
   error: Error | null;
@@ -22,6 +23,7 @@ interface CategoryFormProps {
 
 export function CategoryForm({
   category,
+  defaultType,
   onSubmit,
   isPending,
   error,
@@ -30,7 +32,7 @@ export function CategoryForm({
   const form = useForm<CreateCategoryFormData>({
     defaultValues: {
       name: category?.name ?? "",
-      type: category?.type ?? "expense",
+      type: category?.type ?? defaultType ?? "expense",
       color: category?.color ?? "#6366F1",
       icon: category?.icon ?? undefined,
     },
