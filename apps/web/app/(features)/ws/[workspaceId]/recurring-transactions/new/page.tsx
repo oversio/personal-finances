@@ -18,27 +18,33 @@ export default function NewRecurringTransactionPage() {
   const { data: categories, isLoading: isLoadingCategories } = useGetCategoryList({ workspaceId });
   const createMutation = useCreateRecurringTransaction();
 
-  const handleSubmit = async (data: CreateRecurringTransactionFormData) => {
-    await createMutation.mutateAsync({
-      workspaceId,
-      data: {
-        type: data.type,
-        accountId: data.accountId,
-        categoryId: data.categoryId,
-        subcategoryId: data.subcategoryId,
-        amount: data.amount,
-        currency: data.currency,
-        notes: data.notes,
-        frequency: data.frequency,
-        interval: data.interval,
-        dayOfWeek: data.dayOfWeek,
-        dayOfMonth: data.dayOfMonth,
-        monthOfYear: data.monthOfYear,
-        startDate: data.startDate,
-        endDate: data.endDate,
+  const handleSubmit = (data: CreateRecurringTransactionFormData) => {
+    createMutation.mutate(
+      {
+        workspaceId,
+        data: {
+          type: data.type,
+          accountId: data.accountId,
+          categoryId: data.categoryId,
+          subcategoryId: data.subcategoryId,
+          amount: data.amount,
+          currency: data.currency,
+          notes: data.notes,
+          frequency: data.frequency,
+          interval: data.interval,
+          dayOfWeek: data.dayOfWeek,
+          dayOfMonth: data.dayOfMonth,
+          monthOfYear: data.monthOfYear,
+          startDate: data.startDate,
+          endDate: data.endDate,
+        },
       },
-    });
-    router.push(`/ws/${workspaceId}/recurring-transactions`);
+      {
+        onSuccess: () => {
+          router.push(`/ws/${workspaceId}/recurring-transactions`);
+        },
+      },
+    );
   };
 
   const isLoading = isLoadingAccounts || isLoadingCategories;
