@@ -17,5 +17,9 @@ interface HeroUIProviderWrapperProps {
 export function HeroUIProviderWrapper({ children }: HeroUIProviderWrapperProps) {
   const router = useRouter();
 
-  return <HeroUIProvider navigate={router.push}>{children}</HeroUIProvider>;
+  return (
+    <HeroUIProvider navigate={router.push} locale="es-CL">
+      {children}
+    </HeroUIProvider>
+  );
 }

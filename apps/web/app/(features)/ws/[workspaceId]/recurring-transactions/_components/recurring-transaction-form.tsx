@@ -12,11 +12,12 @@ import {
   Textarea,
 } from "@heroui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { getLocalTimeZone, parseDate, today, type CalendarDate } from "@internationalized/date";
+import { getLocalTimeZone, today, type CalendarDate } from "@internationalized/date";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { PlusIcon } from "@repo/ui/icons";
 import { useServerFormValidationErrors } from "@/_commons/api";
+import { dateToCalendarDate } from "@/_commons/utils/date";
 import type { Account } from "../../accounts/_api/account.types";
 import { useAddSubcategory } from "../../categories/_api/add-subcategory/use-add-subcategory";
 import type { Category } from "../../categories/_api/category.types";
@@ -196,12 +197,6 @@ export function RecurringTransactionForm({
   const showDayOfWeek = selectedFrequency === "weekly";
   const showDayOfMonth = selectedFrequency === "monthly" || selectedFrequency === "yearly";
   const showMonthOfYear = selectedFrequency === "yearly";
-
-  // Convert Date to CalendarDate for DatePicker
-  const dateToCalendarDate = (date: Date) => {
-    const isoDate = date.toISOString().split("T")[0]!;
-    return parseDate(isoDate);
-  };
 
   const startDateValue = watch("startDate");
   const endDateValue = watch("endDate");

@@ -2,9 +2,10 @@
 
 import { Button, DatePicker, Input, Select, SelectItem, Switch } from "@heroui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { parseDate, today, getLocalTimeZone, type CalendarDate } from "@internationalized/date";
+import { today, getLocalTimeZone, type CalendarDate } from "@internationalized/date";
 import { useForm } from "react-hook-form";
 import { useServerFormValidationErrors } from "@/_commons/api";
+import { dateToCalendarDate } from "@/_commons/utils/date";
 import { useGetCategoryList } from "../../categories/_api/get-category-list/use-get-category-list";
 import type { Budget } from "../_api/budget.types";
 import {
@@ -62,12 +63,6 @@ export function BudgetForm({
   const hasSubcategories =
     selectedCategory?.subcategories && selectedCategory.subcategories.length > 0;
   const showAlertThreshold = watch("alertThreshold") !== undefined;
-
-  // Convert Date to CalendarDate for DatePicker
-  const dateToCalendarDate = (date: Date) => {
-    const isoDate = date.toISOString().split("T")[0]!;
-    return parseDate(isoDate);
-  };
 
   const currentStartDate = watch("startDate");
   const startDateValue =
