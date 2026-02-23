@@ -15,6 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { getLocalTimeZone, parseDate, today, type CalendarDate } from "@internationalized/date";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { PlusIcon } from "@repo/ui/icons";
 import { useServerFormValidationErrors } from "@/_commons/api";
 import type { Account } from "../../accounts/_api/account.types";
 import { useAddSubcategory } from "../../categories/_api/add-subcategory/use-add-subcategory";
@@ -309,14 +310,7 @@ export function RecurringTransactionForm({
                 className="text-primary"
               >
                 <span className="flex items-center gap-2">
-                  <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 4v16m8-8H4"
-                    />
-                  </svg>
+                  <PlusIcon className="size-4" />
                   Nueva subcategoría
                 </span>
               </AutocompleteItem>,
@@ -336,14 +330,7 @@ export function RecurringTransactionForm({
                 className="text-primary"
               >
                 <span className="flex items-center gap-2 font-medium">
-                  <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 4v16m8-8H4"
-                    />
-                  </svg>
+                  <PlusIcon className="size-4" />
                   Nueva categoría
                 </span>
               </AutocompleteItem>
