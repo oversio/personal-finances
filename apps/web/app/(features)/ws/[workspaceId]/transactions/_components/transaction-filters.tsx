@@ -1,7 +1,8 @@
 "use client";
 
 import { Button, DatePicker, Select, SelectItem } from "@heroui/react";
-import { parseDate, getLocalTimeZone, type CalendarDate } from "@internationalized/date";
+import { getLocalTimeZone, type CalendarDate } from "@internationalized/date";
+import { dateToCalendarDate } from "@/_commons/utils/date";
 import type { Account } from "../../accounts/_api/account.types";
 import type { Category } from "../../categories/_api/category.types";
 import type { TransactionFilters } from "../_api/transaction.types";
@@ -26,13 +27,6 @@ export function TransactionFiltersComponent({
 
   const hasFilters =
     filters.accountId || filters.categoryId || filters.type || filters.startDate || filters.endDate;
-
-  // Convert Date to CalendarDate for DatePicker
-  const dateToCalendarDate = (date: Date | undefined) => {
-    if (!date) return null;
-    const isoDate = date.toISOString().split("T")[0]!;
-    return parseDate(isoDate);
-  };
 
   return (
     <div className="flex flex-wrap items-end gap-4">
@@ -94,7 +88,7 @@ export function TransactionFiltersComponent({
         size="sm"
         className="w-40"
         granularity="day"
-        value={dateToCalendarDate(filters.startDate)}
+        value={filters.startDate ? dateToCalendarDate(filters.startDate) : null}
         onChange={(value: CalendarDate | null) => {
           const date = value ? value.toDate(getLocalTimeZone()) : undefined;
           onFiltersChange({ ...filters, startDate: date });
@@ -107,7 +101,7 @@ export function TransactionFiltersComponent({
         size="sm"
         className="w-40"
         granularity="day"
-        value={dateToCalendarDate(filters.endDate)}
+        value={filters.endDate ? dateToCalendarDate(filters.endDate) : null}
         onChange={(value: CalendarDate | null) => {
           const date = value ? value.toDate(getLocalTimeZone()) : undefined;
           onFiltersChange({ ...filters, endDate: date });

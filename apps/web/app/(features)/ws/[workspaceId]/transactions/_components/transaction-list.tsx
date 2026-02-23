@@ -2,6 +2,7 @@
 
 import { Spinner } from "@heroui/react";
 import { useState } from "react";
+import { dateToLocalDateString } from "@/_commons/utils/date";
 import { useGetAccountList } from "../../accounts/_api/get-account-list/use-get-account-list";
 import { useGetCategoryList } from "../../categories/_api/get-category-list/use-get-category-list";
 import type { Transaction, TransactionFilters } from "../_api/transaction.types";
@@ -19,7 +20,7 @@ function groupTransactionsByDate(transactions: Transaction[]): Map<string, Trans
   const groups = new Map<string, Transaction[]>();
 
   for (const transaction of transactions) {
-    const dateKey = new Date(transaction.date).toISOString().split("T")[0]!;
+    const dateKey = dateToLocalDateString(new Date(transaction.date));
     const existing = groups.get(dateKey) ?? [];
     existing.push(transaction);
     groups.set(dateKey, existing);
@@ -29,13 +30,12 @@ function groupTransactionsByDate(transactions: Transaction[]): Map<string, Trans
 }
 
 function formatGroupDate(dateString: string): string {
-  const date = new Date(dateString);
   const today = new Date();
   const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
 
-  const todayStr = today.toISOString().split("T")[0];
-  const yesterdayStr = yesterday.toISOString().split("T")[0];
+  const todayStr = dateToLocalDateString(today);
+  const yesterdayStr = dateToLocalDateString(yesterday);
 
   if (dateString === todayStr) {
     return "Hoy";
@@ -43,6 +43,10 @@ function formatGroupDate(dateString: string): string {
   if (dateString === yesterdayStr) {
     return "Ayer";
   }
+
+  // Parse the date string (YYYY-MM-DD) and create date at noon to avoid timezone issues
+  const [year, month, day] = dateString.split("-").map(Number);
+  const date = new Date(year!, month! - 1, day!, 12, 0, 0);
 
   return new Intl.DateTimeFormat("es-CL", {
     weekday: "long",
