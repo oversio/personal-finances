@@ -22,12 +22,8 @@ import type { Account } from "../../accounts/_api/account.types";
 import { useAddSubcategory } from "../../categories/_api/add-subcategory/use-add-subcategory";
 import type { Category } from "../../categories/_api/category.types";
 import { useCreateCategory } from "../../categories/_api/create-category/use-create-category";
-import { CategoryFormModal } from "../../categories/_components/category-form-modal";
 import { SubcategoryForm } from "../../categories/_components/subcategory-form";
-import type {
-  CreateCategoryFormData,
-  SubcategoryFormData,
-} from "../../categories/_schemas/category.schema";
+import type { SubcategoryFormData } from "../../categories/_schemas/category.schema";
 import type { Transaction, TransactionType } from "../_api/transaction.types";
 import {
   createTransactionSchema,
@@ -58,7 +54,6 @@ export function TransactionForm({
   submitLabel = "Crear Transacción",
 }: TransactionFormProps) {
   // Modal states for creating categories/subcategories
-  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isSubcategoryModalOpen, setIsSubcategoryModalOpen] = useState(false);
   const [selectedCategoryForSubcategory, setSelectedCategoryForSubcategory] =
     useState<Category | null>(null);
@@ -98,7 +93,6 @@ export function TransactionForm({
   // Handle category creation success via useEffect (more reliable with 401 retry flow)
   useEffect(() => {
     if (createCategoryMutation.isSuccess && createCategoryMutation.data) {
-      setIsCategoryModalOpen(false);
       setValue("categoryId", createCategoryMutation.data.id);
       setValue("subcategoryId", undefined);
       createCategoryMutation.reset();
@@ -155,11 +149,6 @@ export function TransactionForm({
       categoryId: categoryId || undefined,
       subcategoryId: subcategoryId || undefined,
     };
-  };
-
-  // Handle creating a new category
-  const handleCreateCategory = (data: CreateCategoryFormData) => {
-    createCategoryMutation.mutate({ workspaceId, data });
   };
 
   // Handle adding a subcategory to a category
@@ -276,12 +265,6 @@ export function TransactionForm({
 
               const keyStr = key as string;
 
-              // Handle "create new category" action
-              if (keyStr === "__create_category__") {
-                setIsCategoryModalOpen(true);
-                return;
-              }
-
               // Handle "add subcategory" action
               if (keyStr.startsWith("__add_subcategory__:")) {
                 const categoryId = keyStr.replace("__add_subcategory__:", "");
@@ -331,34 +314,9 @@ export function TransactionForm({
                 );
               });
 
-              sections.push(
-                <AutocompleteSection key="__create_section__" title="" showDivider={false}>
-                  <AutocompleteItem
-                    key="__create_category__"
-                    textValue="Nueva categoría"
-                    className="text-primary"
-                  >
-                    <span className="flex items-center gap-2 font-medium">
-                      <PlusIcon className="size-4" />
-                      Nueva categoría
-                    </span>
-                  </AutocompleteItem>
-                </AutocompleteSection>,
-              );
-
               return sections;
             })()}
           </Autocomplete>
-
-          {/* Category creation modal */}
-          <CategoryFormModal
-            isOpen={isCategoryModalOpen}
-            onClose={() => setIsCategoryModalOpen(false)}
-            defaultType={selectedType === "income" ? "income" : "expense"}
-            onSubmit={handleCreateCategory}
-            isPending={createCategoryMutation.isPending}
-            error={createCategoryMutation.error}
-          />
 
           {/* Subcategory creation modal */}
           <SubcategoryForm
