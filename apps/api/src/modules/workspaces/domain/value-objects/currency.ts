@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const CURRENCIES = [
+export const CURRENCIES = [
   "USD",
   "EUR",
   "GBP",
