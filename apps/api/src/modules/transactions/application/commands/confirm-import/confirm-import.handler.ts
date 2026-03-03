@@ -17,7 +17,6 @@ import { Transaction, type TransactionPrimitives } from "../../../domain/entitie
 import {
   IMPORT_SESSION_REPOSITORY,
   type ImportSessionRepository,
-  type CategoryToCreate,
   type ImportRow,
   type ImportSession,
   TRANSACTION_REPOSITORY,
