@@ -1,4 +1,12 @@
 export { ArchiveIcon } from "./archive-icon";
+export { ArrowLeftIcon } from "./arrow-left-icon";
+export { CheckCircleIcon } from "./check-circle-icon";
+export { ChevronDownIcon } from "./chevron-down-icon";
+export { DocumentArrowDownIcon } from "./document-arrow-down-icon";
+export { DocumentArrowUpIcon } from "./document-arrow-up-icon";
+export { ExclamationTriangleIcon } from "./exclamation-triangle-icon";
 export { ListIcon } from "./list-icon";
 export { PencilIcon } from "./pencil-icon";
 export { PlusIcon } from "./plus-icon";
+export { TrashIcon } from "./trash-icon";
+export { XCircleIcon } from "./x-circle-icon";
