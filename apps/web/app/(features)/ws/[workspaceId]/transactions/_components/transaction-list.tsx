@@ -60,7 +60,7 @@ export function TransactionList({ workspaceId, initialAccountId }: TransactionLi
   const [filters, setFilters] = useState<TransactionFilters>({
     accountId: initialAccountId,
   });
-  const [archivingId, setArchivingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const {
     data: transactions,
@@ -73,12 +73,12 @@ export function TransactionList({ workspaceId, initialAccountId }: TransactionLi
 
   const deleteMutation = useDeleteTransaction();
 
-  const handleArchive = async (transactionId: string) => {
-    setArchivingId(transactionId);
+  const handleDelete = async (transactionId: string) => {
+    setDeletingId(transactionId);
     try {
       await deleteMutation.mutateAsync({ workspaceId, transactionId });
     } finally {
-      setArchivingId(null);
+      setDeletingId(null);
     }
   };
 
@@ -133,8 +133,8 @@ export function TransactionList({ workspaceId, initialAccountId }: TransactionLi
                       workspaceId={workspaceId}
                       accounts={accounts ?? []}
                       categories={categories ?? []}
-                      onArchive={handleArchive}
-                      isArchiving={archivingId === transaction.id}
+                      onDelete={handleDelete}
+                      isDeleting={deletingId === transaction.id}
                     />
                   ))}
                 </div>

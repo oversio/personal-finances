@@ -14,8 +14,8 @@ export function BudgetList({ workspaceId }: BudgetListProps) {
   const { data: budgets, isLoading, error } = useGetBudgetList({ workspaceId });
   const { mutate: deleteBudget, isPending: isDeleting } = useDeleteBudget();
 
-  const handleArchive = (budgetId: string) => {
-    if (confirm("¿Estás seguro de que deseas archivar este presupuesto?")) {
+  const handleDelete = (budgetId: string) => {
+    if (confirm("¿Estás seguro de que deseas eliminar este presupuesto?")) {
       deleteBudget({ workspaceId, budgetId });
     }
   };
@@ -72,8 +72,8 @@ export function BudgetList({ workspaceId }: BudgetListProps) {
           key={budget.id}
           budget={budget}
           workspaceId={workspaceId}
-          onArchive={handleArchive}
-          isArchiving={isDeleting}
+          onDelete={handleDelete}
+          isDeleting={isDeleting}
         />
       ))}
     </div>

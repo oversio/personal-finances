@@ -298,7 +298,7 @@ export function TransactionForm({
                   )),
                   <AutocompleteItem
                     key={`__add_subcategory__:${category.id}`}
-                    textValue={`Agregar subcategoría a ${category.name}`}
+                    textValue={`Agregar subcategoría a ${category.name}: ${category.subcategories.map(s => s.name).join(" ")}`}
                     className="text-primary"
                   >
                     <span className="flex items-center gap-2">

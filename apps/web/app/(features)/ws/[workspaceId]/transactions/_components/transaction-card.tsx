@@ -21,8 +21,8 @@ interface TransactionCardProps {
   workspaceId: string;
   accounts: Account[];
   categories: Category[];
-  onArchive: (transactionId: string) => void;
-  isArchiving: boolean;
+  onDelete: (transactionId: string) => void;
+  isDeleting: boolean;
 }
 
 function formatCurrency(amount: number, currency: string): string {
@@ -45,8 +45,8 @@ export function TransactionCard({
   workspaceId,
   accounts,
   categories,
-  onArchive,
-  isArchiving,
+  onDelete,
+  isDeleting,
 }: TransactionCardProps) {
   const account = accounts.find(a => a.id === transaction.accountId);
   const toAccount = transaction.toAccountId
@@ -159,13 +159,13 @@ export function TransactionCard({
                   Editar
                 </DropdownItem>
                 <DropdownItem
-                  key="archive"
+                  key="delete"
                   className="text-danger"
                   color="danger"
-                  onPress={() => onArchive(transaction.id!)}
-                  isDisabled={isArchiving}
+                  onPress={() => onDelete(transaction.id!)}
+                  isDisabled={isDeleting}
                 >
-                  Archivar
+                  Eliminar
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>

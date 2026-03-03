@@ -4,4 +4,6 @@ export const TRANSACTION_QUERY_KEYS = {
   create: "transactions-create",
   update: "transactions-update",
   delete: "transactions-delete",
+  importPreview: "transactions-import-preview",
+  importConfirm: "transactions-import-confirm",
 } as const;

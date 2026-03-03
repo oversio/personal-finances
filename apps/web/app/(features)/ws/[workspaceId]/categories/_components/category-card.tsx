@@ -23,11 +23,11 @@ import type { SubcategoryFormData } from "../_schemas/category.schema";
 interface CategoryCardProps {
   category: Category;
   workspaceId: string;
-  onArchive: (categoryId: string) => void;
-  isArchiving: boolean;
+  onDelete: (categoryId: string) => void;
+  isDeleting: boolean;
 }
 
-export function CategoryCard({ category, workspaceId, onArchive, isArchiving }: CategoryCardProps) {
+export function CategoryCard({ category, workspaceId, onDelete, isDeleting }: CategoryCardProps) {
   const [isSubcategoryModalOpen, setIsSubcategoryModalOpen] = useState(false);
   const [editingSubcategory, setEditingSubcategory] = useState<Subcategory | null>(null);
 
@@ -146,13 +146,13 @@ export function CategoryCard({ category, workspaceId, onArchive, isArchiving }: 
                   Agregar Subcategoría
                 </DropdownItem>
                 <DropdownItem
-                  key="archive"
+                  key="delete"
                   className="text-danger"
                   color="danger"
-                  onPress={() => onArchive(category.id)}
-                  isDisabled={isArchiving}
+                  onPress={() => onDelete(category.id)}
+                  isDisabled={isDeleting}
                 >
-                  Archivar
+                  Eliminar
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
