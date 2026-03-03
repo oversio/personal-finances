@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      eslint-plugin-turbo:
+        specifier: ^2.7.1
+        version: 2.7.1(eslint@9.39.1(jiti@2.6.1))(turbo@2.8.12)
       husky:
         specifier: ^9.1.7
         version: 9.1.7
