@@ -16,7 +16,7 @@ interface RecurringTransactionListProps {
 }
 
 export function RecurringTransactionList({ workspaceId }: RecurringTransactionListProps) {
-  const [archivingId, setArchivingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [pausingId, setPausingId] = useState<string | null>(null);
   const [resumingId, setResumingId] = useState<string | null>(null);
 
@@ -34,12 +34,12 @@ export function RecurringTransactionList({ workspaceId }: RecurringTransactionLi
   const resumeMutation = useResumeRecurringTransaction();
   const processMutation = useProcessRecurringTransactions();
 
-  const handleArchive = async (id: string) => {
-    setArchivingId(id);
+  const handleDelete = async (id: string) => {
+    setDeletingId(id);
     try {
       await deleteMutation.mutateAsync({ workspaceId, recurringTransactionId: id });
     } finally {
-      setArchivingId(null);
+      setDeletingId(null);
     }
   };
 
@@ -140,10 +140,10 @@ export function RecurringTransactionList({ workspaceId }: RecurringTransactionLi
                     workspaceId={workspaceId}
                     accounts={accounts ?? []}
                     categories={categories ?? []}
-                    onArchive={handleArchive}
+                    onDelete={handleDelete}
                     onPause={handlePause}
                     onResume={handleResume}
-                    isArchiving={archivingId === rt.id}
+                    isDeleting={deletingId === rt.id}
                     isPausing={pausingId === rt.id}
                     isResuming={resumingId === rt.id}
                   />
@@ -165,10 +165,10 @@ export function RecurringTransactionList({ workspaceId }: RecurringTransactionLi
                     workspaceId={workspaceId}
                     accounts={accounts ?? []}
                     categories={categories ?? []}
-                    onArchive={handleArchive}
+                    onDelete={handleDelete}
                     onPause={handlePause}
                     onResume={handleResume}
-                    isArchiving={archivingId === rt.id}
+                    isDeleting={deletingId === rt.id}
                     isPausing={pausingId === rt.id}
                     isResuming={resumingId === rt.id}
                   />

@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Card, CardBody, Tooltip } from "@heroui/react";
-import { ArchiveIcon, ListIcon, PencilIcon } from "@repo/ui/icons";
+import { ListIcon, PencilIcon, TrashIcon } from "@repo/ui/icons";
 import Link from "next/link";
 import type { Account } from "../_api/account.types";
 import { ACCOUNT_TYPE_LABELS } from "../_schemas/account.schema";
@@ -9,8 +9,8 @@ import { ACCOUNT_TYPE_LABELS } from "../_schemas/account.schema";
 interface AccountCardProps {
   account: Account;
   workspaceId: string;
-  onArchive: (accountId: string) => void;
-  isArchiving: boolean;
+  onDelete: (accountId: string) => void;
+  isDeleting: boolean;
 }
 
 function formatCurrency(amount: number, currency: string): string {
@@ -20,7 +20,7 @@ function formatCurrency(amount: number, currency: string): string {
   }).format(amount);
 }
 
-export function AccountCard({ account, workspaceId, onArchive, isArchiving }: AccountCardProps) {
+export function AccountCard({ account, workspaceId, onDelete, isDeleting }: AccountCardProps) {
   return (
     <Card className="overflow-hidden">
       <div className="h-1 w-full" style={{ backgroundColor: account.color }} />
@@ -60,17 +60,17 @@ export function AccountCard({ account, workspaceId, onArchive, isArchiving }: Ac
               </Button>
             </Tooltip>
 
-            <Tooltip content="Archivar">
+            <Tooltip content="Eliminar">
               <Button
                 isIconOnly
                 size="sm"
                 variant="light"
                 color="danger"
-                aria-label="Archivar cuenta"
-                onPress={() => onArchive(account.id)}
-                isDisabled={isArchiving}
+                aria-label="Eliminar cuenta"
+                onPress={() => onDelete(account.id)}
+                isDisabled={isDeleting}
               >
-                <ArchiveIcon className="size-5" />
+                <TrashIcon className="size-5" />
               </Button>
             </Tooltip>
           </div>

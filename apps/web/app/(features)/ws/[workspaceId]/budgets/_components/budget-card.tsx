@@ -18,8 +18,8 @@ import { BudgetProgressBar } from "./budget-progress-bar";
 interface BudgetCardProps {
   budget: Budget;
   workspaceId: string;
-  onArchive: (budgetId: string) => void;
-  isArchiving: boolean;
+  onDelete: (budgetId: string) => void;
+  isDeleting: boolean;
 }
 
 function formatCurrency(amount: number): string {
@@ -38,7 +38,7 @@ function formatPeriodRange(start: Date, end: Date): string {
   return `${startStr} - ${endStr}`;
 }
 
-export function BudgetCard({ budget, workspaceId, onArchive, isArchiving }: BudgetCardProps) {
+export function BudgetCard({ budget, workspaceId, onDelete, isDeleting }: BudgetCardProps) {
   const statusColor = budget.isExceeded ? "danger" : budget.isWarning ? "warning" : "success";
 
   return (
@@ -86,13 +86,13 @@ export function BudgetCard({ budget, workspaceId, onArchive, isArchiving }: Budg
                 Editar
               </DropdownItem>
               <DropdownItem
-                key="archive"
+                key="delete"
                 className="text-danger"
                 color="danger"
-                onPress={() => onArchive(budget.id)}
-                isDisabled={isArchiving}
+                onPress={() => onDelete(budget.id)}
+                isDisabled={isDeleting}
               >
-                Archivar
+                Eliminar
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>

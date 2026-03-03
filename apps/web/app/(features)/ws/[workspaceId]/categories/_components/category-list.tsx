@@ -15,8 +15,8 @@ export function CategoryList({ workspaceId }: CategoryListProps) {
   const { data: categories, isLoading, error } = useGetCategoryList({ workspaceId });
   const { mutate: deleteCategory, isPending: isDeleting } = useDeleteCategory();
 
-  const handleArchive = (categoryId: string) => {
-    if (confirm("¿Estás seguro de que deseas archivar esta categoría?")) {
+  const handleDelete = (categoryId: string) => {
+    if (confirm("¿Estás seguro de que deseas eliminar esta categoría?")) {
       deleteCategory({ workspaceId, categoryId });
     }
   };
@@ -77,8 +77,8 @@ export function CategoryList({ workspaceId }: CategoryListProps) {
               key={category.id}
               category={category}
               workspaceId={workspaceId}
-              onArchive={handleArchive}
-              isArchiving={isDeleting}
+              onDelete={handleDelete}
+              isDeleting={isDeleting}
             />
           ))}
         </div>
@@ -93,8 +93,8 @@ export function CategoryList({ workspaceId }: CategoryListProps) {
               key={category.id}
               category={category}
               workspaceId={workspaceId}
-              onArchive={handleArchive}
-              isArchiving={isDeleting}
+              onDelete={handleDelete}
+              isDeleting={isDeleting}
             />
           ))}
         </div>

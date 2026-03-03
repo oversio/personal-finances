@@ -27,10 +27,10 @@ interface RecurringTransactionCardProps {
   workspaceId: string;
   accounts: Account[];
   categories: Category[];
-  onArchive: (id: string) => void;
+  onDelete: (id: string) => void;
   onPause: (id: string) => void;
   onResume: (id: string) => void;
-  isArchiving: boolean;
+  isDeleting: boolean;
   isPausing: boolean;
   isResuming: boolean;
 }
@@ -100,10 +100,10 @@ export function RecurringTransactionCard({
   workspaceId,
   accounts,
   categories,
-  onArchive,
+  onDelete,
   onPause,
   onResume,
-  isArchiving,
+  isDeleting,
   isPausing,
   isResuming,
 }: RecurringTransactionCardProps) {
@@ -118,7 +118,7 @@ export function RecurringTransactionCard({
     return recurringTransaction.type === "income" ? "+" : "-";
   };
 
-  const isProcessing = isArchiving || isPausing || isResuming;
+  const isProcessing = isDeleting || isPausing || isResuming;
 
   return (
     <Card className="overflow-hidden">
@@ -232,13 +232,13 @@ export function RecurringTransactionCard({
                   </DropdownItem>
                 )}
                 <DropdownItem
-                  key="archive"
+                  key="delete"
                   className="text-danger"
                   color="danger"
-                  onPress={() => onArchive(recurringTransaction.id)}
-                  isDisabled={isArchiving}
+                  onPress={() => onDelete(recurringTransaction.id)}
+                  isDisabled={isDeleting}
                 >
-                  Archive
+                  Eliminar
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>

@@ -14,8 +14,8 @@ export function AccountList({ workspaceId }: AccountListProps) {
   const { data: accounts, isLoading, error } = useGetAccountList({ workspaceId });
   const { mutate: deleteAccount, isPending: isDeleting } = useDeleteAccount();
 
-  const handleArchive = (accountId: string) => {
-    if (confirm("¿Estás seguro de que deseas archivar esta cuenta?")) {
+  const handleDelete = (accountId: string) => {
+    if (confirm("¿Estás seguro de que deseas eliminar esta cuenta?")) {
       deleteAccount({ workspaceId, accountId });
     }
   };
@@ -70,8 +70,8 @@ export function AccountList({ workspaceId }: AccountListProps) {
           key={account.id}
           account={account}
           workspaceId={workspaceId}
-          onArchive={handleArchive}
-          isArchiving={isDeleting}
+          onDelete={handleDelete}
+          isDeleting={isDeleting}
         />
       ))}
     </div>
