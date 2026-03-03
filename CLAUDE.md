@@ -133,6 +133,7 @@ src/
 - [Authentication Module](apps/api/docs/AUTH_MODULE.md) - JWT auth, OAuth, token strategy, API contracts
 - [Database Model](apps/api/docs/DATABASE_MODEL.md) - MongoDB collections and schemas
 - [API Standards](apps/api/docs/API_STANDARDS.md) - Error formats, HTTP status codes, pagination, versioning
+- [Transaction Import](apps/api/docs/TRANSACTION_IMPORT.md) - CSV import feature with Port/Adapter pattern
 
 ---
 
@@ -216,12 +217,13 @@ app/
 
 See [apps/web/CLAUDE.md](apps/web/CLAUDE.md) for AI-specific instructions when working in the web app.
 
-| Document                                              | Description                                     |
-| ----------------------------------------------------- | ----------------------------------------------- |
-| [Data Fetching](apps/web/docs/DATA_FETCHING.md)       | Fetcher, React Query hooks, schema parsing      |
-| [Error Handling](apps/web/docs/ERROR_HANDLING.md)     | ValidationErrors, ApiError, form error handling |
-| [Auth Flow](apps/web/docs/AUTH_FLOW.md)               | Login, registration, OAuth, token management    |
-| [State Management](apps/web/docs/STATE_MANAGEMENT.md) | Zustand stores, selectors, best practices       |
+| Document                                                  | Description                                     |
+| --------------------------------------------------------- | ----------------------------------------------- |
+| [Data Fetching](apps/web/docs/DATA_FETCHING.md)           | Fetcher, React Query hooks, schema parsing      |
+| [Error Handling](apps/web/docs/ERROR_HANDLING.md)         | ValidationErrors, ApiError, form error handling |
+| [Auth Flow](apps/web/docs/AUTH_FLOW.md)                   | Login, registration, OAuth, token management    |
+| [State Management](apps/web/docs/STATE_MANAGEMENT.md)     | Zustand stores, selectors, best practices       |
+| [Transaction Import](apps/web/docs/TRANSACTION_IMPORT.md) | CSV import wizard, file upload, validation UI   |
 
 ---
 
