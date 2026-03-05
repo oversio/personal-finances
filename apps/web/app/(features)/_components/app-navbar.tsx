@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Button, Navbar, NavbarBrand, NavbarContent } from "@heroui/react";
 import { useSidebarStore, selectIsMobileOpen } from "@/_commons/stores/sidebar.store";
 import { AccountSwitcher } from "./account-switcher";
@@ -60,7 +61,7 @@ export function AppNavbar() {
           <HamburgerIcon isOpen={isMobileOpen} />
         </Button>
         <NavbarBrand className="hidden sm:flex">
-          <p className="font-semibold text-inherit">Finanzas Personales</p>
+          <Image src="/logo.png" alt="OMA Finance" width={100} height={34} priority />
         </NavbarBrand>
       </NavbarContent>
 
