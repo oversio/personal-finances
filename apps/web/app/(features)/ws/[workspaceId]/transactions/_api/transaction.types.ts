@@ -51,6 +51,7 @@ export interface UpdateTransactionInput {
 export interface TransactionFilters {
   accountId?: string;
   categoryId?: string;
+  subcategoryId?: string;
   type?: TransactionType;
   startDate?: Date;
   endDate?: Date;

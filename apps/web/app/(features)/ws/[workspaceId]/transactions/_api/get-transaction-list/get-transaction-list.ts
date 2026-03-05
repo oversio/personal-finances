@@ -15,6 +15,9 @@ export async function getTransactionList({ workspaceId, filters }: GetTransactio
   if (filters?.categoryId) {
     params.categoryId = filters.categoryId;
   }
+  if (filters?.subcategoryId) {
+    params.subcategoryId = filters.subcategoryId;
+  }
   if (filters?.type) {
     params.type = filters.type;
   }
