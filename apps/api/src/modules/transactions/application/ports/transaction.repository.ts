@@ -5,6 +5,7 @@ export const TRANSACTION_REPOSITORY = Symbol("TRANSACTION_REPOSITORY");
 export interface TransactionFilters {
   accountId?: string;
   categoryId?: string;
+  subcategoryId?: string;
   type?: string;
   startDate?: Date;
   endDate?: Date;
@@ -36,4 +37,24 @@ export interface TransactionRepository {
     startDate: Date,
     endDate: Date,
   ): Promise<number>;
+
+  /**
+   * Aggregate expenses by category, subcategory, and month for a given year.
+   * Returns structured data for the expenses breakdown report.
+   *
+   * @param workspaceId - Workspace to query
+   * @param year - Year to aggregate expenses for
+   * @returns Raw aggregation data (category/subcategory enrichment done in handler)
+   */
+  aggregateExpensesByMonth(
+    workspaceId: string,
+    year: number,
+  ): Promise<
+    Array<{
+      categoryId: string;
+      subcategoryId: string | null;
+      month: number;
+      total: number;
+    }>
+  >;
 }

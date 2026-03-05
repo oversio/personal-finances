@@ -8,6 +8,7 @@ import {
   ConfirmImportHandler,
   CreateTransactionHandler,
   FILE_PARSER_SERVICE,
+  GetExpensesBreakdownHandler,
   GetTransactionHandler,
   GetTransactionsHandler,
   IMPORT_SESSION_REPOSITORY,
@@ -36,7 +37,7 @@ const commandHandlers = [
   ConfirmImportHandler,
 ];
 
-const queryHandlers = [GetTransactionHandler, GetTransactionsHandler];
+const queryHandlers = [GetTransactionHandler, GetTransactionsHandler, GetExpensesBreakdownHandler];
 
 const eventHandlers = [UpdateAccountBalanceHandler];
 

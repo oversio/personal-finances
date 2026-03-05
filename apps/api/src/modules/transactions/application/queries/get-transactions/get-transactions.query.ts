@@ -3,6 +3,7 @@ export class GetTransactionsQuery {
     public readonly workspaceId: string,
     public readonly accountId?: string,
     public readonly categoryId?: string,
+    public readonly subcategoryId?: string,
     public readonly type?: string,
     public readonly startDate?: Date,
     public readonly endDate?: Date,

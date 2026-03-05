@@ -16,6 +16,7 @@ export class GetTransactionsHandler {
     const transactions = await this.transactionRepository.findByWorkspaceId(query.workspaceId, {
       accountId: query.accountId,
       categoryId: query.categoryId,
+      subcategoryId: query.subcategoryId,
       type: query.type,
       startDate: query.startDate,
       endDate: query.endDate,

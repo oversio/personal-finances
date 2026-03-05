@@ -6,6 +6,7 @@ const TRANSACTION_TYPES = ["income", "expense", "transfer"] as const;
 const transactionFiltersSchema = z.object({
   accountId: z.string().optional(),
   categoryId: z.string().optional(),
+  subcategoryId: z.string().optional(),
   type: z.enum(TRANSACTION_TYPES, { error: "Invalid transaction type" }).optional(),
   startDate: z
     .string()

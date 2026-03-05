@@ -23,6 +23,8 @@ import {
   ArchiveTransactionHandler,
   CreateTransactionCommand,
   CreateTransactionHandler,
+  GetExpensesBreakdownHandler,
+  GetExpensesBreakdownQuery,
   GetTransactionHandler,
   GetTransactionQuery,
   GetTransactionsHandler,
@@ -30,7 +32,12 @@ import {
   UpdateTransactionCommand,
   UpdateTransactionHandler,
 } from "../../../application";
-import { CreateTransactionDto, TransactionFiltersDto, UpdateTransactionDto } from "../dto";
+import {
+  CreateTransactionDto,
+  ExpensesBreakdownRequestDto,
+  TransactionFiltersDto,
+  UpdateTransactionDto,
+} from "../dto";
 
 @ApiTags("transactions")
 @Controller("ws/:workspaceId/transactions")
@@ -42,6 +49,7 @@ export class TransactionsController {
     private readonly archiveTransactionHandler: ArchiveTransactionHandler,
     private readonly getTransactionHandler: GetTransactionHandler,
     private readonly getTransactionsHandler: GetTransactionsHandler,
+    private readonly getExpensesBreakdownHandler: GetExpensesBreakdownHandler,
   ) {}
 
   @Get()
@@ -49,6 +57,7 @@ export class TransactionsController {
   @ApiParam({ name: "workspaceId", description: "Workspace ID" })
   @ApiQuery({ name: "accountId", required: false, description: "Filter by account" })
   @ApiQuery({ name: "categoryId", required: false, description: "Filter by category" })
+  @ApiQuery({ name: "subcategoryId", required: false, description: "Filter by subcategory" })
   @ApiQuery({
     name: "type",
     required: false,
@@ -67,12 +76,26 @@ export class TransactionsController {
       workspace.id,
       filters.accountId,
       filters.categoryId,
+      filters.subcategoryId,
       filters.type,
       filters.startDate,
       filters.endDate,
       filters.includeArchived ?? false,
     );
     return this.getTransactionsHandler.execute(query);
+  }
+
+  @Get("expenses-breakdown")
+  @ApiOperation({ summary: "Get expenses breakdown by category and month" })
+  @ApiParam({ name: "workspaceId", description: "Workspace ID" })
+  @ApiQuery({ name: "year", required: true, description: "Year to aggregate expenses for" })
+  @ApiResponse({ status: 200, description: "Expenses breakdown by category/subcategory and month" })
+  async getExpensesBreakdown(
+    @CurrentWorkspace() workspace: WorkspaceContext["workspace"],
+    @Query() dto: ExpensesBreakdownRequestDto,
+  ) {
+    const query = new GetExpensesBreakdownQuery(workspace.id, dto.year);
+    return this.getExpensesBreakdownHandler.execute(query);
   }
 
   @Get(":id")

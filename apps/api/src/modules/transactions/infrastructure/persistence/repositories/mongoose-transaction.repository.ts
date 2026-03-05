@@ -68,6 +68,10 @@ export class MongooseTransactionRepository implements TransactionRepository {
       filter.categoryId = new Types.ObjectId(filters.categoryId);
     }
 
+    if (filters?.subcategoryId) {
+      filter.subcategoryId = filters.subcategoryId;
+    }
+
     if (filters?.type) {
       filter.type = filters.type;
     }
@@ -148,6 +152,64 @@ export class MongooseTransactionRepository implements TransactionRepository {
     ]);
 
     return result[0]?.total ?? 0;
+  }
+
+  async aggregateExpensesByMonth(
+    workspaceId: string,
+    year: number,
+  ): Promise<
+    Array<{
+      categoryId: string;
+      subcategoryId: string | null;
+      month: number;
+      total: number;
+    }>
+  > {
+    const startOfYear = new Date(year, 0, 1);
+    const endOfYear = new Date(year, 11, 31, 23, 59, 59, 999);
+
+    const result = await this.transactionModel.aggregate<{
+      _id: {
+        categoryId: Types.ObjectId;
+        subcategoryId: string | null;
+        month: number;
+      };
+      total: number;
+    }>([
+      {
+        $match: {
+          workspaceId: new Types.ObjectId(workspaceId),
+          type: "expense",
+          isArchived: false,
+          date: { $gte: startOfYear, $lte: endOfYear },
+          categoryId: { $exists: true, $ne: null },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            categoryId: "$categoryId",
+            subcategoryId: "$subcategoryId",
+            month: { $month: "$date" },
+          },
+          total: { $sum: "$amount" },
+        },
+      },
+      {
+        $sort: {
+          "_id.categoryId": 1,
+          "_id.subcategoryId": 1,
+          "_id.month": 1,
+        },
+      },
+    ]);
+
+    return result.map(r => ({
+      categoryId: r._id.categoryId.toString(),
+      subcategoryId: r._id.subcategoryId,
+      month: r._id.month,
+      total: r.total,
+    }));
   }
 
   private toDomain(doc: TransactionDocument): Transaction {
