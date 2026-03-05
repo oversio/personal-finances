@@ -1,6 +1,15 @@
 import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
 
+// Re-export application layer types for convenience
+// Infrastructure consumers can import from here, maintaining proper dependency direction
+export type {
+  CategoryBreakdown,
+  ExpensesBreakdownResponse,
+  MonthlyExpense,
+  SubcategoryBreakdown,
+} from "../../../application/queries/get-expenses-breakdown/expenses-breakdown.types";
+
 // Request DTO
 const expensesBreakdownRequestSchema = z.object({
   year: z.coerce
@@ -12,7 +21,7 @@ const expensesBreakdownRequestSchema = z.object({
 
 export class ExpensesBreakdownRequestDto extends createZodDto(expensesBreakdownRequestSchema) {}
 
-// Response schemas (for documentation/typing purposes)
+// Response schemas (for Swagger documentation and runtime validation if needed)
 export const monthlyExpenseSchema = z.object({
   month: z.number().int().min(1).max(12),
   total: z.number(),
@@ -40,9 +49,3 @@ export const expensesBreakdownResponseSchema = z.object({
   monthlyTotals: z.array(monthlyExpenseSchema),
   grandTotal: z.number(),
 });
-
-// Types extracted from schemas
-export type MonthlyExpense = z.infer<typeof monthlyExpenseSchema>;
-export type SubcategoryBreakdown = z.infer<typeof subcategoryBreakdownSchema>;
-export type CategoryBreakdown = z.infer<typeof categoryBreakdownSchema>;
-export type ExpensesBreakdownResponse = z.infer<typeof expensesBreakdownResponseSchema>;

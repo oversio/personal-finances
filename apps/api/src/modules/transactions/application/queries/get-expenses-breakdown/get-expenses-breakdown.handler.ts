@@ -4,13 +4,13 @@ import {
   type CategoryRepository,
 } from "@/modules/categories/application/ports";
 import { TRANSACTION_REPOSITORY, type TransactionRepository } from "../../ports";
-import { GetExpensesBreakdownQuery } from "./get-expenses-breakdown.query";
 import type {
   CategoryBreakdown,
   ExpensesBreakdownResponse,
   MonthlyExpense,
   SubcategoryBreakdown,
-} from "../../../infrastructure/http/dto/expenses-breakdown.dto";
+} from "./expenses-breakdown.types";
+import { GetExpensesBreakdownQuery } from "./get-expenses-breakdown.query";
 
 @Injectable()
 export class GetExpensesBreakdownHandler {
