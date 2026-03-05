@@ -182,6 +182,80 @@ export function TransactionForm({
   const dateValue =
     currentDate instanceof Date ? dateToCalendarDate(currentDate) : today(getLocalTimeZone());
 
+  // Amount formatting
+  const currentAmount = watch("amount");
+  const [amountDisplay, setAmountDisplay] = useState(() => {
+    if (currentAmount && currentAmount > 0) {
+      return formatAmountForDisplay(currentAmount);
+    }
+    return "";
+  });
+
+  // Sync display when form amount changes externally (e.g., edit mode)
+  useEffect(() => {
+    if (transaction?.amount && currentAmount === transaction.amount) {
+      setAmountDisplay(formatAmountForDisplay(currentAmount));
+    }
+  }, [transaction?.amount, currentAmount]);
+
+  function formatAmountForDisplay(value: number): string {
+    if (!value || value === 0) return "";
+    // Format with thousand separators (Chilean format uses period)
+    return new Intl.NumberFormat("es-CL", {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    }).format(value);
+  }
+
+  function parseAmountFromInput(input: string): number {
+    if (!input) return 0;
+    // Remove thousand separators (periods) and replace decimal comma with period
+    const normalized = input.replace(/\./g, "").replace(",", ".");
+    const parsed = parseFloat(normalized);
+    return isNaN(parsed) ? 0 : parsed;
+  }
+
+  function handleAmountChange(inputValue: string) {
+    // Allow empty input
+    if (!inputValue) {
+      setAmountDisplay("");
+      setValue("amount", 0);
+      return;
+    }
+
+    // Only allow digits, commas (decimal), and periods (thousand separator)
+    const cleanInput = inputValue.replace(/[^\d.,]/g, "");
+
+    // Check if user is typing a decimal
+    const hasDecimal = cleanInput.includes(",");
+    const parts = cleanInput.split(",");
+
+    // Validate format: only one decimal separator allowed
+    if (parts.length > 2) return;
+
+    // Parse the numeric value
+    const numericValue = parseAmountFromInput(cleanInput);
+
+    // Format for display
+    if (hasDecimal && parts[1] !== undefined) {
+      // Preserve decimal input while typing
+      const integerPart = parts[0] ? parseInt(parts[0].replace(/\./g, ""), 10) : 0;
+      const formattedInteger = isNaN(integerPart)
+        ? ""
+        : new Intl.NumberFormat("es-CL").format(integerPart);
+      const decimalPart = parts[1].slice(0, 2); // Max 2 decimal places
+      setAmountDisplay(`${formattedInteger},${decimalPart}`);
+    } else {
+      // No decimal, just format the integer
+      const intValue = parseInt(cleanInput.replace(/\./g, ""), 10);
+      if (!isNaN(intValue)) {
+        setAmountDisplay(new Intl.NumberFormat("es-CL").format(intValue));
+      }
+    }
+
+    setValue("amount", numericValue);
+  }
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
       <Select
@@ -334,12 +408,13 @@ export function TransactionForm({
 
       <div className="grid grid-cols-2 gap-4">
         <Input
-          type="number"
+          type="text"
+          inputMode="decimal"
           label="Monto"
-          placeholder="0.00"
-          step="0.01"
+          placeholder="0"
+          value={amountDisplay}
+          onValueChange={handleAmountChange}
           endContent={<span className="text-small text-default-400">{watch("currency")}</span>}
-          {...register("amount", { valueAsNumber: true })}
           isInvalid={!!errors.amount}
           errorMessage={errors.amount?.message}
           variant="flat"
