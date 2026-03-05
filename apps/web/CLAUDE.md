@@ -10,6 +10,7 @@ This document provides AI-specific instructions for working with the web applica
 | Error Handling   | [docs/ERROR_HANDLING.md](docs/ERROR_HANDLING.md)     |
 | Auth Flow        | [docs/AUTH_FLOW.md](docs/AUTH_FLOW.md)               |
 | State Management | [docs/STATE_MANAGEMENT.md](docs/STATE_MANAGEMENT.md) |
+| Reports Module   | [docs/REPORTS_MODULE.md](docs/REPORTS_MODULE.md)     |
 | Localization     | Spanish (es-CL) - see [Localization](#localization)  |
 
 ## Folder Structure Conventions

@@ -217,13 +217,14 @@ app/
 
 See [apps/web/CLAUDE.md](apps/web/CLAUDE.md) for AI-specific instructions when working in the web app.
 
-| Document                                                  | Description                                     |
-| --------------------------------------------------------- | ----------------------------------------------- |
-| [Data Fetching](apps/web/docs/DATA_FETCHING.md)           | Fetcher, React Query hooks, schema parsing      |
-| [Error Handling](apps/web/docs/ERROR_HANDLING.md)         | ValidationErrors, ApiError, form error handling |
-| [Auth Flow](apps/web/docs/AUTH_FLOW.md)                   | Login, registration, OAuth, token management    |
-| [State Management](apps/web/docs/STATE_MANAGEMENT.md)     | Zustand stores, selectors, best practices       |
-| [Transaction Import](apps/web/docs/TRANSACTION_IMPORT.md) | CSV import wizard, file upload, validation UI   |
+| Document                                                  | Description                                       |
+| --------------------------------------------------------- | ------------------------------------------------- |
+| [Data Fetching](apps/web/docs/DATA_FETCHING.md)           | Fetcher, React Query hooks, schema parsing        |
+| [Error Handling](apps/web/docs/ERROR_HANDLING.md)         | ValidationErrors, ApiError, form error handling   |
+| [Auth Flow](apps/web/docs/AUTH_FLOW.md)                   | Login, registration, OAuth, token management      |
+| [State Management](apps/web/docs/STATE_MANAGEMENT.md)     | Zustand stores, selectors, best practices         |
+| [Transaction Import](apps/web/docs/TRANSACTION_IMPORT.md) | CSV import wizard, file upload, validation UI     |
+| [Reports Module](apps/web/docs/REPORTS_MODULE.md)         | Aggregation endpoints, on-demand popovers, tables |
 
 ---
 
