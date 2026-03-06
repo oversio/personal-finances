@@ -61,7 +61,7 @@ export function AppNavbar() {
           <HamburgerIcon isOpen={isMobileOpen} />
         </Button>
         <NavbarBrand className="hidden sm:flex">
-          <Image src="/logo-dark.png" alt="OMA Finance" width={150} height={48} priority />
+          <Image src="/omaf-dark.png" alt="OMA Finance" width={100} height={32} priority />
         </NavbarBrand>
       </NavbarContent>
 

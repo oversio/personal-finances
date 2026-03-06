@@ -14,8 +14,17 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Personal Finances",
-  description: "Manage your personal finances",
+  title: { default: "OMA Finance", template: "%s | OMA Finance" },
+  description: "Administra tus finanzas personales",
+  icons: {
+    icon: [
+      { url: "/favicon/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    shortcut: "/favicon/favicon.ico",
+    apple: "/favicon/apple-touch-icon.png",
+  },
+  manifest: "/favicon/site.webmanifest",
 };
 
 export default function RootLayout({
