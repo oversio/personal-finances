@@ -9,7 +9,7 @@ export default function LoginPage() {
   return (
     <Card className="p-4 shadow-lg">
       <CardHeader className="flex flex-col items-center gap-4 pb-0">
-        <Image src="/logo-dark.png" alt="OMA Finance" width={140} height={48} priority />
+        <Image src="/omaf-dark.png" alt="OMA Finance" width={150} height={32} priority />
         <div className="flex flex-col gap-1 text-center">
           <h1 className="text-2xl font-bold">Bienvenido de nuevo</h1>
           <p className="text-small text-default-500">Inicia sesión para continuar</p>
