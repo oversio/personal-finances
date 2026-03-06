@@ -18,6 +18,7 @@ import {
   SendInvitationEmailHandler,
   SendInvitationHandler,
   UpdateWorkspaceHandler,
+  UserRegisteredHandler,
   WORKSPACE_INVITATION_REPOSITORY,
   WORKSPACE_MEMBER_REPOSITORY,
   WORKSPACE_REPOSITORY,
@@ -60,7 +61,7 @@ const queryHandlers = [
   GetPendingInvitationsHandler,
 ];
 
-const eventHandlers = [SendInvitationEmailHandler];
+const eventHandlers = [SendInvitationEmailHandler, UserRegisteredHandler];
 
 const repositories = [
   {

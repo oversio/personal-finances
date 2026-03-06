@@ -1,44 +1,8 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { type HydratedDocument, Types } from "mongoose";
+import type { CategoryToCreate, ImportRow } from "../../../application/ports";
 
 export type ImportSessionDocument = HydratedDocument<ImportSessionModel>;
-
-export interface CategoryToCreate {
-  name: string;
-  type: "income" | "expense";
-  subcategories: string[];
-}
-
-export interface ImportRowData {
-  type: string;
-  accountName: string;
-  toAccountName?: string;
-  categoryName?: string;
-  subcategoryName?: string;
-  amount: number;
-  currency: string;
-  notes?: string;
-  date: string;
-}
-
-export interface ImportRowError {
-  field: string;
-  message: string;
-  code: string;
-}
-
-export interface ImportRow {
-  rowNumber: number;
-  status: "valid" | "invalid" | "warning";
-  data: ImportRowData;
-  resolvedIds: {
-    accountId?: string;
-    toAccountId?: string;
-    categoryId?: string;
-    subcategoryId?: string;
-  };
-  errors: ImportRowError[];
-}
 
 @Schema({ collection: "import_sessions", timestamps: true })
 export class ImportSessionModel {

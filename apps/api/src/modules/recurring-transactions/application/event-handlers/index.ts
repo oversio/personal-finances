@@ -1,1 +1,2 @@
-export * from "./create-transaction-from-recurring.handler";
+// Event handlers for recurring-transactions module
+// Currently empty - the module only emits events, doesn't handle them

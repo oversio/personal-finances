@@ -2,7 +2,6 @@ import { Inject, Injectable } from "@nestjs/common";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { User, USER_REPOSITORY } from "@/modules/users";
 import type { UserRepository } from "@/modules/users";
-import { CreateWorkspaceCommand, CreateWorkspaceHandler } from "@/modules/workspaces/application";
 import { RefreshToken } from "../../../domain/entities";
 import { OAuthAccountNotLinkedError } from "../../../domain/exceptions";
 import { REFRESH_TOKEN_REPOSITORY, TOKEN_SERVICE } from "../../ports";
@@ -24,7 +23,6 @@ export class GoogleAuthHandler {
     private readonly tokenService: TokenService,
     @Inject(REFRESH_TOKEN_REPOSITORY)
     private readonly refreshTokenRepository: RefreshTokenRepository,
-    private readonly createWorkspaceHandler: CreateWorkspaceHandler,
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
@@ -60,18 +58,7 @@ export class GoogleAuthHandler {
         user = await this.userRepository.save(user);
         isNewUser = true;
 
-        // Auto-create default workspace for new users
-        await this.createWorkspaceHandler.execute(
-          new CreateWorkspaceCommand(
-            "Personal",
-            user.id!.value,
-            "USD",
-            undefined,
-            true, // isDefault
-          ),
-        );
-
-        // Emit domain event
+        // Emit domain event (triggers default workspace creation via event handler)
         this.eventEmitter.emit("user.registered", {
           userId: user.id!.value,
           email: user.email.value,

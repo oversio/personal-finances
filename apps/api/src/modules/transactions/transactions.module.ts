@@ -6,6 +6,7 @@ import { WorkspacesModule } from "@/modules/workspaces";
 import {
   ArchiveTransactionHandler,
   ConfirmImportHandler,
+  CreateTransactionFromRecurringHandler,
   CreateTransactionHandler,
   FILE_PARSER_SERVICE,
   GetExpensesBreakdownHandler,
@@ -39,7 +40,7 @@ const commandHandlers = [
 
 const queryHandlers = [GetTransactionHandler, GetTransactionsHandler, GetExpensesBreakdownHandler];
 
-const eventHandlers = [UpdateAccountBalanceHandler];
+const eventHandlers = [UpdateAccountBalanceHandler, CreateTransactionFromRecurringHandler];
 
 const repositories = [
   {
