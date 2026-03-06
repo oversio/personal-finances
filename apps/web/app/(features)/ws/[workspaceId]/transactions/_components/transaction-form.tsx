@@ -257,74 +257,74 @@ export function TransactionForm({
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
-      <Select
-        label="Tipo"
-        placeholder="Selecciona un tipo"
-        selectedKeys={[selectedType]}
-        onSelectionChange={keys => {
-          const value = Array.from(keys)[0] as TransactionType;
-          if (value) {
-            setValue("type", value);
-            // Clear conditional fields when type changes
-            if (value === "transfer") {
-              setValue("categoryId", undefined);
-              setValue("subcategoryId", undefined);
-            } else {
-              setValue("toAccountId", undefined);
-            }
-          }
-        }}
-        isInvalid={!!errors.type}
-        errorMessage={errors.type?.message}
-        variant="flat"
-        isRequired
-      >
-        {TRANSACTION_TYPES.map(type => (
-          <SelectItem key={type}>{TRANSACTION_TYPE_LABELS[type]}</SelectItem>
-        ))}
-      </Select>
-
-      <Select
-        label={selectedType === "transfer" ? "Desde Cuenta" : "Cuenta"}
-        placeholder="Selecciona una cuenta"
-        selectedKeys={watch("accountId") ? [watch("accountId")] : []}
-        onSelectionChange={keys => {
-          const value = Array.from(keys)[0] as string;
-          if (value) setValue("accountId", value);
-        }}
-        isInvalid={!!errors.accountId}
-        errorMessage={errors.accountId?.message}
-        variant="flat"
-        isRequired
-      >
-        {accounts.map(account => (
-          <SelectItem key={account.id}>{account.name}</SelectItem>
-        ))}
-      </Select>
-
-      {showToAccount && (
+    <>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
         <Select
-          label="Hacia Cuenta"
-          placeholder="Selecciona cuenta de destino"
-          selectedKeys={watch("toAccountId") ? [watch("toAccountId")!] : []}
+          label="Tipo"
+          placeholder="Selecciona un tipo"
+          selectedKeys={[selectedType]}
           onSelectionChange={keys => {
-            const value = Array.from(keys)[0] as string;
-            setValue("toAccountId", value || undefined);
+            const value = Array.from(keys)[0] as TransactionType;
+            if (value) {
+              setValue("type", value);
+              // Clear conditional fields when type changes
+              if (value === "transfer") {
+                setValue("categoryId", undefined);
+                setValue("subcategoryId", undefined);
+              } else {
+                setValue("toAccountId", undefined);
+              }
+            }
           }}
-          isInvalid={!!errors.toAccountId}
-          errorMessage={errors.toAccountId?.message}
+          isInvalid={!!errors.type}
+          errorMessage={errors.type?.message}
           variant="flat"
           isRequired
         >
-          {destinationAccounts.map(account => (
+          {TRANSACTION_TYPES.map(type => (
+            <SelectItem key={type}>{TRANSACTION_TYPE_LABELS[type]}</SelectItem>
+          ))}
+        </Select>
+
+        <Select
+          label={selectedType === "transfer" ? "Desde Cuenta" : "Cuenta"}
+          placeholder="Selecciona una cuenta"
+          selectedKeys={watch("accountId") ? [watch("accountId")] : []}
+          onSelectionChange={keys => {
+            const value = Array.from(keys)[0] as string;
+            if (value) setValue("accountId", value);
+          }}
+          isInvalid={!!errors.accountId}
+          errorMessage={errors.accountId?.message}
+          variant="flat"
+          isRequired
+        >
+          {accounts.map(account => (
             <SelectItem key={account.id}>{account.name}</SelectItem>
           ))}
         </Select>
-      )}
 
-      {showCategory && (
-        <>
+        {showToAccount && (
+          <Select
+            label="Hacia Cuenta"
+            placeholder="Selecciona cuenta de destino"
+            selectedKeys={watch("toAccountId") ? [watch("toAccountId")!] : []}
+            onSelectionChange={keys => {
+              const value = Array.from(keys)[0] as string;
+              setValue("toAccountId", value || undefined);
+            }}
+            isInvalid={!!errors.toAccountId}
+            errorMessage={errors.toAccountId?.message}
+            variant="flat"
+            isRequired
+          >
+            {destinationAccounts.map(account => (
+              <SelectItem key={account.id}>{account.name}</SelectItem>
+            ))}
+          </Select>
+        )}
+
+        {showCategory && (
           <Autocomplete
             label="Categoría"
             placeholder="Busca o selecciona una categoría"
@@ -391,68 +391,68 @@ export function TransactionForm({
               return sections;
             })()}
           </Autocomplete>
+        )}
 
-          {/* Subcategory creation modal */}
-          <SubcategoryForm
-            isOpen={isSubcategoryModalOpen}
-            onClose={() => {
-              setIsSubcategoryModalOpen(false);
-              setSelectedCategoryForSubcategory(null);
-            }}
-            onSubmit={handleAddSubcategory}
-            isPending={addSubcategoryMutation.isPending}
-            error={addSubcategoryMutation.error}
+        <div className="grid grid-cols-2 gap-4">
+          <Input
+            type="text"
+            inputMode="decimal"
+            label="Monto"
+            placeholder="0"
+            value={amountDisplay}
+            onValueChange={handleAmountChange}
+            endContent={<span className="text-small text-default-400">{watch("currency")}</span>}
+            isInvalid={!!errors.amount}
+            errorMessage={errors.amount?.message}
+            variant="flat"
+            isRequired
           />
-        </>
-      )}
 
-      <div className="grid grid-cols-2 gap-4">
-        <Input
-          type="text"
-          inputMode="decimal"
-          label="Monto"
-          placeholder="0"
-          value={amountDisplay}
-          onValueChange={handleAmountChange}
-          endContent={<span className="text-small text-default-400">{watch("currency")}</span>}
-          isInvalid={!!errors.amount}
-          errorMessage={errors.amount?.message}
+          <DatePicker
+            label="Fecha"
+            granularity="day"
+            value={dateValue}
+            onChange={(value: CalendarDate | null) => {
+              if (value) {
+                setValue("date", value.toDate(getLocalTimeZone()));
+              }
+            }}
+            isInvalid={!!errors.date}
+            errorMessage={errors.date?.message}
+            variant="flat"
+            isRequired
+            showMonthAndYearPickers
+          />
+        </div>
+
+        <Textarea
+          label="Notas"
+          placeholder="Detalles adicionales (opcional)"
+          {...register("notes")}
+          isInvalid={!!errors.notes}
+          errorMessage={errors.notes?.message}
           variant="flat"
-          isRequired
+          minRows={2}
         />
 
-        <DatePicker
-          label="Fecha"
-          granularity="day"
-          value={dateValue}
-          onChange={(value: CalendarDate | null) => {
-            if (value) {
-              setValue("date", value.toDate(getLocalTimeZone()));
-            }
-          }}
-          isInvalid={!!errors.date}
-          errorMessage={errors.date?.message}
-          variant="flat"
-          isRequired
-          showMonthAndYearPickers
-        />
-      </div>
+        {generalError && <p className="text-small text-danger">{generalError}</p>}
 
-      <Textarea
-        label="Notas"
-        placeholder="Detalles adicionales (opcional)"
-        {...register("notes")}
-        isInvalid={!!errors.notes}
-        errorMessage={errors.notes?.message}
-        variant="flat"
-        minRows={2}
+        <Button type="submit" color="primary" isLoading={isPending} className="mt-4">
+          {submitLabel}
+        </Button>
+      </form>
+
+      {/* Subcategory creation modal - must be outside the form to prevent event bubbling */}
+      <SubcategoryForm
+        isOpen={isSubcategoryModalOpen}
+        onClose={() => {
+          setIsSubcategoryModalOpen(false);
+          setSelectedCategoryForSubcategory(null);
+        }}
+        onSubmit={handleAddSubcategory}
+        isPending={addSubcategoryMutation.isPending}
+        error={addSubcategoryMutation.error}
       />
-
-      {generalError && <p className="text-small text-danger">{generalError}</p>}
-
-      <Button type="submit" color="primary" isLoading={isPending} className="mt-4">
-        {submitLabel}
-      </Button>
-    </form>
+    </>
   );
 }
