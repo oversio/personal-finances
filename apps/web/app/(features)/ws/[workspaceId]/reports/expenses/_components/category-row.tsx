@@ -45,15 +45,15 @@ export function CategoryRow({
               <button
                 type="button"
                 onClick={onToggle}
-                className="flex items-center gap-1 hover:text-primary"
+                className="flex items-center gap-1 hover:text-primary justify-start"
               >
                 <ChevronDownIcon
                   className={`size-4 transition-transform ${isExpanded ? "" : "-rotate-90"}`}
                 />
-                <span>{category.categoryName}</span>
+                <span className="text-sm">{category.categoryName}</span>
               </button>
             ) : (
-              <span className="ml-5">{category.categoryName}</span>
+              <span className="ml-5 text-sm">{category.categoryName}</span>
             )}
           </div>
         </td>

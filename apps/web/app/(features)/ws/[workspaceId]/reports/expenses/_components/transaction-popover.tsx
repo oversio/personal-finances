@@ -84,9 +84,9 @@ export function TransactionPopover({
   const hasMore = transactions.length > 10;
 
   return (
-    <div className="w-72 space-y-3">
+    <div className="min-w-72 w-auto">
       {/* Header */}
-      <div>
+      <div className="mb-2 flex flex-col border-b border-default-200 pb-2">
         <h4 className="font-semibold capitalize">
           {displayName} - {monthName} {year}
         </h4>
@@ -115,7 +115,7 @@ export function TransactionPopover({
       </div>
 
       {/* Footer */}
-      <div className="flex items-center justify-between border-t border-default-200 pt-2">
+      <div className="flex items-center justify-between border-t mt-2 border-default-200 pt-2">
         <span className="text-sm text-default-500">
           {transactions.length} transaccion{transactions.length !== 1 ? "es" : ""}
           {hasMore && ` (mostrando 10)`}
