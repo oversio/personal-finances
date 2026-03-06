@@ -128,8 +128,42 @@ src/
 - Repository pattern with ports (interfaces) and adapters (implementations)
 - Global exception filter maps domain errors to HTTP responses
 
+### Layer Dependencies (CRITICAL)
+
+```
+Infrastructure → Application → Domain → (nothing)
+```
+
+| Layer              | Can Import From     | Cannot Import From          |
+| ------------------ | ------------------- | --------------------------- |
+| **Domain**         | Only shared domain  | Application, Infrastructure |
+| **Application**    | Domain              | Infrastructure              |
+| **Infrastructure** | Domain, Application | -                           |
+
+**Anti-patterns to avoid:**
+
+- Application importing from infrastructure (e.g., ports importing schema types)
+- Direct handler calls between modules (use domain events instead)
+- Domain importing from any other layer
+
+### Cross-Module Communication
+
+Use **domain events** instead of direct handler calls:
+
+```typescript
+// ✅ CORRECT: Emit event, let other modules react
+this.eventEmitter.emit("user.registered", { userId, email, provider });
+
+// ❌ WRONG: Direct import and call of another module's handler
+import { CreateWorkspaceHandler } from "@/modules/workspaces/application";
+await this.createWorkspaceHandler.execute(...);
+```
+
+See [MODULE_IMPLEMENTATION_GUIDE.md](apps/api/docs/MODULE_IMPLEMENTATION_GUIDE.md) for detailed rules.
+
 ### Documentation
 
+- [Module Implementation Guide](apps/api/docs/MODULE_IMPLEMENTATION_GUIDE.md) - **Layer dependencies, cross-module events, patterns**
 - [Authentication Module](apps/api/docs/AUTH_MODULE.md) - JWT auth, OAuth, token strategy, API contracts
 - [Database Model](apps/api/docs/DATABASE_MODEL.md) - MongoDB collections and schemas
 - [API Standards](apps/api/docs/API_STANDARDS.md) - Error formats, HTTP status codes, pagination, versioning
