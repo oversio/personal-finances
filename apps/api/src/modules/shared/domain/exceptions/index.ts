@@ -3,6 +3,7 @@ export {
   InvalidEntityIdError,
   EntityNotFoundError,
   EntityAlreadyExistsError,
+  EmailNotVerifiedError,
 } from "./domain.exception";
 export type { DomainExceptionOptions } from "./domain.exception";
 

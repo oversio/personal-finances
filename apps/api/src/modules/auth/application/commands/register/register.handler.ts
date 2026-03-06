@@ -50,10 +50,11 @@ export class RegisterHandler {
     const user = User.createLocal(command.email, command.name, passwordHash, picture);
     const savedUser = await this.userRepository.save(user);
 
-    // Emit domain event (triggers default workspace creation via event handler)
+    // Emit domain event (triggers default workspace creation and verification email)
     this.eventEmitter.emit("user.registered", {
       userId: savedUser.id!.value,
       email: savedUser.email.value,
+      name: savedUser.name.value,
       provider: "local",
     });
 

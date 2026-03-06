@@ -53,3 +53,13 @@ export class EntityAlreadyExistsError extends DomainException {
     });
   }
 }
+
+export class EmailNotVerifiedError extends DomainException {
+  constructor() {
+    super("Email verification required", {
+      errorCode: ErrorCodes.auth.emailNotVerified,
+      fieldName: null,
+      handler: "user",
+    });
+  }
+}

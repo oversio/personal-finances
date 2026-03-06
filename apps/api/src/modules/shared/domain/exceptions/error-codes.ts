@@ -17,6 +17,10 @@ export const ErrorCodes = {
     invalidRefreshToken: "auth.invalid_refresh_token",
     oauthAccountNotLinked: "auth.oauth_account_not_linked",
     passwordRequired: "auth.password_required",
+    emailAlreadyVerified: "auth.email_already_verified",
+    verificationTokenExpired: "auth.verification_token_expired",
+    verificationTokenInvalid: "auth.verification_token_invalid",
+    emailNotVerified: "auth.email_not_verified",
   },
 
   // reCAPTCHA errors

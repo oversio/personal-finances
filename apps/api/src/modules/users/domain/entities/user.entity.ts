@@ -66,6 +66,21 @@ export class User {
     );
   }
 
+  withEmailVerified(): User {
+    return new User(
+      this.id,
+      this.email,
+      this.name,
+      this.passwordHash,
+      this.provider,
+      this.providerId,
+      true,
+      this.picture,
+      this.createdAt,
+      new Date(),
+    );
+  }
+
   toPrimitives() {
     return {
       id: this.id?.value,
