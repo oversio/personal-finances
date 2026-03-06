@@ -2,6 +2,7 @@
 
 import { ChevronDownIcon } from "@repo/ui/icons";
 import type { CategoryBreakdown } from "../../_api/expenses-breakdown.types";
+import { formatFullCurrency } from "../_utils/format-currency";
 import { AmountCell } from "./amount-cell";
 import { SubcategoryRow } from "./subcategory-row";
 
@@ -11,18 +12,11 @@ interface CategoryRowProps {
   onToggle: () => void;
   workspaceId: string;
   year: number;
+  currency?: string;
 }
 
 function getMonthTotal(months: { month: number; total: number }[], monthNumber: number): number {
   return months.find(m => m.month === monthNumber)?.total ?? 0;
-}
-
-function formatFullCurrency(amount: number): string {
-  return new Intl.NumberFormat("es-CL", {
-    style: "currency",
-    currency: "CLP",
-    minimumFractionDigits: 0,
-  }).format(amount);
 }
 
 export function CategoryRow({
@@ -31,6 +25,7 @@ export function CategoryRow({
   onToggle,
   workspaceId,
   year,
+  currency,
 }: CategoryRowProps) {
   const hasSubcategories = category.subcategories.length > 0;
 
@@ -74,11 +69,12 @@ export function CategoryRow({
             month={month}
             year={year}
             workspaceId={workspaceId}
+            currency={currency}
           />
         ))}
         {/* Year total */}
         <td className="px-4 py-2 text-right font-semibold">
-          {formatFullCurrency(category.yearTotal)}
+          {formatFullCurrency(category.yearTotal, currency)}
         </td>
       </tr>
 
@@ -92,6 +88,7 @@ export function CategoryRow({
             categoryName={category.categoryName}
             workspaceId={workspaceId}
             year={year}
+            currency={currency}
           />
         ))}
     </>

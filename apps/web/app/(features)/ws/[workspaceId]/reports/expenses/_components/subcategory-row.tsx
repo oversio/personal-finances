@@ -1,6 +1,7 @@
 "use client";
 
 import type { SubcategoryBreakdown } from "../../_api/expenses-breakdown.types";
+import { formatFullCurrency } from "../_utils/format-currency";
 import { AmountCell } from "./amount-cell";
 
 interface SubcategoryRowProps {
@@ -9,18 +10,11 @@ interface SubcategoryRowProps {
   categoryName: string;
   workspaceId: string;
   year: number;
+  currency?: string;
 }
 
 function getMonthTotal(months: { month: number; total: number }[], monthNumber: number): number {
   return months.find(m => m.month === monthNumber)?.total ?? 0;
-}
-
-function formatFullCurrency(amount: number): string {
-  return new Intl.NumberFormat("es-CL", {
-    style: "currency",
-    currency: "CLP",
-    minimumFractionDigits: 0,
-  }).format(amount);
 }
 
 export function SubcategoryRow({
@@ -29,6 +23,7 @@ export function SubcategoryRow({
   categoryName,
   workspaceId,
   year,
+  currency,
 }: SubcategoryRowProps) {
   return (
     <tr className="bg-content1 hover:bg-default-50">
@@ -50,10 +45,13 @@ export function SubcategoryRow({
           month={month}
           year={year}
           workspaceId={workspaceId}
+          currency={currency}
         />
       ))}
       {/* Year total */}
-      <td className="px-4 py-2 text-right text-sm">{formatFullCurrency(subcategory.yearTotal)}</td>
+      <td className="px-4 py-2 text-right text-sm">
+        {formatFullCurrency(subcategory.yearTotal, currency)}
+      </td>
     </tr>
   );
 }

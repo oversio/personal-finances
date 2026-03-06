@@ -6,7 +6,12 @@ import { getExpensesBreakdown, type GetExpensesBreakdownParams } from "./get-exp
 
 export function useGetExpensesBreakdown(params: GetExpensesBreakdownParams) {
   return useQuery({
-    queryKey: [REPORTS_QUERY_KEYS.expensesBreakdown, params.workspaceId, params.year],
+    queryKey: [
+      REPORTS_QUERY_KEYS.expensesBreakdown,
+      params.workspaceId,
+      params.year,
+      params.currency,
+    ],
     queryFn: () => getExpensesBreakdown(params),
     enabled: !!params.workspaceId && !!params.year,
   });

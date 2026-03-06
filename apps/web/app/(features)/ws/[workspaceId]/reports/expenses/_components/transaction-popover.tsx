@@ -3,6 +3,7 @@
 import { Skeleton } from "@heroui/react";
 import Link from "next/link";
 import { useGetTransactionList } from "../../../transactions/_api/get-transaction-list/use-get-transaction-list";
+import { formatFullCurrency } from "../_utils/format-currency";
 
 interface TransactionPopoverProps {
   categoryId: string;
@@ -13,14 +14,7 @@ interface TransactionPopoverProps {
   year: number;
   amount: number;
   workspaceId: string;
-}
-
-function formatFullCurrency(amount: number): string {
-  return new Intl.NumberFormat("es-CL", {
-    style: "currency",
-    currency: "CLP",
-    minimumFractionDigits: 0,
-  }).format(amount);
+  currency?: string;
 }
 
 function formatDate(date: Date): string {
@@ -53,6 +47,7 @@ export function TransactionPopover({
   year,
   amount,
   workspaceId,
+  currency,
 }: TransactionPopoverProps) {
   // Calculate date range for the month
   const startDate = new Date(year, month - 1, 1);
@@ -95,7 +90,7 @@ export function TransactionPopover({
         <h4 className="font-semibold capitalize">
           {displayName} - {monthName} {year}
         </h4>
-        <p className="text-sm text-default-500">Total: {formatFullCurrency(amount)}</p>
+        <p className="text-sm text-default-500">Total: {formatFullCurrency(amount, currency)}</p>
       </div>
 
       {/* Transaction list */}
@@ -113,7 +108,7 @@ export function TransactionPopover({
                 <span className="text-default-400">{formatDate(tx.date)}</span>
                 <span className="max-w-32 truncate">{tx.notes || "-"}</span>
               </div>
-              <span className="font-medium">{formatFullCurrency(tx.amount)}</span>
+              <span className="font-medium">{formatFullCurrency(tx.amount, currency)}</span>
             </div>
           ))
         )}
