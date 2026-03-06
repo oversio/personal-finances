@@ -60,3 +60,33 @@ export class RecaptchaTokenMissingError extends DomainException {
     });
   }
 }
+
+export class EmailAlreadyVerifiedError extends DomainException {
+  constructor() {
+    super("Email is already verified", {
+      errorCode: ErrorCodes.auth.emailAlreadyVerified,
+      fieldName: null,
+      handler: "user",
+    });
+  }
+}
+
+export class VerificationTokenExpiredError extends DomainException {
+  constructor() {
+    super("Verification token has expired", {
+      errorCode: ErrorCodes.auth.verificationTokenExpired,
+      fieldName: null,
+      handler: "user",
+    });
+  }
+}
+
+export class VerificationTokenInvalidError extends DomainException {
+  constructor() {
+    super("Invalid verification token", {
+      errorCode: ErrorCodes.auth.verificationTokenInvalid,
+      fieldName: null,
+      handler: "user",
+    });
+  }
+}

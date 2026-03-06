@@ -13,7 +13,11 @@ import {
   REFRESH_TOKEN_REPOSITORY,
   RefreshTokenHandler,
   RegisterHandler,
+  SendVerificationEmailHandler,
+  SendVerificationEmailOnRegistrationHandler,
   TOKEN_SERVICE,
+  VERIFICATION_TOKEN_SERVICE,
+  VerifyEmailHandler,
 } from "./application";
 import {
   AuthController,
@@ -22,6 +26,7 @@ import {
   JwtAuthGuard,
   JwtStrategy,
   JwtTokenService,
+  JwtVerificationTokenService,
   MongooseRefreshTokenRepository,
   RefreshTokenModel,
   RefreshTokenSchema,
@@ -33,7 +38,11 @@ const commandHandlers = [
   RefreshTokenHandler,
   GoogleAuthHandler,
   LogoutHandler,
+  VerifyEmailHandler,
+  SendVerificationEmailHandler,
 ];
+
+const eventHandlers = [SendVerificationEmailOnRegistrationHandler];
 
 const repositories = [
   {
@@ -50,6 +59,10 @@ const services = [
   {
     provide: TOKEN_SERVICE,
     useClass: JwtTokenService,
+  },
+  {
+    provide: VERIFICATION_TOKEN_SERVICE,
+    useClass: JwtVerificationTokenService,
   },
 ];
 
@@ -74,7 +87,14 @@ const strategies = [JwtStrategy, GoogleStrategy];
     WorkspacesModule,
   ],
   controllers: [AuthController],
-  providers: [...commandHandlers, ...repositories, ...services, ...strategies, JwtAuthGuard],
+  providers: [
+    ...commandHandlers,
+    ...eventHandlers,
+    ...repositories,
+    ...services,
+    ...strategies,
+    JwtAuthGuard,
+  ],
   exports: [...repositories, ...services, JwtAuthGuard, JwtStrategy],
 })
 export class AuthModule {}

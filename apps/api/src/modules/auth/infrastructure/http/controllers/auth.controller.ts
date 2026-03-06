@@ -24,6 +24,10 @@ import {
   RefreshTokenHandler,
   RegisterCommand,
   RegisterHandler,
+  SendVerificationEmailCommand,
+  SendVerificationEmailHandler,
+  VerifyEmailCommand,
+  VerifyEmailHandler,
 } from "../../../application";
 import {
   RecaptchaTokenMissingError,
@@ -35,7 +39,7 @@ import type { AuthenticatedUser } from "../../decorators/current-user.decorator"
 import { Public } from "../../decorators/public.decorator";
 import { GoogleAuthGuard } from "../../guards/google-auth.guard";
 import type { GoogleProfile } from "../../strategies/google.strategy";
-import { LoginDto, LogoutDto, RefreshTokenDto, RegisterDto } from "../dto";
+import { LoginDto, LogoutDto, RefreshTokenDto, RegisterDto, VerifyEmailDto } from "../dto";
 
 @ApiTags("auth")
 @Controller("auth")
@@ -46,6 +50,8 @@ export class AuthController {
     private readonly refreshTokenHandler: RefreshTokenHandler,
     private readonly googleAuthHandler: GoogleAuthHandler,
     private readonly logoutHandler: LogoutHandler,
+    private readonly verifyEmailHandler: VerifyEmailHandler,
+    private readonly sendVerificationEmailHandler: SendVerificationEmailHandler,
     private readonly configService: ConfigService,
     @Inject(RECAPTCHA_SERVICE) private readonly recaptchaService: RecaptchaService,
   ) {}
@@ -167,6 +173,29 @@ export class AuthController {
   @ApiResponse({ status: 401, description: "Unauthorized" })
   getProfile(@CurrentUser() user: AuthenticatedUser) {
     return user;
+  }
+
+  @Public()
+  @Post("verify-email")
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Verify email address with token" })
+  @ApiResponse({ status: 200, description: "Email verified successfully" })
+  @ApiResponse({ status: 400, description: "Invalid or expired token" })
+  @ApiResponse({ status: 422, description: "Email already verified" })
+  async verifyEmail(@Body() dto: VerifyEmailDto) {
+    const command = new VerifyEmailCommand(dto.token);
+    return this.verifyEmailHandler.execute(command);
+  }
+
+  @Post("resend-verification")
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Resend verification email" })
+  @ApiResponse({ status: 200, description: "Verification email sent" })
+  @ApiResponse({ status: 422, description: "Email already verified" })
+  async resendVerification(@CurrentUser() user: AuthenticatedUser) {
+    const command = new SendVerificationEmailCommand(user.id, user.email, user.name);
+    await this.sendVerificationEmailHandler.execute(command);
+    return { message: "Verification email sent" };
   }
 
   /**

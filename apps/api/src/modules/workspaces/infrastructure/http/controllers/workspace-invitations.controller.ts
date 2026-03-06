@@ -10,7 +10,12 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { CurrentUser, Public, type AuthenticatedUser } from "@/modules/shared";
+import {
+  CurrentUser,
+  Public,
+  RequiresVerifiedEmail,
+  type AuthenticatedUser,
+} from "@/modules/shared";
 import {
   AcceptInvitationCommand,
   AcceptInvitationHandler,
@@ -72,6 +77,7 @@ export class WorkspaceInvitationsController {
   @Post("ws/:workspaceId/invitations")
   @UseGuards(WorkspaceAccessGuard, WorkspaceRoleGuard)
   @RequireRole("owner", "admin")
+  @RequiresVerifiedEmail()
   @ApiOperation({ summary: "Send an invitation to join workspace" })
   @ApiParam({ name: "workspaceId", description: "Workspace ID" })
   @ApiResponse({ status: 201, description: "Invitation sent" })
