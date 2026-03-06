@@ -26,6 +26,7 @@ export class GetExpensesBreakdownHandler {
     const rawData = await this.transactionRepository.aggregateExpensesByMonth(
       query.workspaceId,
       query.year,
+      query.currency,
     );
 
     // 2. Get all categories for the workspace to enrich with names and colors

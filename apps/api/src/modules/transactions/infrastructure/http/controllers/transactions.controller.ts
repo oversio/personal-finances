@@ -89,12 +89,17 @@ export class TransactionsController {
   @ApiOperation({ summary: "Get expenses breakdown by category and month" })
   @ApiParam({ name: "workspaceId", description: "Workspace ID" })
   @ApiQuery({ name: "year", required: true, description: "Year to aggregate expenses for" })
+  @ApiQuery({
+    name: "currency",
+    required: false,
+    description: "Filter by currency (e.g., CLP, USD)",
+  })
   @ApiResponse({ status: 200, description: "Expenses breakdown by category/subcategory and month" })
   async getExpensesBreakdown(
     @CurrentWorkspace() workspace: WorkspaceContext["workspace"],
     @Query() dto: ExpensesBreakdownRequestDto,
   ) {
-    const query = new GetExpensesBreakdownQuery(workspace.id, dto.year);
+    const query = new GetExpensesBreakdownQuery(workspace.id, dto.year, dto.currency);
     return this.getExpensesBreakdownHandler.execute(query);
   }
 

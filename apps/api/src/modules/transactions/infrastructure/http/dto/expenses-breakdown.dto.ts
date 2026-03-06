@@ -17,6 +17,7 @@ const expensesBreakdownRequestSchema = z.object({
     .int()
     .min(2000, { error: "Year must be at least 2000" })
     .max(2100, { error: "Year must be at most 2100" }),
+  currency: z.string().optional(),
 });
 
 export class ExpensesBreakdownRequestDto extends createZodDto(expensesBreakdownRequestSchema) {}

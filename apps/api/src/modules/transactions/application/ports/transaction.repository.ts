@@ -44,11 +44,13 @@ export interface TransactionRepository {
    *
    * @param workspaceId - Workspace to query
    * @param year - Year to aggregate expenses for
+   * @param currency - Optional currency filter (e.g., 'CLP', 'USD')
    * @returns Raw aggregation data (category/subcategory enrichment done in handler)
    */
   aggregateExpensesByMonth(
     workspaceId: string,
     year: number,
+    currency?: string,
   ): Promise<
     Array<{
       categoryId: string;
