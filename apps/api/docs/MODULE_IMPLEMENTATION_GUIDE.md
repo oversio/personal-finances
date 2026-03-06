@@ -4,12 +4,233 @@ This guide documents the patterns and structure for implementing new feature mod
 
 ## Table of Contents
 
-1. [Module Structure](#module-structure)
-2. [Domain Layer](#domain-layer)
-3. [Application Layer](#application-layer)
-4. [Infrastructure Layer](#infrastructure-layer)
-5. [Module Registration](#module-registration)
-6. [Implementation Checklist](#implementation-checklist)
+1. [Layer Dependencies](#layer-dependencies)
+2. [Cross-Module Communication](#cross-module-communication)
+3. [Module Structure](#module-structure)
+4. [Domain Layer](#domain-layer)
+5. [Application Layer](#application-layer)
+6. [Infrastructure Layer](#infrastructure-layer)
+7. [Module Registration](#module-registration)
+8. [Implementation Checklist](#implementation-checklist)
+
+---
+
+## Layer Dependencies
+
+Understanding the correct dependency direction is **critical** for maintaining a clean hexagonal architecture. Violations lead to tightly coupled code that's difficult to test and maintain.
+
+### The Dependency Rule
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    INFRASTRUCTURE LAYER                      │
+│  (Controllers, Repositories, Schemas, External Services)    │
+│                                                              │
+│                          ▼ depends on                        │
+├─────────────────────────────────────────────────────────────┤
+│                    APPLICATION LAYER                         │
+│    (Commands, Queries, Handlers, Ports, Event Handlers)     │
+│                                                              │
+│                          ▼ depends on                        │
+├─────────────────────────────────────────────────────────────┤
+│                      DOMAIN LAYER                            │
+│        (Entities, Value Objects, Domain Exceptions)          │
+│                                                              │
+│                    ▼ depends on NOTHING                      │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Layer Rules
+
+| Layer              | Can Import From                                | Cannot Import From          |
+| ------------------ | ---------------------------------------------- | --------------------------- |
+| **Domain**         | Only shared domain (EntityId, DomainException) | Application, Infrastructure |
+| **Application**    | Domain                                         | Infrastructure              |
+| **Infrastructure** | Domain, Application                            | -                           |
+
+### Correct Import Examples
+
+```typescript
+// ✅ CORRECT: Infrastructure imports from Application
+// infrastructure/persistence/repositories/mongoose-account.repository.ts
+import { AccountRepository } from "../../../application/ports";
+import { Account } from "../../../domain/entities";
+
+// ✅ CORRECT: Application imports from Domain
+// application/commands/create-account/create-account.handler.ts
+import { Account } from "../../../domain/entities";
+import { AccountNotFoundError } from "../../../domain/exceptions";
+
+// ✅ CORRECT: Domain imports only from shared domain
+// domain/entities/account.entity.ts
+import { EntityId } from "@/modules/shared/domain/value-objects";
+```
+
+### Anti-Patterns to Avoid
+
+```typescript
+// ❌ WRONG: Application importing from Infrastructure
+// application/ports/import-session.repository.ts
+import { ImportRow } from "../../infrastructure/persistence/schemas/import-session.schema";
+// FIX: Define types in the application layer (ports or DTOs)
+
+// ❌ WRONG: Domain importing from Application
+// domain/entities/transaction.entity.ts
+import { TransactionRepository } from "../../application/ports";
+// FIX: Domain should never know about repositories
+
+// ❌ WRONG: Domain importing from Infrastructure
+// domain/value-objects/currency.ts
+import { CurrencyModel } from "../../infrastructure/persistence/schemas";
+// FIX: Domain must be completely independent
+```
+
+### Where to Define Types
+
+| Type of Data                              | Where to Define                       | Why                    |
+| ----------------------------------------- | ------------------------------------- | ---------------------- |
+| Domain concepts (entities, value objects) | `domain/`                             | Core business logic    |
+| Port interfaces & related types           | `application/ports/`                  | Contracts for adapters |
+| DTOs for API requests/responses           | `infrastructure/http/dto/`            | HTTP layer concerns    |
+| Mongoose schemas                          | `infrastructure/persistence/schemas/` | Database concerns      |
+
+**Key Principle:** If a type is used by the application layer (ports, handlers), it must be defined in the application or domain layer, not infrastructure.
+
+---
+
+## Cross-Module Communication
+
+Modules should be loosely coupled. Use **domain events** for cross-module communication instead of direct handler calls.
+
+### The Event-Driven Pattern
+
+```
+┌──────────────────┐     emits event      ┌──────────────────┐
+│   Auth Module    │ ──────────────────▶  │  Event Bus       │
+│                  │   "user.registered"  │                  │
+└──────────────────┘                      └────────┬─────────┘
+                                                   │
+                                    listens        │
+                              ┌────────────────────┼────────────────────┐
+                              │                    │                    │
+                              ▼                    ▼                    ▼
+                   ┌──────────────────┐ ┌──────────────────┐ ┌──────────────────┐
+                   │ Workspaces Module│ │ Categories Module│ │ Notifications    │
+                   │ (create default  │ │ (seed defaults)  │ │ (send welcome)   │
+                   │  workspace)      │ │                  │ │                  │
+                   └──────────────────┘ └──────────────────┘ └──────────────────┘
+```
+
+### Correct: Event-Based Communication
+
+```typescript
+// Module A: Emits event after completing its operation
+// auth/application/commands/register/register.handler.ts
+@Injectable()
+export class RegisterHandler {
+  constructor(
+    @Inject(USER_REPOSITORY)
+    private readonly userRepository: UserRepository,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
+
+  async execute(command: RegisterCommand): Promise<RegisterResult> {
+    const user = User.createLocal(/* ... */);
+    const savedUser = await this.userRepository.save(user);
+
+    // ✅ CORRECT: Emit event, let other modules react
+    this.eventEmitter.emit("user.registered", {
+      userId: savedUser.id!.value,
+      email: savedUser.email.value,
+      provider: "local",
+    });
+
+    return savedUser.toPrimitives();
+  }
+}
+
+// Module B: Listens to event and handles its own logic
+// workspaces/application/event-handlers/user-registered.handler.ts
+@Injectable()
+export class UserRegisteredHandler {
+  constructor(private readonly createWorkspaceHandler: CreateWorkspaceHandler) {}
+
+  @OnEvent("user.registered")
+  async handle(event: UserRegisteredEvent): Promise<void> {
+    await this.createWorkspaceHandler.execute(
+      new CreateWorkspaceCommand("Personal", event.userId, "USD", undefined, true),
+    );
+  }
+}
+```
+
+### Anti-Pattern: Direct Handler Calls
+
+```typescript
+// ❌ WRONG: Directly importing and calling another module's handler
+// auth/application/commands/register/register.handler.ts
+import { CreateWorkspaceHandler } from "@/modules/workspaces/application";
+
+@Injectable()
+export class RegisterHandler {
+  constructor(
+    private readonly createWorkspaceHandler: CreateWorkspaceHandler, // ❌ Tight coupling
+  ) {}
+
+  async execute(command: RegisterCommand): Promise<RegisterResult> {
+    const savedUser = await this.userRepository.save(user);
+
+    // ❌ WRONG: Direct call creates tight coupling between modules
+    await this.createWorkspaceHandler.execute(
+      new CreateWorkspaceCommand("Personal", savedUser.id!.value, "USD"),
+    );
+  }
+}
+```
+
+### Event Naming Conventions
+
+Use dot notation: `{entity}.{past-tense-action}`
+
+| Event Name                  | Emitted When                               |
+| --------------------------- | ------------------------------------------ |
+| `user.registered`           | New user account created                   |
+| `workspace.created`         | New workspace created                      |
+| `transaction.created`       | New transaction recorded                   |
+| `transaction.updated`       | Transaction modified                       |
+| `transaction.archived`      | Transaction soft-deleted                   |
+| `recurring-transaction.due` | Recurring transaction is due for execution |
+
+### Event Handler Location
+
+**Rule:** Event handlers should live in the module that **performs the action**, not the module that emits the event.
+
+| Event                       | Emitted By             | Handled By   | Handler Action           |
+| --------------------------- | ---------------------- | ------------ | ------------------------ |
+| `user.registered`           | auth                   | workspaces   | Create default workspace |
+| `user.registered`           | auth                   | categories   | (via workspace.created)  |
+| `workspace.created`         | workspaces             | categories   | Seed default categories  |
+| `transaction.created`       | transactions           | accounts     | Update account balance   |
+| `recurring-transaction.due` | recurring-transactions | transactions | Create transaction       |
+
+### When Direct Imports Are Acceptable
+
+Direct imports between modules are acceptable for:
+
+1. **Repository ports for read-only queries** (via DI symbols)
+2. **Shared value objects** from `@/modules/shared/domain`
+3. **Guards and decorators** that provide context
+
+```typescript
+// ✅ ACCEPTABLE: Importing port symbol for dependency injection
+import { ACCOUNT_REPOSITORY, type AccountRepository } from "@/modules/accounts";
+
+// ✅ ACCEPTABLE: Importing shared domain value objects
+import { EntityId } from "@/modules/shared/domain/value-objects";
+
+// ✅ ACCEPTABLE: Importing guards/decorators for authorization
+import { WorkspaceAccessGuard, CurrentWorkspace } from "@/modules/workspaces";
+```
 
 ---
 
@@ -854,6 +1075,14 @@ export class AppModule {}
 
 ## Implementation Checklist
 
+### Architecture Compliance
+
+- [ ] **Domain layer has NO imports from application or infrastructure**
+- [ ] **Application layer has NO imports from infrastructure**
+- [ ] **Types used in ports are defined in application/domain, not infrastructure**
+- [ ] **Cross-module communication uses events, not direct handler calls**
+- [ ] No circular dependencies between modules
+
 ### Domain Layer
 
 - [ ] Create value objects with Zod validation
@@ -861,19 +1090,22 @@ export class AppModule {}
 - [ ] Create domain exceptions extending `DomainException`
 - [ ] Add error codes to `error-codes.ts`
 - [ ] Create barrel exports (`index.ts`)
+- [ ] **Verify: No imports from `../application` or `../infrastructure`**
 
 ### Application Layer
 
-- [ ] Create repository port (interface)
+- [ ] Create repository port (interface) with types defined locally
 - [ ] Create commands with handlers
 - [ ] Create queries with handlers
-- [ ] Create event handlers (if needed)
+- [ ] Create event handlers for cross-module events (if needed)
+- [ ] Emit domain events after state changes
 - [ ] Create barrel exports
+- [ ] **Verify: No imports from `../infrastructure` or `../../infrastructure`**
 
 ### Infrastructure Layer
 
 - [ ] Create Mongoose schema with indexes
-- [ ] Create repository implementation
+- [ ] Create repository implementation (imports from application/ports)
 - [ ] Create DTOs with Zod validation
 - [ ] Create controller with Swagger docs
 - [ ] Create barrel exports
@@ -881,8 +1113,10 @@ export class AppModule {}
 ### Module Registration
 
 - [ ] Create `[feature].module.ts`
+- [ ] Register event handlers in `eventHandlers` array
 - [ ] Create root `index.ts` with exports
 - [ ] Register module in `app.module.ts`
+- [ ] **Remove unnecessary module imports** (use events instead)
 
 ### Verification
 
@@ -890,3 +1124,16 @@ export class AppModule {}
 - [ ] Test API endpoints via Swagger UI (`/docs`)
 - [ ] Verify domain events are emitted
 - [ ] Verify error handling works correctly
+- [ ] **Review imports in application layer for infrastructure leaks**
+
+### Architecture Review Commands
+
+```bash
+# Check for application layer importing from infrastructure
+grep -r "from.*infrastructure" apps/api/src/modules/*/application/
+
+# Check for domain layer importing from other layers
+grep -r "from.*application\|from.*infrastructure" apps/api/src/modules/*/domain/
+
+# These commands should return NO results for a clean architecture
+```

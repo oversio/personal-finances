@@ -12,12 +12,32 @@ The authentication system is split into separate modules following the Single Re
 
 - **Users Module**: Manages user entities, persistence, and user-related operations
 - **Auth Module**: Handles authentication logic (login, register, tokens, OAuth)
-- **Workspaces Module**: Creates default workspace on user registration
+- **Workspaces Module**: Listens for `user.registered` events and creates default workspace
 
 ```
-AuthModule ──imports──► UsersModule
-AuthModule ──imports──► WorkspacesModule
+┌─────────────┐                    ┌─────────────────┐
+│ Auth Module │ ──imports──►       │ Users Module    │
+│             │                    │                 │
+│             │ ──emits event──►   │                 │
+│             │  "user.registered" │                 │
+└─────────────┘                    └─────────────────┘
+       │
+       │ event
+       ▼
+┌─────────────────┐
+│ Workspaces      │ ──listens──► "user.registered"
+│ Module          │              (creates default workspace)
+└─────────────────┘
+       │
+       │ emits "workspace.created"
+       ▼
+┌─────────────────┐
+│ Categories      │ ──listens──► "workspace.created"
+│ Module          │              (seeds default categories)
+└─────────────────┘
 ```
+
+**Note:** Auth module does NOT import WorkspacesModule. Cross-module communication uses domain events for loose coupling.
 
 ### Features
 
@@ -350,37 +370,105 @@ const passwordSchema = z
 
 ## Auto-Create Workspace Flow
 
-When a user registers (local or Google):
+When a user registers (local or Google), the flow uses domain events for loose coupling between modules:
+
+```
+┌─────────────────┐     user.registered      ┌─────────────────┐
+│ RegisterHandler │ ─────────────────────►   │ Event Bus       │
+│ (auth module)   │                          │                 │
+└─────────────────┘                          └────────┬────────┘
+                                                      │
+                                       ┌──────────────┴──────────────┐
+                                       │                             │
+                                       ▼                             ▼
+                            ┌─────────────────────┐       (future: notifications,
+                            │ UserRegisteredHandler│        analytics, etc.)
+                            │ (workspaces module) │
+                            └──────────┬──────────┘
+                                       │
+                                       ▼ workspace.created
+                            ┌─────────────────────┐
+                            │ WorkspaceCreatedHandler│
+                            │ (categories module)  │
+                            │ (seeds default cats) │
+                            └─────────────────────┘
+```
+
+### Auth Module: Emits Event
 
 ```typescript
-// 1. Create user
-const user = await usersRepository.create({ ... });
+// auth/application/commands/register/register.handler.ts
+@Injectable()
+export class RegisterHandler {
+  constructor(
+    @Inject(USER_REPOSITORY)
+    private readonly userRepository: UserRepository,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
 
-// 2. Emit UserRegisteredEvent
-eventEmitter.emit("user.registered", new UserRegisteredEvent(user));
+  async execute(command: RegisterCommand): Promise<RegisterResult> {
+    // 1. Create and save user
+    const user = User.createLocal(command.email, command.name, passwordHash, picture);
+    const savedUser = await this.userRepository.save(user);
 
-// 3. Event handler creates workspace
-@OnEvent("user.registered")
-async handleUserRegistered(event: UserRegisteredEvent) {
-  // Create default workspace
-  const workspace = await workspacesRepository.create({
-    name: `${event.userName}'s Workspace`,
-    ownerId: event.userId,
-    currency: "USD",
-  });
+    // 2. Emit domain event (triggers workspace creation via event handler)
+    this.eventEmitter.emit("user.registered", {
+      userId: savedUser.id!.value,
+      email: savedUser.email.value,
+      provider: "local",
+    });
 
-  // Add user as owner
-  await workspaceMembersRepository.create({
-    workspaceId: workspace.id,
-    userId: event.userId,
-    role: "owner",
-    joinedAt: new Date(),
-  });
-
-  // Seed default categories
-  await categoriesSeeder.seed(workspace.id);
+    // 3. Generate tokens and return
+    return { user: savedUser.toPrimitives(), tokens };
+  }
 }
 ```
+
+### Workspaces Module: Handles Event
+
+```typescript
+// workspaces/application/event-handlers/user-registered.handler.ts
+interface UserRegisteredEvent {
+  userId: string;
+  email: string;
+  provider: string;
+}
+
+@Injectable()
+export class UserRegisteredHandler {
+  private readonly logger = new Logger(UserRegisteredHandler.name);
+
+  constructor(private readonly createWorkspaceHandler: CreateWorkspaceHandler) {}
+
+  @OnEvent("user.registered")
+  async handle(event: UserRegisteredEvent): Promise<void> {
+    this.logger.log(`Creating default workspace for user ${event.userId}`);
+
+    await this.createWorkspaceHandler.execute(
+      new CreateWorkspaceCommand(
+        "Personal", // workspace name
+        event.userId, // owner ID
+        "USD", // default currency
+        undefined, // timezone
+        true, // isDefault
+      ),
+    );
+  }
+}
+```
+
+### Why Event-Driven?
+
+| Approach                | Pros                       | Cons                                              |
+| ----------------------- | -------------------------- | ------------------------------------------------- |
+| **Direct handler call** | Simpler to trace           | Tight coupling, auth module depends on workspaces |
+| **Event-driven**        | Loose coupling, extensible | Harder to trace, eventual consistency             |
+
+We use event-driven because:
+
+- Auth module doesn't need to know about workspaces implementation
+- Easy to add more listeners (notifications, analytics, etc.)
+- Follows hexagonal architecture principles
 
 ---
 
