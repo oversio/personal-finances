@@ -157,6 +157,7 @@ export class MongooseTransactionRepository implements TransactionRepository {
   async aggregateExpensesByMonth(
     workspaceId: string,
     year: number,
+    currency?: string,
   ): Promise<
     Array<{
       categoryId: string;
@@ -168,6 +169,18 @@ export class MongooseTransactionRepository implements TransactionRepository {
     const startOfYear = new Date(year, 0, 1);
     const endOfYear = new Date(year, 11, 31, 23, 59, 59, 999);
 
+    const matchStage: Record<string, unknown> = {
+      workspaceId: new Types.ObjectId(workspaceId),
+      type: "expense",
+      isArchived: false,
+      date: { $gte: startOfYear, $lte: endOfYear },
+      categoryId: { $exists: true, $ne: null },
+    };
+
+    if (currency) {
+      matchStage.currency = currency;
+    }
+
     const result = await this.transactionModel.aggregate<{
       _id: {
         categoryId: Types.ObjectId;
@@ -177,13 +190,7 @@ export class MongooseTransactionRepository implements TransactionRepository {
       total: number;
     }>([
       {
-        $match: {
-          workspaceId: new Types.ObjectId(workspaceId),
-          type: "expense",
-          isArchived: false,
-          date: { $gte: startOfYear, $lte: endOfYear },
-          categoryId: { $exists: true, $ne: null },
-        },
+        $match: matchStage,
       },
       {
         $group: {
