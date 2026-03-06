@@ -1,4 +1,5 @@
 import { useAuthStore } from "@/_commons/stores/auth.store";
+import { getAuthTokensFromCookies } from "@/_commons/utils/cookies";
 
 const API_BASE_URL = "/api/v1";
 
@@ -54,7 +55,11 @@ export const apiClient = {
 };
 
 async function fetchWithAuth(config: RequestConfig): Promise<globalThis.Response> {
-  const { accessToken } = useAuthStore.getState();
+  // Try store first (fast), fallback to cookies to avoid race condition with store hydration
+  let { accessToken } = useAuthStore.getState();
+  if (!accessToken) {
+    accessToken = getAuthTokensFromCookies().accessToken;
+  }
   const { url, method = "GET", data, params, signal } = config;
 
   // Build URL with query params
@@ -110,7 +115,10 @@ function buildUrl(url: string, params?: Record<string, unknown>): string {
 }
 
 async function refreshAccessToken(): Promise<string | null> {
-  const { refreshToken, setTokens, logout } = useAuthStore.getState();
+  const { setTokens, logout } = useAuthStore.getState();
+
+  // Read directly from cookies - don't depend on store hydration
+  const { refreshToken } = getAuthTokensFromCookies();
 
   if (!refreshToken) {
     logout();
