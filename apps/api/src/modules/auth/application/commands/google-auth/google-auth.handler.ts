@@ -63,7 +63,7 @@ export class GoogleAuthHandler {
         // Auto-create default workspace for new users
         await this.createWorkspaceHandler.execute(
           new CreateWorkspaceCommand(
-            `${command.name}'s Workspace`,
+            "Personal",
             user.id!.value,
             "USD",
             undefined,

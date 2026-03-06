@@ -55,7 +55,7 @@ export class RegisterHandler {
     // Auto-create default workspace for the user
     await this.createWorkspaceHandler.execute(
       new CreateWorkspaceCommand(
-        `${command.name}'s Workspace`,
+        "Personal",
         savedUser.id!.value,
         "USD",
         undefined,
