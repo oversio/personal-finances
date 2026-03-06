@@ -2,6 +2,7 @@
 
 import { Popover, PopoverContent, PopoverTrigger } from "@heroui/react";
 import { useState } from "react";
+import { formatFullCurrency } from "../_utils/format-currency";
 import { TransactionPopover } from "./transaction-popover";
 
 interface AmountCellProps {
@@ -13,6 +14,7 @@ interface AmountCellProps {
   month: number;
   year: number;
   workspaceId: string;
+  currency?: string;
 }
 
 function formatCurrency(amount: number): string {
@@ -25,14 +27,6 @@ function formatCurrency(amount: number): string {
   return amount.toLocaleString("es-CL");
 }
 
-function formatFullCurrency(amount: number): string {
-  return new Intl.NumberFormat("es-CL", {
-    style: "currency",
-    currency: "CLP",
-    minimumFractionDigits: 0,
-  }).format(amount);
-}
-
 export function AmountCell({
   amount,
   categoryId,
@@ -42,6 +36,7 @@ export function AmountCell({
   month,
   year,
   workspaceId,
+  currency,
 }: AmountCellProps) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -60,7 +55,7 @@ export function AmountCell({
           <button
             type="button"
             className="cursor-pointer rounded px-2 py-1 text-sm transition-colors hover:bg-default-100"
-            title={formatFullCurrency(amount)}
+            title={formatFullCurrency(amount, currency)}
           >
             {formatCurrency(amount)}
           </button>
@@ -75,6 +70,7 @@ export function AmountCell({
             year={year}
             amount={amount}
             workspaceId={workspaceId}
+            currency={currency}
           />
         </PopoverContent>
       </Popover>

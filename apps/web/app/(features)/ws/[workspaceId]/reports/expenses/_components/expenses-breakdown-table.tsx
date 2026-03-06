@@ -1,7 +1,8 @@
 "use client";
 
 import { Button, Select, SelectItem, Spinner } from "@heroui/react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useGetAccountList } from "../../../accounts/_api/get-account-list/use-get-account-list";
 import { useGetExpensesBreakdown } from "../../_api/get-expenses-breakdown/use-get-expenses-breakdown";
 import { CategoryRow } from "./category-row";
 import { TotalRow } from "./total-row";
@@ -28,11 +29,31 @@ interface ExpensesBreakdownTableProps {
 export function ExpensesBreakdownTable({ workspaceId }: ExpensesBreakdownTableProps) {
   const currentYear = new Date().getFullYear();
   const [selectedYear, setSelectedYear] = useState(currentYear);
+  const [selectedCurrency, setSelectedCurrency] = useState<string | undefined>(undefined);
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
+
+  // Get accounts to derive available currencies
+  const { data: accounts } = useGetAccountList({ workspaceId });
+
+  // Derive unique currencies from accounts, prioritizing CLP
+  const availableCurrencies = useMemo(() => {
+    if (!accounts || accounts.length === 0) return [];
+    const currencies = [...new Set(accounts.map(a => a.currency))].sort((a, b) => {
+      // Prioritize CLP first
+      if (a === "CLP") return -1;
+      if (b === "CLP") return 1;
+      return a.localeCompare(b);
+    });
+    return currencies;
+  }, [accounts]);
+
+  // Set default currency when currencies are loaded
+  const effectiveCurrency = selectedCurrency ?? availableCurrencies[0];
 
   const { data, isLoading, error } = useGetExpensesBreakdown({
     workspaceId,
     year: selectedYear,
+    currency: effectiveCurrency,
   });
 
   const availableYears = Array.from({ length: 5 }, (_, i) => currentYear - i);
@@ -83,6 +104,25 @@ export function ExpensesBreakdownTable({ workspaceId }: ExpensesBreakdownTablePr
               <SelectItem key={String(year)}>{String(year)}</SelectItem>
             ))}
           </Select>
+          {availableCurrencies.length > 1 && (
+            <Select
+              aria-label="Seleccionar moneda"
+              placeholder="Moneda"
+              selectedKeys={effectiveCurrency ? [effectiveCurrency] : []}
+              onSelectionChange={keys => {
+                const currency = Array.from(keys)[0];
+                if (currency) setSelectedCurrency(String(currency));
+              }}
+              className="w-24"
+              size="sm"
+              variant="flat"
+              disallowEmptySelection
+            >
+              {availableCurrencies.map(currency => (
+                <SelectItem key={currency}>{currency}</SelectItem>
+              ))}
+            </Select>
+          )}
           <div className="flex gap-1">
             <Button size="sm" variant="flat" onPress={expandAll} isDisabled={!hasData}>
               Expandir todo
@@ -162,11 +202,16 @@ export function ExpensesBreakdownTable({ workspaceId }: ExpensesBreakdownTablePr
                   onToggle={() => toggleCategory(category.categoryId)}
                   workspaceId={workspaceId}
                   year={selectedYear}
+                  currency={effectiveCurrency}
                 />
               ))}
             </tbody>
             <tfoot>
-              <TotalRow monthlyTotals={data.monthlyTotals} grandTotal={data.grandTotal} />
+              <TotalRow
+                monthlyTotals={data.monthlyTotals}
+                grandTotal={data.grandTotal}
+                currency={effectiveCurrency}
+              />
             </tfoot>
           </table>
         </div>
