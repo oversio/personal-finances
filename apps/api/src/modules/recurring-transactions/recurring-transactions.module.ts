@@ -1,11 +1,9 @@
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
-import { TransactionsModule } from "@/modules/transactions";
 import { WorkspacesModule } from "@/modules/workspaces";
 import {
   ArchiveRecurringTransactionHandler,
   CreateRecurringTransactionHandler,
-  CreateTransactionFromRecurringHandler,
   GetRecurringTransactionHandler,
   GetRecurringTransactionsHandler,
   PauseRecurringTransactionHandler,
@@ -32,8 +30,6 @@ const commandHandlers = [
 
 const queryHandlers = [GetRecurringTransactionHandler, GetRecurringTransactionsHandler];
 
-const eventHandlers = [CreateTransactionFromRecurringHandler];
-
 const repositories = [
   {
     provide: RECURRING_TRANSACTION_REPOSITORY,
@@ -47,10 +43,9 @@ const repositories = [
       { name: RecurringTransactionModel.name, schema: RecurringTransactionSchema },
     ]),
     WorkspacesModule,
-    TransactionsModule,
   ],
   controllers: [RecurringTransactionsController],
-  providers: [...commandHandlers, ...queryHandlers, ...eventHandlers, ...repositories],
+  providers: [...commandHandlers, ...queryHandlers, ...repositories],
   exports: [...commandHandlers, ...queryHandlers, ...repositories],
 })
 export class RecurringTransactionsModule {}

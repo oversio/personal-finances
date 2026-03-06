@@ -1,11 +1,41 @@
-import type {
-  CategoryToCreate,
-  ImportRow,
-  ImportRowData,
-  ImportRowError,
-} from "../../infrastructure/persistence/schemas/import-session.schema";
-
 export const IMPORT_SESSION_REPOSITORY = Symbol("IMPORT_SESSION_REPOSITORY");
+
+export interface CategoryToCreate {
+  name: string;
+  type: "income" | "expense";
+  subcategories: string[];
+}
+
+export interface ImportRowData {
+  type: string;
+  accountName: string;
+  toAccountName?: string;
+  categoryName?: string;
+  subcategoryName?: string;
+  amount: number;
+  currency: string;
+  notes?: string;
+  date: string;
+}
+
+export interface ImportRowError {
+  field: string;
+  message: string;
+  code: string;
+}
+
+export interface ImportRow {
+  rowNumber: number;
+  status: "valid" | "invalid" | "warning";
+  data: ImportRowData;
+  resolvedIds: {
+    accountId?: string;
+    toAccountId?: string;
+    categoryId?: string;
+    subcategoryId?: string;
+  };
+  errors: ImportRowError[];
+}
 
 export interface ImportSession {
   id: string;
@@ -42,5 +72,3 @@ export interface ImportSessionRepository {
   findById(id: string): Promise<ImportSession | null>;
   delete(id: string): Promise<void>;
 }
-
-export type { CategoryToCreate, ImportRow, ImportRowData, ImportRowError };
