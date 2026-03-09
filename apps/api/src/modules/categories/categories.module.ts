@@ -1,5 +1,6 @@
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
+import { TransactionsModule } from "@/modules/transactions";
 import { WorkspacesModule } from "@/modules/workspaces";
 import {
   AddSubcategoryHandler,
@@ -44,6 +45,7 @@ const repositories = [
   imports: [
     MongooseModule.forFeature([{ name: CategoryModel.name, schema: CategorySchema }]),
     WorkspacesModule,
+    forwardRef(() => TransactionsModule),
   ],
   controllers: [CategoriesController],
   providers: [...commandHandlers, ...queryHandlers, ...eventHandlers, ...repositories],

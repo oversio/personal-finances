@@ -125,6 +125,25 @@ export class MongooseTransactionRepository implements TransactionRepository {
     await this.transactionModel.findByIdAndDelete(id).exec();
   }
 
+  async existsByCategory(
+    workspaceId: string,
+    categoryId: string,
+    subcategoryId?: string,
+  ): Promise<boolean> {
+    const filter: Record<string, unknown> = {
+      workspaceId: new Types.ObjectId(workspaceId),
+      categoryId: new Types.ObjectId(categoryId),
+      isArchived: false,
+    };
+
+    if (subcategoryId) {
+      filter.subcategoryId = subcategoryId;
+    }
+
+    const count = await this.transactionModel.countDocuments(filter).limit(1).exec();
+    return count > 0;
+  }
+
   async sumByCategory(
     workspaceId: string,
     categoryId: string,
