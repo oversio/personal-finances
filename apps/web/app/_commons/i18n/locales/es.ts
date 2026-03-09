@@ -1,8 +1,9 @@
+export const UNKNOWN_ERROR_CODE = "unknown";
 /**
  * Spanish translations for API error codes.
  * These map to the ErrorCodes defined in the API.
  */
-export const ERROR_MESSAGES: Record<string, string> = {
+const MESSAGES: Record<string, string> = {
   // Authentication errors
   "auth.invalid_credentials": "Credenciales inválidas",
   "auth.email_already_exists": "Este correo electrónico ya está registrado",
@@ -56,7 +57,9 @@ export const ERROR_MESSAGES: Record<string, string> = {
 
   // Category errors
   "categories.not_found": "Categoría no encontrada",
-  "categories.in_use": "Esta categoría está en uso y no puede ser eliminada",
+  "categories.in_use": "No se puede eliminar la categoría porque tiene transacciones asociadas",
+  "categories.subcategory_in_use":
+    "No se puede eliminar la subcategoría porque tiene transacciones asociadas",
   "categories.already_exists": "Ya existe una categoría con este nombre",
   "categories.subcategory_not_found": "Subcategoría no encontrada",
 
@@ -80,6 +83,8 @@ export const ERROR_MESSAGES: Record<string, string> = {
   "entity.not_found": "No encontrado",
   "entity.already_exists": "Ya existe",
   "entity.invalid_id": "ID inválido",
+  [`toast.query.generic.${UNKNOWN_ERROR_CODE}`]: "Error desconocido",
+  [`toast.mutation.generic.${UNKNOWN_ERROR_CODE}`]: "Error desconocido",
 
   // Validation errors
   "validation.required": "Este campo es requerido",
@@ -100,6 +105,6 @@ export const ERROR_MESSAGES: Record<string, string> = {
  * Get translated error message for an error code.
  * Falls back to the original description if no translation exists.
  */
-export function getErrorMessage(code: string, fallback: string): string {
-  return ERROR_MESSAGES[code] ?? fallback;
+export function getTranslationMessage(code: string, fallback?: string): string {
+  return MESSAGES[code] ?? fallback ?? "";
 }

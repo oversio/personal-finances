@@ -1,4 +1,4 @@
-import { getErrorMessage } from "@/_commons/i18n/error-messages";
+import { getTranslationMessage } from "@/_commons/i18n/locales/es";
 
 type ValidationError = {
   code: string;
@@ -55,7 +55,7 @@ export class ValidationErrors extends Error {
 
   // Translation helper - uses Spanish translations with fallback to API description
   private static _validationErrorsMessage(errors: ValidationError[] | undefined) {
-    return errors?.map(error => getErrorMessage(error.code, error.description)).join(" ");
+    return errors?.map(error => getTranslationMessage(error.code, error.description)).join(" ");
   }
 }
 

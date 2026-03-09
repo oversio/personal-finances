@@ -1,5 +1,6 @@
 import { useAuthStore } from "@/_commons/stores/auth.store";
 import { getAuthTokensFromCookies } from "@/_commons/utils/cookies";
+import { ApiError } from "../api/errors/api-error";
 
 const API_BASE_URL = "/api/v1";
 
@@ -27,7 +28,7 @@ export const apiClient = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => null);
-      const error = new ApiError(response.status, response.statusText, errorData);
+      const error = new ApiError(response.status, response.type, response.statusText);
       // Attach response-like object for compatibility with error handlers
       (error as ApiError & { response?: { status: number; data: unknown } }).response = {
         status: response.status,
@@ -151,16 +152,5 @@ async function refreshAccessToken(): Promise<string | null> {
   } catch {
     logout();
     return null;
-  }
-}
-
-export class ApiError extends Error {
-  constructor(
-    public status: number,
-    public statusText: string,
-    public data?: unknown,
-  ) {
-    super(`API Error: ${status} ${statusText}`);
-    this.name = "ApiError";
   }
 }
