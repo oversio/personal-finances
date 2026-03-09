@@ -29,3 +29,23 @@ export class SubcategoryNotFoundError extends DomainException {
     });
   }
 }
+
+export class CategoryInUseError extends DomainException {
+  constructor(categoryName: string) {
+    super(`Cannot archive category "${categoryName}" because it has associated transactions`, {
+      errorCode: ErrorCodes.categories.inUse,
+      fieldName: null,
+      handler: "user",
+    });
+  }
+}
+
+export class SubcategoryInUseError extends DomainException {
+  constructor(subcategoryName: string) {
+    super(`Cannot remove subcategory "${subcategoryName}" because it has associated transactions`, {
+      errorCode: ErrorCodes.categories.subcategoryInUse,
+      fieldName: null,
+      handler: "user",
+    });
+  }
+}

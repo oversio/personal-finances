@@ -77,6 +77,7 @@ export const ErrorCodes = {
   categories: {
     notFound: "categories.not_found",
     inUse: "categories.in_use",
+    subcategoryInUse: "categories.subcategory_in_use",
     alreadyExists: "categories.already_exists",
     subcategoryNotFound: "categories.subcategory_not_found",
   },

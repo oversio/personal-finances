@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 import { AccountsModule } from "@/modules/accounts";
 import { CategoriesModule } from "@/modules/categories";
@@ -68,7 +68,7 @@ const services = [
     ]),
     WorkspacesModule,
     AccountsModule,
-    CategoriesModule,
+    forwardRef(() => CategoriesModule),
   ],
   controllers: [TransactionsController, TransactionImportController],
   providers: [...commandHandlers, ...queryHandlers, ...eventHandlers, ...repositories, ...services],

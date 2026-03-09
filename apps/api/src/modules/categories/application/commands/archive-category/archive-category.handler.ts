@@ -1,6 +1,10 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { EventEmitter2 } from "@nestjs/event-emitter";
-import { CategoryNotFoundError } from "../../../domain/exceptions";
+import {
+  TRANSACTION_REPOSITORY,
+  type TransactionRepository,
+} from "@/modules/transactions/application/ports";
+import { CategoryInUseError, CategoryNotFoundError } from "../../../domain/exceptions";
 import { CATEGORY_REPOSITORY, type CategoryRepository } from "../../ports";
 import { ArchiveCategoryCommand } from "./archive-category.command";
 
@@ -9,6 +13,8 @@ export class ArchiveCategoryHandler {
   constructor(
     @Inject(CATEGORY_REPOSITORY)
     private readonly categoryRepository: CategoryRepository,
+    @Inject(TRANSACTION_REPOSITORY)
+    private readonly transactionRepository: TransactionRepository,
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
@@ -18,6 +24,15 @@ export class ArchiveCategoryHandler {
 
     if (!category || category.workspaceId.value !== command.workspaceId) {
       throw new CategoryNotFoundError(command.id);
+    }
+
+    // Check if category has transactions
+    const hasTransactions = await this.transactionRepository.existsByCategory(
+      command.workspaceId,
+      command.id,
+    );
+    if (hasTransactions) {
+      throw new CategoryInUseError(category.name.value);
     }
 
     // Archive the category

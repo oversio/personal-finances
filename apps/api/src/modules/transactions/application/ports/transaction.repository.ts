@@ -20,6 +20,21 @@ export interface TransactionRepository {
   delete(id: string): Promise<void>;
 
   /**
+   * Check if any non-archived transactions exist for a category or subcategory.
+   * Used to prevent deletion of categories/subcategories with associated transactions.
+   *
+   * @param workspaceId - Workspace to query
+   * @param categoryId - Category to check
+   * @param subcategoryId - If provided, only check for this specific subcategory
+   * @returns true if transactions exist, false otherwise
+   */
+  existsByCategory(
+    workspaceId: string,
+    categoryId: string,
+    subcategoryId?: string,
+  ): Promise<boolean>;
+
+  /**
    * Sum expense transactions by category/subcategory within a date range.
    * Used for budget progress calculation.
    *

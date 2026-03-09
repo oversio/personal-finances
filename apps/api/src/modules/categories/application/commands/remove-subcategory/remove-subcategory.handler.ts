@@ -1,7 +1,15 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { EventEmitter2 } from "@nestjs/event-emitter";
+import {
+  TRANSACTION_REPOSITORY,
+  type TransactionRepository,
+} from "@/modules/transactions/application/ports";
 import { Category } from "../../../domain/entities";
-import { CategoryNotFoundError, SubcategoryNotFoundError } from "../../../domain/exceptions";
+import {
+  CategoryNotFoundError,
+  SubcategoryInUseError,
+  SubcategoryNotFoundError,
+} from "../../../domain/exceptions";
 import { CATEGORY_REPOSITORY, type CategoryRepository } from "../../ports";
 import { RemoveSubcategoryCommand } from "./remove-subcategory.command";
 
@@ -12,6 +20,8 @@ export class RemoveSubcategoryHandler {
   constructor(
     @Inject(CATEGORY_REPOSITORY)
     private readonly categoryRepository: CategoryRepository,
+    @Inject(TRANSACTION_REPOSITORY)
+    private readonly transactionRepository: TransactionRepository,
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
@@ -27,6 +37,16 @@ export class RemoveSubcategoryHandler {
     const subcategory = category.findSubcategory(command.subcategoryId);
     if (!subcategory) {
       throw new SubcategoryNotFoundError(command.categoryId, command.subcategoryId);
+    }
+
+    // Check if subcategory has transactions
+    const hasTransactions = await this.transactionRepository.existsByCategory(
+      command.workspaceId,
+      command.categoryId,
+      command.subcategoryId,
+    );
+    if (hasTransactions) {
+      throw new SubcategoryInUseError(subcategory.name);
     }
 
     // Remove subcategory
