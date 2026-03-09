@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { getErrorMessage } from "@/_commons/i18n/error-messages";
+import { getTranslationMessage } from "@/_commons/i18n/locales/es";
 
 /**
  * Schema matching the backend's standard error response format (non-422).
@@ -55,7 +55,7 @@ export class ApiError extends Error {
     if (parsed.success) {
       // Translate message using error code, fallback to original message
       const translatedMessage = parsed.data.errorCode
-        ? getErrorMessage(parsed.data.errorCode, parsed.data.message)
+        ? getTranslationMessage(parsed.data.errorCode, parsed.data.message)
         : parsed.data.message;
 
       return new ApiError(

@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { Toaster } from "sileo";
 
 import { QueryProvider } from "@/_commons/api";
 
@@ -16,6 +17,7 @@ export function Providers({ children }: ProvidersProps) {
     <QueryProvider>
       <HeroUIProviderWrapper>
         <AuthProvider>{children}</AuthProvider>
+        <Toaster position="top-center" />
       </HeroUIProviderWrapper>
     </QueryProvider>
   );

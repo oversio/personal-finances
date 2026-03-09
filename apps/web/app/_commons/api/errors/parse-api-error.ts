@@ -9,7 +9,7 @@ interface ErrorWithResponse {
   };
 }
 
-function hasResponse(error: unknown): error is ErrorWithResponse {
+export function hasErrorResponse(error: unknown): error is ErrorWithResponse {
   return (
     typeof error === "object" &&
     error !== null &&
@@ -29,7 +29,7 @@ function hasResponse(error: unknown): error is ErrorWithResponse {
  * @throws ApiError for all other error responses
  */
 export function parseApiError(error: unknown): never {
-  if (hasResponse(error) && error.response) {
+  if (hasErrorResponse(error) && error.response) {
     const { status, data } = error.response;
 
     // 422 Validation errors -> throw ValidationErrors
