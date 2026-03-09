@@ -74,59 +74,18 @@ This is a **Turborepo monorepo** with pnpm workspaces.
 
 ## Tech Stack & Patterns (Shared)
 
-### TypeScript (skills/typescript/)
+See skills for detailed patterns:
 
-- Use const objects + extracted types instead of union types
-- Flat interfaces (no inline nested objects)
-- Never use `any`, prefer `unknown` + type guards
-- Use `import type` for type-only imports
-
-### Zod 4 (skills/zod-4/)
-
-- Top-level validators: `z.email()`, `z.uuid()`, `z.url()`
-- Use `{ error: "message" }` instead of `{ message: "message" }`
+- **TypeScript** (`skills/typescript/`) - const types, flat interfaces, no `any`
+- **Zod 4** (`skills/zod-4/`) - top-level validators, `{ error }` syntax
 
 ---
 
 ## API Application (`apps/api`)
 
-### Structure
+### Patterns
 
-```
-src/
-├── main.ts
-├── app/
-│   └── app.module.ts
-└── modules/
-    ├── shared/                      # Cross-cutting concerns
-    │   ├── domain/value-objects/    # EntityId, etc.
-    │   └── infrastructure/exceptions/
-    └── [feature]/                   # e.g., transactions, accounts
-        ├── [feature].module.ts
-        ├── application/
-        │   ├── commands/[action]/   # Write operations
-        │   ├── queries/[action]/    # Read operations
-        │   ├── dtos/                # Zod schemas
-        │   ├── ports/               # Repository interfaces
-        │   └── event-handlers/      # Domain event listeners
-        ├── domain/
-        │   ├── entities/
-        │   ├── value-objects/
-        │   ├── events/
-        │   └── exceptions/
-        └── infrastructure/
-            ├── controllers/
-            └── persistence/mongoose/
-```
-
-### Patterns (apps/api/skills/nestjs-api/)
-
-- Hexagonal Architecture: domain, application, infrastructure layers
-- CQRS: explicit `commands/` and `queries/` folders
-- Domain Events with `@nestjs/event-emitter`
-- Zod everywhere with `nestjs-zod` for validation
-- Repository pattern with ports (interfaces) and adapters (implementations)
-- Global exception filter maps domain errors to HTTP responses
+See `skills/nestjs-api/` for full patterns (Hexagonal, CQRS, Domain Events, Zod, Repository pattern).
 
 ### Layer Dependencies (CRITICAL)
 
@@ -161,6 +120,10 @@ await this.createWorkspaceHandler.execute(...);
 
 See [MODULE_IMPLEMENTATION_GUIDE.md](apps/api/docs/MODULE_IMPLEMENTATION_GUIDE.md) for detailed rules.
 
+### Testing
+
+See `skills/nestjs-testing/` for patterns. Commands: `pnpm --filter=api test` | `test:watch` | `test:cov` | `test:e2e`
+
 ### Documentation
 
 - [Module Implementation Guide](apps/api/docs/MODULE_IMPLEMENTATION_GUIDE.md) - **Layer dependencies, cross-module events, patterns**
@@ -173,68 +136,13 @@ See [MODULE_IMPLEMENTATION_GUIDE.md](apps/api/docs/MODULE_IMPLEMENTATION_GUIDE.m
 
 ## Web Application (`apps/web`)
 
-### Structure
-
-```
-app/
-├── layout.tsx, page.tsx, loading.tsx, error.tsx, not-found.tsx
-├── (auth)/                   # Route group for auth pages
-│   ├── _api/                 # Shared API code for auth module
-│   │   ├── _support/         # Query keys, constants
-│   │   └── auth-user/        # Shared endpoint
-│   ├── login/
-│   │   ├── _api/             # Feature-specific (login.ts, use-login.ts)
-│   │   ├── _components/
-│   │   └── _schemas/         # Form validation schemas
-│   └── register/...
-├── (features)/               # Route group for feature modules
-│   └── [featureName]/
-│       ├── _api/             # Feature-specific API (grouped by action)
-│       │   ├── _support/     # Query keys
-│       │   ├── [feature].types.ts  # Shared Zod schemas
-│       │   ├── get-[entity]-list/  # List endpoint (note -list suffix)
-│       │   │   ├── get-[entity]-list.ts
-│       │   │   └── use-get-[entity]-list.ts
-│       │   ├── get-[entity]/       # Single entity endpoint
-│       │   │   ├── get-[entity].ts
-│       │   │   └── use-get-[entity].ts
-│       │   └── create-[entity]/
-│       │       ├── create-[entity].ts
-│       │       └── use-create-[entity].ts
-│       ├── _components/
-│       ├── _schemas/
-│       └── _stores/          # Feature-specific Zustand stores
-├── _actions/                 # Server actions
-└── _commons/                 # Shared code
-    ├── api/                  # Fetcher, React Query, error handling
-    │   ├── fetcher.ts
-    │   ├── errors/
-    │   └── hooks/
-    ├── components/
-    ├── stores/               # Global Zustand stores
-    ├── types/
-    └── utils/
-```
-
 ### Patterns
 
-#### React 19 (skills/react-19/)
+See skills for detailed patterns:
 
-- No manual memoization (React Compiler handles it)
-- Named imports: `import { useState } from "react"` (never `import React`)
-- Server Components by default, `"use client"` only when needed
-- `ref` is a prop (no forwardRef needed)
-
-#### Tailwind CSS 4 (skills/tailwind-4/)
-
-- Never use `var()` in className or hex colors
-- Use `cn()` only for conditional classes, not static
-- Use `style` prop for truly dynamic values
-
-#### Zustand 5 (skills/zustand-5/)
-
-- Use selectors to prevent re-renders: `useStore((state) => state.field)`
-- Use `useShallow` for multiple fields
+- **React 19** (`skills/react-19/`) - no manual memoization, named imports, Server Components default
+- **Tailwind 4** (`skills/tailwind-4/`) - no `var()` in className, `cn()` for conditionals only
+- **Zustand 5** (`skills/zustand-5/`) - selectors, `useShallow` for multiple fields
 
 #### Data Fetching (TanStack Query + Zod)
 
