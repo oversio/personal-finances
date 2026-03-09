@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { sileo } from "sileo";
 import { CATEGORY_QUERY_KEYS } from "../_support/category-query-keys";
 import { removeSubcategory } from "./remove-subcategory";
 
@@ -17,6 +18,7 @@ export function useRemoveSubcategory() {
       queryClient.invalidateQueries({
         queryKey: [CATEGORY_QUERY_KEYS.detail, variables.workspaceId, variables.categoryId],
       });
+      sileo.success({ title: "Subcategoría eliminada" });
     },
   });
 }

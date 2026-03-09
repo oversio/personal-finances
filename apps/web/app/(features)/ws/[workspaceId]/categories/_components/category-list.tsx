@@ -1,7 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { Button, Spinner, Tab, Tabs } from "@heroui/react";
 import Link from "next/link";
+import { ConfirmationDialog } from "@/_commons/components";
+import { ApiError, isValidationErrors } from "@/_commons/api/errors";
 import { useDeleteCategory } from "../_api/delete-category/use-delete-category";
 import { useGetCategoryList } from "../_api/get-category-list/use-get-category-list";
 import type { Category } from "../_api/category.types";
@@ -13,13 +16,45 @@ interface CategoryListProps {
 
 export function CategoryList({ workspaceId }: CategoryListProps) {
   const { data: categories, isLoading, error } = useGetCategoryList({ workspaceId });
-  const { mutate: deleteCategory, isPending: isDeleting } = useDeleteCategory();
+  const {
+    mutate: deleteCategory,
+    isPending: isDeleting,
+    error: deleteError,
+    reset: resetDeleteError,
+  } = useDeleteCategory();
+  const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null);
 
-  const handleDelete = (categoryId: string) => {
-    if (confirm("¿Estás seguro de que deseas eliminar esta categoría?")) {
-      deleteCategory({ workspaceId, categoryId });
+  const handleDeleteClick = (categoryId: string) => {
+    const category = categories?.find(c => c.id === categoryId);
+    if (category) {
+      resetDeleteError();
+      setCategoryToDelete(category);
     }
   };
+
+  const handleConfirmDelete = () => {
+    if (categoryToDelete) {
+      deleteCategory(
+        { workspaceId, categoryId: categoryToDelete.id },
+        {
+          onSuccess: () => setCategoryToDelete(null),
+        },
+      );
+    }
+  };
+
+  const handleCloseDialog = () => {
+    setCategoryToDelete(null);
+    resetDeleteError();
+  };
+
+  const deleteErrorMessage = deleteError
+    ? isValidationErrors(deleteError)
+      ? deleteError.generalErrorsMessage
+      : deleteError instanceof ApiError
+        ? deleteError.message
+        : "Error al eliminar la categoría"
+    : null;
 
   if (isLoading) {
     return (
@@ -69,39 +104,53 @@ export function CategoryList({ workspaceId }: CategoryListProps) {
   const expenseCategories = categories.filter((c: Category) => c.type === "expense");
 
   return (
-    <Tabs aria-label="Category types" variant="underlined" classNames={{ panel: "pt-4" }}>
-      <Tab key="expense" title={`Gastos (${expenseCategories.length})`}>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {expenseCategories.map((category: Category) => (
-            <CategoryCard
-              key={category.id}
-              category={category}
-              workspaceId={workspaceId}
-              onDelete={handleDelete}
-              isDeleting={isDeleting}
-            />
-          ))}
-        </div>
-        {expenseCategories.length === 0 && (
-          <p className="py-8 text-center text-default-500">No hay categorías de gastos</p>
-        )}
-      </Tab>
-      <Tab key="income" title={`Ingresos (${incomeCategories.length})`}>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {incomeCategories.map((category: Category) => (
-            <CategoryCard
-              key={category.id}
-              category={category}
-              workspaceId={workspaceId}
-              onDelete={handleDelete}
-              isDeleting={isDeleting}
-            />
-          ))}
-        </div>
-        {incomeCategories.length === 0 && (
-          <p className="py-8 text-center text-default-500">No hay categorías de ingresos</p>
-        )}
-      </Tab>
-    </Tabs>
+    <>
+      <Tabs aria-label="Category types" variant="underlined" classNames={{ panel: "pt-4" }}>
+        <Tab key="expense" title={`Gastos (${expenseCategories.length})`}>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {expenseCategories.map((category: Category) => (
+              <CategoryCard
+                key={category.id}
+                category={category}
+                workspaceId={workspaceId}
+                onDelete={handleDeleteClick}
+                isDeleting={isDeleting}
+              />
+            ))}
+          </div>
+          {expenseCategories.length === 0 && (
+            <p className="py-8 text-center text-default-500">No hay categorías de gastos</p>
+          )}
+        </Tab>
+        <Tab key="income" title={`Ingresos (${incomeCategories.length})`}>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {incomeCategories.map((category: Category) => (
+              <CategoryCard
+                key={category.id}
+                category={category}
+                workspaceId={workspaceId}
+                onDelete={handleDeleteClick}
+                isDeleting={isDeleting}
+              />
+            ))}
+          </div>
+          {incomeCategories.length === 0 && (
+            <p className="py-8 text-center text-default-500">No hay categorías de ingresos</p>
+          )}
+        </Tab>
+      </Tabs>
+
+      <ConfirmationDialog
+        isOpen={categoryToDelete !== null}
+        onClose={handleCloseDialog}
+        onConfirm={handleConfirmDelete}
+        title="Eliminar Categoría"
+        message={`¿Estás seguro de que deseas eliminar la categoría "${categoryToDelete?.name}"?`}
+        confirmLabel="Eliminar"
+        confirmColor="danger"
+        isPending={isDeleting}
+        error={deleteErrorMessage}
+      />
+    </>
   );
 }
