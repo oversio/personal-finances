@@ -12,6 +12,8 @@ import {
   DropdownTrigger,
 } from "@heroui/react";
 import Link from "next/link";
+import { ConfirmationDialog } from "@/_commons/components";
+import { ApiError, isValidationErrors } from "@/_commons/api/errors";
 import type { Category, Subcategory } from "../_api/category.types";
 import { useAddSubcategory } from "../_api/add-subcategory/use-add-subcategory";
 import { useRemoveSubcategory } from "../_api/remove-subcategory/use-remove-subcategory";
@@ -30,6 +32,7 @@ interface CategoryCardProps {
 export function CategoryCard({ category, workspaceId, onDelete, isDeleting }: CategoryCardProps) {
   const [isSubcategoryModalOpen, setIsSubcategoryModalOpen] = useState(false);
   const [editingSubcategory, setEditingSubcategory] = useState<Subcategory | null>(null);
+  const [subcategoryToRemove, setSubcategoryToRemove] = useState<Subcategory | null>(null);
 
   const {
     mutate: addSubcategory,
@@ -43,7 +46,12 @@ export function CategoryCard({ category, workspaceId, onDelete, isDeleting }: Ca
     error: updateError,
     reset: resetUpdate,
   } = useUpdateSubcategory();
-  const { mutate: removeSubcategory, isPending: isRemoving } = useRemoveSubcategory();
+  const {
+    mutate: removeSubcategory,
+    isPending: isRemoving,
+    error: removeError,
+    reset: resetRemove,
+  } = useRemoveSubcategory();
 
   const handleAddSubcategory = () => {
     setEditingSubcategory(null);
@@ -57,15 +65,38 @@ export function CategoryCard({ category, workspaceId, onDelete, isDeleting }: Ca
     setIsSubcategoryModalOpen(true);
   };
 
-  const handleRemoveSubcategory = (subcategoryId: string) => {
-    if (confirm("¿Estás seguro de que deseas eliminar esta subcategoría?")) {
-      removeSubcategory({
-        workspaceId,
-        categoryId: category.id,
-        subcategoryId,
-      });
+  const handleRemoveSubcategoryClick = (subcategory: Subcategory) => {
+    resetRemove();
+    setSubcategoryToRemove(subcategory);
+  };
+
+  const handleConfirmRemoveSubcategory = () => {
+    if (subcategoryToRemove) {
+      removeSubcategory(
+        {
+          workspaceId,
+          categoryId: category.id,
+          subcategoryId: subcategoryToRemove.id,
+        },
+        {
+          onSuccess: () => setSubcategoryToRemove(null),
+        },
+      );
     }
   };
+
+  const handleCloseRemoveDialog = () => {
+    setSubcategoryToRemove(null);
+    resetRemove();
+  };
+
+  const removeErrorMessage = removeError
+    ? isValidationErrors(removeError)
+      ? removeError.generalErrorsMessage
+      : removeError instanceof ApiError
+        ? removeError.message
+        : "Error al eliminar la subcategoría"
+    : null;
 
   const handleSubcategorySubmit = (data: SubcategoryFormData) => {
     if (editingSubcategory) {
@@ -167,7 +198,7 @@ export function CategoryCard({ category, workspaceId, onDelete, isDeleting }: Ca
                     key={subcategory.id}
                     size="sm"
                     variant="flat"
-                    onClose={() => handleRemoveSubcategory(subcategory.id)}
+                    onClose={() => handleRemoveSubcategoryClick(subcategory)}
                     isDisabled={isRemoving}
                     classNames={{
                       base: "cursor-pointer hover:bg-default-100",
@@ -201,6 +232,18 @@ export function CategoryCard({ category, workspaceId, onDelete, isDeleting }: Ca
         onSubmit={handleSubcategorySubmit}
         isPending={isAdding || isUpdating}
         error={editingSubcategory ? updateError : addError}
+      />
+
+      <ConfirmationDialog
+        isOpen={subcategoryToRemove !== null}
+        onClose={handleCloseRemoveDialog}
+        onConfirm={handleConfirmRemoveSubcategory}
+        title="Eliminar Subcategoría"
+        message={`¿Estás seguro de que deseas eliminar la subcategoría "${subcategoryToRemove?.name}"?`}
+        confirmLabel="Eliminar"
+        confirmColor="danger"
+        isPending={isRemoving}
+        error={removeErrorMessage}
       />
     </>
   );
