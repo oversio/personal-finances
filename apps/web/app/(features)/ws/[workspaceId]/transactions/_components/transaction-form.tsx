@@ -86,7 +86,6 @@ export const TransactionForm = forwardRef<TransactionFormRef, TransactionFormPro
     });
 
     const {
-      register,
       handleSubmit,
       setValue,
       watch,
