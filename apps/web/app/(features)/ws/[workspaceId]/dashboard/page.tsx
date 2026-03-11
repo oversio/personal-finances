@@ -1,149 +1,122 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useAuthStore, selectUser } from "@/_commons/stores/auth.store";
+import { KpiSparklineCard } from "@/_commons/components/charts";
+import { selectUser, useAuthStore } from "@/_commons/stores/auth.store";
+import { useGetExpensesBreakdown } from "../reports/_api/get-expenses-breakdown/use-get-expenses-breakdown";
 import { useGetAccountList } from "../accounts/_api/get-account-list/use-get-account-list";
 import { useGetTransactionList } from "../transactions/_api/get-transaction-list/use-get-transaction-list";
-import { StatCard } from "./_components/stat-card";
-import { AccountSummary } from "./_components/account-summary";
 import { BudgetOverview } from "./_components/budget-overview";
+import { ExpensesByCategoryChart } from "./_components/expenses-by-category-chart";
+import { IncomeExpensesTrendChart } from "./_components/income-expenses-trend-chart";
 import { RecentTransactions } from "./_components/recent-transactions";
-
-function formatCurrency(amount: number, currency: string): string {
-  return new Intl.NumberFormat("es-CL", {
-    style: "currency",
-    currency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
+import { TopCategoriesChart } from "./_components/top-categories-chart";
+import {
+  calculateMonthlyTrends,
+  calculateSparklineData,
+  calculateTrendPercentage,
+  formatCurrency,
+} from "./_utils/dashboard-calculations";
 
 export default function DashboardPage() {
   const params = useParams<{ workspaceId: string }>();
   const workspaceId = params.workspaceId;
   const user = useAuthStore(selectUser);
 
+  // Data fetching
   const { data: accounts } = useGetAccountList({ workspaceId });
-  const { data: transactions } = useGetTransactionList({ workspaceId, filters: {} });
+  const { data: transactions, isLoading: isLoadingTransactions } = useGetTransactionList({
+    workspaceId,
+    filters: {},
+  });
+  const { data: expensesBreakdown, isLoading: isLoadingBreakdown } = useGetExpensesBreakdown({
+    workspaceId,
+    year: new Date().getFullYear(),
+  });
 
   // Calculate stats
   const totalBalance = accounts?.reduce((sum, account) => sum + account.currentBalance, 0) ?? 0;
-  const currency = accounts?.[0]?.currency ?? "USD";
+  const currency = accounts?.[0]?.currency ?? "CLP";
 
-  // Calculate this month's income and expenses
-  const now = new Date();
-  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  const thisMonthTransactions =
-    transactions?.filter(tx => new Date(tx.date) >= firstDayOfMonth) ?? [];
+  // Calculate monthly trends
+  const monthlyTrends = transactions ? calculateMonthlyTrends(transactions, 6) : [];
+  const currentMonth = monthlyTrends[monthlyTrends.length - 1];
+  const previousMonth = monthlyTrends[monthlyTrends.length - 2];
 
-  const monthlyIncome = thisMonthTransactions
-    .filter(tx => tx.type === "income")
-    .reduce((sum, tx) => sum + tx.amount, 0);
+  const monthlyIncome = currentMonth?.income ?? 0;
+  const monthlyExpenses = currentMonth?.expenses ?? 0;
+  const netIncome = currentMonth?.net ?? 0;
 
-  const monthlyExpenses = thisMonthTransactions
-    .filter(tx => tx.type === "expense")
-    .reduce((sum, tx) => sum + tx.amount, 0);
+  // Calculate trend percentages
+  const incomeTrend = previousMonth
+    ? calculateTrendPercentage(monthlyIncome, previousMonth.income)
+    : 0;
+  const expensesTrend = previousMonth
+    ? calculateTrendPercentage(monthlyExpenses, previousMonth.expenses)
+    : 0;
+  const netTrend = previousMonth ? calculateTrendPercentage(netIncome, previousMonth.net) : 0;
 
-  const netIncome = monthlyIncome - monthlyExpenses;
+  // Sparkline data
+  const incomeSparkline = transactions ? calculateSparklineData(transactions, "income", 6) : [];
+  const expensesSparkline = transactions ? calculateSparklineData(transactions, "expense", 6) : [];
+  const netSparkline = transactions ? calculateSparklineData(transactions, "net", 6) : [];
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div>
         <h1 className="text-2xl font-bold">Inicio</h1>
-        <p className="text-default-500">¡Bienvenido{user?.name ? `, ${user.name}` : ""}! 👋</p>
+        <p className="text-default-500">¡Bienvenido{user?.name ? `, ${user.name}` : ""}!</p>
       </div>
 
-      {/* Stats Overview */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard
+      {/* KPI Cards with Sparklines */}
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <KpiSparklineCard
           title="Saldo Total"
+          subtitle="Todas las cuentas"
           value={formatCurrency(totalBalance, currency)}
-          icon={
-            <svg
-              className="size-6"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.5}
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M21 12a2.25 2.25 0 0 0-2.25-2.25H15a3 3 0 1 1-6 0H5.25A2.25 2.25 0 0 0 3 12m18 0v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 9m18 0V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          }
+          sparklineData={netSparkline}
           color="primary"
         />
-        <StatCard
+        <KpiSparklineCard
           title="Ingresos del Mes"
+          subtitle="vs mes anterior"
           value={formatCurrency(monthlyIncome, currency)}
-          icon={
-            <svg
-              className="size-6"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.5}
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          }
-          color="success"
+          trendValue={incomeTrend}
+          sparklineData={incomeSparkline}
         />
-        <StatCard
+        <KpiSparklineCard
           title="Gastos del Mes"
+          subtitle="vs mes anterior"
           value={formatCurrency(monthlyExpenses, currency)}
-          icon={
-            <svg
-              className="size-6"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.5}
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M2.25 6 9 12.75l4.286-4.286a11.948 11.948 0 0 1 4.306 6.43l.776 2.898m0 0 3.182-5.511m-3.182 5.51-5.511-3.181"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          }
-          color="danger"
+          trendValue={expensesTrend}
+          upIsGood={false}
+          sparklineData={expensesSparkline}
         />
-        <StatCard
+        <KpiSparklineCard
           title="Balance Neto"
+          subtitle="Ingresos - Gastos"
           value={formatCurrency(netIncome, currency)}
-          icon={
-            <svg
-              className="size-6"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.5}
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          }
-          color={netIncome >= 0 ? "success" : "danger"}
+          trendValue={netTrend}
+          sparklineData={netSparkline}
         />
       </div>
 
-      {/* Main Content Grid */}
+      {/* Charts Row */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="space-y-6">
-          <AccountSummary workspaceId={workspaceId} />
+        <IncomeExpensesTrendChart transactions={transactions} isLoading={isLoadingTransactions} />
+        <ExpensesByCategoryChart breakdown={expensesBreakdown} isLoading={isLoadingBreakdown} />
+      </div>
+
+      {/* Bottom Row */}
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-1">
+          <TopCategoriesChart breakdown={expensesBreakdown} isLoading={isLoadingBreakdown} />
+        </div>
+        <div className="lg:col-span-1">
           <BudgetOverview workspaceId={workspaceId} />
         </div>
-        <div>
+        <div className="lg:col-span-1">
           <RecentTransactions workspaceId={workspaceId} />
         </div>
       </div>
