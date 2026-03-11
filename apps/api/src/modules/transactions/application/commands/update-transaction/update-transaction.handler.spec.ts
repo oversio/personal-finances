@@ -94,7 +94,7 @@ describe("UpdateTransactionHandler", () => {
       );
 
       transactionRepository.findById.mockResolvedValue(transaction);
-      transactionRepository.update.mockImplementation(async tx => tx);
+      transactionRepository.update.mockImplementation(tx => Promise.resolve(tx));
 
       const result = await handler.execute(command);
 
@@ -116,7 +116,7 @@ describe("UpdateTransactionHandler", () => {
       );
 
       transactionRepository.findById.mockResolvedValue(transaction);
-      transactionRepository.update.mockImplementation(async tx => tx);
+      transactionRepository.update.mockImplementation(tx => Promise.resolve(tx));
 
       const result = await handler.execute(command);
 
@@ -150,7 +150,7 @@ describe("UpdateTransactionHandler", () => {
       );
 
       transactionRepository.findById.mockResolvedValue(transaction);
-      transactionRepository.update.mockImplementation(async tx => tx);
+      transactionRepository.update.mockImplementation(tx => Promise.resolve(tx));
 
       const result = await handler.execute(command);
 
@@ -200,7 +200,7 @@ describe("UpdateTransactionHandler", () => {
       const command = new UpdateTransactionCommand("tx-123", "workspace-123", "income");
 
       transactionRepository.findById.mockResolvedValue(transaction);
-      transactionRepository.update.mockImplementation(async tx => tx);
+      transactionRepository.update.mockImplementation(tx => Promise.resolve(tx));
 
       const result = await handler.execute(command);
 
@@ -267,7 +267,7 @@ describe("UpdateTransactionHandler", () => {
       );
 
       transactionRepository.findById.mockResolvedValue(transaction);
-      transactionRepository.update.mockImplementation(async tx => tx);
+      transactionRepository.update.mockImplementation(tx => Promise.resolve(tx));
 
       await handler.execute(command);
 
@@ -299,7 +299,7 @@ describe("UpdateTransactionHandler", () => {
       );
 
       transactionRepository.findById.mockResolvedValue(transaction);
-      transactionRepository.update.mockImplementation(async tx => tx);
+      transactionRepository.update.mockImplementation(tx => Promise.resolve(tx));
 
       await handler.execute(command);
 
@@ -347,7 +347,7 @@ describe("UpdateTransactionHandler", () => {
       );
 
       transactionRepository.findById.mockResolvedValue(transaction);
-      transactionRepository.update.mockImplementation(async tx => tx);
+      transactionRepository.update.mockImplementation(tx => Promise.resolve(tx));
 
       const result = await handler.execute(command);
 
