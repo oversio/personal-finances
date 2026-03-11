@@ -1,5 +1,7 @@
 import { Module, forwardRef } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { MongooseModule } from "@nestjs/mongoose";
+import type { EnvConfig } from "@/config/env.validation";
 import { AccountsModule } from "@/modules/accounts";
 import { CategoriesModule } from "@/modules/categories";
 import { WorkspacesModule } from "@/modules/workspaces";
@@ -13,17 +15,24 @@ import {
   GetTransactionHandler,
   GetTransactionsHandler,
   IMPORT_SESSION_REPOSITORY,
+  INVOICE_SCANNER_SERVICE,
   PreviewImportHandler,
+  ScanInvoiceHandler,
   TRANSACTION_REPOSITORY,
   UpdateAccountBalanceHandler,
   UpdateTransactionHandler,
 } from "./application";
 import {
+  AnthropicInvoiceScannerService,
   CsvParserService,
+  GeminiInvoiceScannerService,
+  GroqInvoiceScannerService,
   ImportSessionModel,
   ImportSessionSchema,
+  InvoiceScanController,
   MongooseImportSessionRepository,
   MongooseTransactionRepository,
+  OpenAiInvoiceScannerService,
   TransactionImportController,
   TransactionModel,
   TransactionSchema,
@@ -36,6 +45,7 @@ const commandHandlers = [
   ArchiveTransactionHandler,
   PreviewImportHandler,
   ConfirmImportHandler,
+  ScanInvoiceHandler,
 ];
 
 const queryHandlers = [GetTransactionHandler, GetTransactionsHandler, GetExpensesBreakdownHandler];
@@ -58,6 +68,24 @@ const services = [
     provide: FILE_PARSER_SERVICE,
     useClass: CsvParserService,
   },
+  {
+    provide: INVOICE_SCANNER_SERVICE,
+    useFactory: (config: ConfigService<EnvConfig>) => {
+      const provider = config.get<string>("AI_INVOICE_PROVIDER") ?? "groq";
+      switch (provider) {
+        case "gemini":
+          return new GeminiInvoiceScannerService(config);
+        case "openai":
+          return new OpenAiInvoiceScannerService(config);
+        case "anthropic":
+          return new AnthropicInvoiceScannerService(config);
+        case "groq":
+        default:
+          return new GroqInvoiceScannerService(config);
+      }
+    },
+    inject: [ConfigService],
+  },
 ];
 
 @Module({
@@ -70,7 +98,7 @@ const services = [
     AccountsModule,
     forwardRef(() => CategoriesModule),
   ],
-  controllers: [TransactionsController, TransactionImportController],
+  controllers: [TransactionsController, TransactionImportController, InvoiceScanController],
   providers: [...commandHandlers, ...queryHandlers, ...eventHandlers, ...repositories, ...services],
   exports: [...commandHandlers, ...queryHandlers, ...repositories],
 })

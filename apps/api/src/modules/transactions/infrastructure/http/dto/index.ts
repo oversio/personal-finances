@@ -3,3 +3,4 @@ export * from "./update-transaction.dto";
 export * from "./transaction-filters.dto";
 export * from "./confirm-import.dto";
 export * from "./expenses-breakdown.dto";
+export * from "./scan-invoice-response.dto";

@@ -73,6 +73,13 @@ export const ErrorCodes = {
     sameAccountTransfer: "transactions.same_account_transfer",
   },
 
+  // Invoice Scanner errors
+  invoiceScanner: {
+    unsupportedFormat: "invoice_scanner.unsupported_format",
+    extractionFailed: "invoice_scanner.extraction_failed",
+    serviceUnavailable: "invoice_scanner.service_unavailable",
+  },
+
   // Category errors
   categories: {
     notFound: "categories.not_found",
@@ -132,6 +139,7 @@ export type ErrorCode =
   | (typeof ErrorCodes.workspaces)[keyof typeof ErrorCodes.workspaces]
   | (typeof ErrorCodes.accounts)[keyof typeof ErrorCodes.accounts]
   | (typeof ErrorCodes.transactions)[keyof typeof ErrorCodes.transactions]
+  | (typeof ErrorCodes.invoiceScanner)[keyof typeof ErrorCodes.invoiceScanner]
   | (typeof ErrorCodes.categories)[keyof typeof ErrorCodes.categories]
   | (typeof ErrorCodes.budgets)[keyof typeof ErrorCodes.budgets]
   | (typeof ErrorCodes.recurringTransactions)[keyof typeof ErrorCodes.recurringTransactions]

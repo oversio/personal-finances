@@ -20,6 +20,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.78.0",
+    "@google/generative-ai": "^0.24.1",
     "@hookform/resolvers": "^5.2.2",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
@@ -31,8 +33,10 @@
     "@nestjs/platform-express": "^11.0.1",
     "bcrypt": "^6.0.0",
     "google-auth-library": "^10.5.0",
+    "groq-sdk": "^1.1.1",
     "mongoose": "^9.1.5",
     "nestjs-zod": "^5.1.1",
+    "openai": "^6.27.0",
     "papaparse": "^5.5.3",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
