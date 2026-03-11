@@ -78,7 +78,7 @@ const strategies = [JwtStrategy, GoogleStrategy];
         secret: configService.getOrThrow<string>("JWT_SECRET"),
         signOptions: {
           expiresIn: (configService.get<string>("JWT_ACCESS_EXPIRATION") ??
-            "15m") as `${number}${"s" | "m" | "h" | "d"}`,
+            "1d") as `${number}${"s" | "m" | "h" | "d"}`,
         },
       }),
     }),
