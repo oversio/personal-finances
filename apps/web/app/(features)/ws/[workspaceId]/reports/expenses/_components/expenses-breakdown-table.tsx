@@ -176,21 +176,21 @@ export function ExpensesBreakdownTable({ workspaceId }: ExpensesBreakdownTablePr
       {/* Table - Only when we have data */}
       {hasData && (
         <div className="overflow-x-auto rounded-lg border border-default-200">
-          <table className="w-full min-w-[900px] border-collapse">
+          <table className="w-full min-w-225 border-collapse">
             <thead>
               <tr className="bg-default-100">
-                <th className="sticky left-0 z-10 min-w-[200px] bg-default-100 px-4 py-3 text-left text-sm font-semibold">
+                <th className="sticky left-0 z-10 min-w-50 bg-default-100 px-4 py-3 text-left text-sm font-semibold">
                   Categoría
                 </th>
                 {MONTHS.map(month => (
                   <th
                     key={month}
-                    className="min-w-[80px] px-2 py-3 text-right text-sm font-semibold"
+                    className="min-w-20 pl-2 pr-4 py-3 text-right text-sm font-semibold"
                   >
                     {month}
                   </th>
                 ))}
-                <th className="min-w-[100px] px-4 py-3 text-right text-sm font-semibold">TOTAL</th>
+                <th className="min-w-25 px-4 py-3 text-right text-sm font-semibold">TOTAL</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-default-100">
