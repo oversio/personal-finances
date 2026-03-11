@@ -6,4 +6,5 @@ export const TRANSACTION_QUERY_KEYS = {
   delete: "transactions-delete",
   importPreview: "transactions-import-preview",
   importConfirm: "transactions-import-confirm",
+  scanInvoice: "transactions-scan-invoice",
 } as const;
