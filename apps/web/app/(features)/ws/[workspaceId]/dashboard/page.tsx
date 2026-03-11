@@ -1,6 +1,8 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import { useParams } from "next/navigation";
+import { Select, SelectItem } from "@heroui/react";
 import { KpiSparklineCard } from "@/_commons/components/charts";
 import { selectUser, useAuthStore } from "@/_commons/stores/auth.store";
 import { useGetExpensesBreakdown } from "../reports/_api/get-expenses-breakdown/use-get-expenses-breakdown";
@@ -29,17 +31,39 @@ export default function DashboardPage() {
     workspaceId,
     filters: {},
   });
+
+  // Currency filter state
+  const [selectedCurrency, setSelectedCurrency] = useState<string>();
+
+  // Derive unique currencies from accounts, prioritizing CLP
+  const availableCurrencies = useMemo(() => {
+    if (!accounts?.length) return [];
+    return [...new Set(accounts.map(a => a.currency))].sort((a, b) => {
+      if (a === "CLP") return -1;
+      if (b === "CLP") return 1;
+      return a.localeCompare(b);
+    });
+  }, [accounts]);
+
+  // Effective currency (with fallback)
+  const effectiveCurrency = selectedCurrency ?? availableCurrencies[0] ?? "CLP";
+
+  // Fetch expenses breakdown with currency filter
   const { data: expensesBreakdown, isLoading: isLoadingBreakdown } = useGetExpensesBreakdown({
     workspaceId,
     year: new Date().getFullYear(),
+    currency: effectiveCurrency,
   });
 
-  // Calculate stats
-  const totalBalance = accounts?.reduce((sum, account) => sum + account.currentBalance, 0) ?? 0;
-  const currency = accounts?.[0]?.currency ?? "CLP";
+  // Filter accounts and transactions by currency
+  const filteredAccounts = accounts?.filter(a => a.currency === effectiveCurrency) ?? [];
+  const filteredTransactions = transactions?.filter(tx => tx.currency === effectiveCurrency) ?? [];
 
-  // Calculate monthly trends
-  const monthlyTrends = transactions ? calculateMonthlyTrends(transactions, 6) : [];
+  // Calculate stats from filtered data
+  const totalBalance = filteredAccounts.reduce((sum, account) => sum + account.currentBalance, 0);
+
+  // Calculate monthly trends from filtered transactions
+  const monthlyTrends = calculateMonthlyTrends(filteredTransactions, 6);
   const currentMonth = monthlyTrends[monthlyTrends.length - 1];
   const previousMonth = monthlyTrends[monthlyTrends.length - 2];
 
@@ -56,17 +80,37 @@ export default function DashboardPage() {
     : 0;
   const netTrend = previousMonth ? calculateTrendPercentage(netIncome, previousMonth.net) : 0;
 
-  // Sparkline data
-  const incomeSparkline = transactions ? calculateSparklineData(transactions, "income", 6) : [];
-  const expensesSparkline = transactions ? calculateSparklineData(transactions, "expense", 6) : [];
-  const netSparkline = transactions ? calculateSparklineData(transactions, "net", 6) : [];
+  // Sparkline data from filtered transactions
+  const incomeSparkline = calculateSparklineData(filteredTransactions, "income", 6);
+  const expensesSparkline = calculateSparklineData(filteredTransactions, "expense", 6);
+  const netSparkline = calculateSparklineData(filteredTransactions, "net", 6);
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold">Inicio</h1>
-        <p className="text-default-500">¡Bienvenido{user?.name ? `, ${user.name}` : ""}!</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">Inicio</h1>
+          <p className="text-default-500">¡Bienvenido{user?.name ? `, ${user.name}` : ""}!</p>
+        </div>
+        {availableCurrencies.length > 1 && (
+          <Select
+            aria-label="Seleccionar moneda"
+            selectedKeys={selectedCurrency ? [selectedCurrency] : [effectiveCurrency]}
+            onSelectionChange={keys => {
+              const currency = Array.from(keys)[0];
+              if (currency) setSelectedCurrency(String(currency));
+            }}
+            className="w-28"
+            size="sm"
+            variant="flat"
+            disallowEmptySelection
+          >
+            {availableCurrencies.map(currency => (
+              <SelectItem key={currency}>{currency}</SelectItem>
+            ))}
+          </Select>
+        )}
       </div>
 
       {/* KPI Cards with Sparklines */}
@@ -74,21 +118,21 @@ export default function DashboardPage() {
         <KpiSparklineCard
           title="Saldo Total"
           subtitle="Todas las cuentas"
-          value={formatCurrency(totalBalance, currency)}
+          value={formatCurrency(totalBalance, effectiveCurrency)}
           sparklineData={netSparkline}
           color="primary"
         />
         <KpiSparklineCard
           title="Ingresos del Mes"
           subtitle="vs mes anterior"
-          value={formatCurrency(monthlyIncome, currency)}
+          value={formatCurrency(monthlyIncome, effectiveCurrency)}
           trendValue={incomeTrend}
           sparklineData={incomeSparkline}
         />
         <KpiSparklineCard
           title="Gastos del Mes"
           subtitle="vs mes anterior"
-          value={formatCurrency(monthlyExpenses, currency)}
+          value={formatCurrency(monthlyExpenses, effectiveCurrency)}
           trendValue={expensesTrend}
           upIsGood={false}
           sparklineData={expensesSparkline}
@@ -96,7 +140,7 @@ export default function DashboardPage() {
         <KpiSparklineCard
           title="Balance Neto"
           subtitle="Ingresos - Gastos"
-          value={formatCurrency(netIncome, currency)}
+          value={formatCurrency(netIncome, effectiveCurrency)}
           trendValue={netTrend}
           sparklineData={netSparkline}
         />
@@ -104,7 +148,10 @@ export default function DashboardPage() {
 
       {/* Charts Row */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <IncomeExpensesTrendChart transactions={transactions} isLoading={isLoadingTransactions} />
+        <IncomeExpensesTrendChart
+          transactions={filteredTransactions}
+          isLoading={isLoadingTransactions}
+        />
         <ExpensesByCategoryChart breakdown={expensesBreakdown} isLoading={isLoadingBreakdown} />
       </div>
 
