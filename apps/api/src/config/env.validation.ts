@@ -9,7 +9,7 @@ const envSchema = z
 
     // JWT
     JWT_SECRET: z.string().min(32),
-    JWT_ACCESS_EXPIRATION: z.string().default("15m"),
+    JWT_ACCESS_EXPIRATION: z.string().default("1d"),
     JWT_REFRESH_EXPIRATION: z.string().default("7d"),
 
     // Google OAuth
