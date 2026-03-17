@@ -60,12 +60,21 @@ Route groups like `(auth)` can have shared `_api/` folders:
 _commons/
 ├── api/                  # Data fetching infrastructure
 │   ├── fetcher.ts        # Core fetcher (use this, not raw axios)
-│   ├── errors/           # Error classes
+│   ├── errors/           # Error classes (ApiError, ValidationErrors)
 │   └── hooks/            # useServerFormValidationErrors
+├── components/           # Shared UI components (app-wide)
+├── hooks/                # Shared React hooks (app-wide)
+├── i18n/                 # Internationalization utilities
 ├── stores/               # Global Zustand stores
 ├── types/                # Shared type definitions
-└── utils/                # Shared utilities
+└── utils/                # Shared utilities (formatters, helpers)
 ```
+
+**When to use `_commons/` vs feature-specific:**
+| Scope | Location |
+|-------|----------|
+| Used by 2+ features | `_commons/` |
+| Single feature only | Feature's `_components/`, `_hooks/`, etc. |
 
 ## Coding Patterns
 

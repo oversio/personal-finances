@@ -2,6 +2,51 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## ⛔ MANDATORY RULES (Check Before Every Implementation)
+
+**STOP and verify these rules before writing any code:**
+
+### 1. Icons MUST go in `packages/ui`
+
+- ❌ **NEVER** create icons directly in `apps/web` or `apps/api`
+- ✅ **ALWAYS** create icons in `packages/ui/src/icons/` first
+- ✅ Then import via `@repo/ui/icons`
+- 📖 See [packages/ui/CLAUDE.md](packages/ui/CLAUDE.md) for icon creation guide
+
+**Before creating an icon, check if it already exists:**
+
+```bash
+ls packages/ui/src/icons/
+```
+
+### 2. Reusable Code MUST be Abstracted
+
+Before implementing any logic, ask yourself:
+
+- Does similar logic already exist in the codebase?
+- Will this logic be needed in more than one place?
+- Can this be a shared utility, hook, or component?
+
+**Where to put shared code:**
+| Type | Location (Web) | Location (API) |
+|------|----------------|----------------|
+| UI Components | `packages/ui/src/` | — |
+| React Hooks | `apps/web/app/_commons/hooks/` | — |
+| Utilities | `apps/web/app/_commons/utils/` | `apps/api/src/modules/shared/` |
+| Zustand Stores | `apps/web/app/_commons/stores/` | — |
+| Types/Schemas | `apps/web/app/_commons/types/` or feature's `*.types.ts` | Module's `domain/` |
+| API Fetchers | `apps/web/app/_commons/api/` or `(features)/_api/` | — |
+
+### 3. Self-Check Before Completing
+
+Before marking any task as complete, verify:
+
+- [ ] No icons created outside `packages/ui`
+- [ ] No duplicated logic that should be abstracted
+- [ ] Imports use correct package aliases (`@repo/ui/*`)
+
+---
+
 ## Documentation Maintenance Rule
 
 **After completing major implementations or refactoring tasks, proactively check and update (if needed) relevant documentation without being asked.**
