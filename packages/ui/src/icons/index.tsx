@@ -1,5 +1,6 @@
 export { ArchiveIcon } from "./archive-icon";
 export { ArrowLeftIcon } from "./arrow-left-icon";
+export { Bars3Icon } from "./bars-3-icon";
 export { ArrowTrendingUpIcon } from "./arrow-trending-up-icon";
 export { BanknotesIcon } from "./banknotes-icon";
 export { ChartBarIcon } from "./chart-bar-icon";
@@ -23,3 +24,4 @@ export { ShieldCheckIcon } from "./shield-check-icon";
 export { TrashIcon } from "./trash-icon";
 export { WalletIcon } from "./wallet-icon";
 export { XCircleIcon } from "./x-circle-icon";
+export { XMarkIcon } from "./x-mark-icon";
