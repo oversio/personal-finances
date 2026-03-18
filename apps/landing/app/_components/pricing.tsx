@@ -1,5 +1,7 @@
 import { FadeInOnScroll } from "./fade-in-on-scroll";
 
+const webAppUrl = process.env.NEXT_PUBLIC_WEB_APP_URL ?? "http://localhost:3000";
+
 const plans = [
   {
     name: "Gratis",
@@ -142,7 +144,7 @@ export function Pricing() {
                   </ul>
 
                   <a
-                    href="#"
+                    href={webAppUrl}
                     className={`relative block cursor-pointer rounded-full py-3 text-center font-semibold transition-all duration-200 ${
                       plan.popular
                         ? "bg-white text-brand-red hover:bg-white/90"

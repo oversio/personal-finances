@@ -1,5 +1,7 @@
 import { FadeInOnScroll } from "./fade-in-on-scroll";
 
+const webAppUrl = process.env.NEXT_PUBLIC_WEB_APP_URL ?? "http://localhost:3000";
+
 export function CTA() {
   return (
     <section id="cta" className="px-4 py-24">
@@ -21,7 +23,7 @@ export function CTA() {
 
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <a
-                href="#"
+                href={webAppUrl}
                 className="group flex cursor-pointer items-center gap-2 rounded-full bg-white px-8 py-4 text-lg font-semibold text-brand-red shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl"
               >
                 Crear cuenta gratis
