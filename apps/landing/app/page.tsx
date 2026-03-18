@@ -1,17 +1,13 @@
-import { Navbar } from "./_components/ui/navbar";
-import { Hero } from "./_components/sections/hero";
-import { Features } from "./_components/sections/features";
-import { Pricing } from "./_components/sections/pricing";
-import { CTA } from "./_components/sections/cta";
-import { Footer } from "./_components/ui/footer";
+import { CTA, Features, Footer, Hero, HowItWorks, Navbar, Pricing } from "./_components";
 
-export default function HomePage() {
+export default function Home() {
   return (
     <>
       <Navbar />
       <main>
         <Hero />
         <Features />
+        <HowItWorks />
         <Pricing />
         <CTA />
       </main>
